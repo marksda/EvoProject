@@ -26,6 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { Button, ButtonText } from '@/components/ui/button';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -91,6 +92,9 @@ function App(): React.JSX.Element {
             <Section title="Learn More">
               Read the docs to discover what to do next:
             </Section>
+            <Button size="md" variant="solid" action="primary">
+              <ButtonText>Hello World!</ButtonText>
+            </Button>
             <LearnMoreLinks />
           </View>
         </ScrollView>
