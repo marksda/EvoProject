@@ -6,6 +6,8 @@ import FitnessLogo from "./Header/FitnessLogo";
 import HeaderTabs from "./Header/HeaderTabs";
 import ToggleMode from "./Header/ToggleMode";
 import UserProfile from "./Header/UserProfile";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { SearchIcon } from "@/components/ui/icon";
 
 const Header = React.memo(() => {
     const { colorMode } = useContext(ThemeContext);
@@ -22,6 +24,18 @@ const Header = React.memo(() => {
                         <UserProfile />
                     </HStack>
                 </HStack>
+            </Box>
+            {/* small screen */}
+            <Box className="p-5 md:hidden w-full">
+                <Input variant="rounded" size="sm" className="w-full h-10">
+                    <InputField placeholder="Anywhere • Any week • Add guests" />
+                    <InputSlot className="bg-primary-500 rounded-full h-6 w-6 m-1.5">
+                        <InputIcon
+                            as={SearchIcon}
+                            color={colorMode === "light" ? "#FEFEFF" : "#171717"}
+                        />
+                    </InputSlot>
+                </Input>
             </Box>
         </>
     );
