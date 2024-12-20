@@ -1,10 +1,10 @@
 import { ThemeContext } from "@/apps/fitness.app";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
+import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import React from "react";
-import { Pressable } from "react-native";
 
 const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
     const { colorMode } = React.useContext(ThemeContext);
@@ -37,7 +37,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                             <VStack className="items-center">
                                 <Icon
                                     as={tab.icon}
-                                    size="sm"
+                                    size="xl"
                                     className={`${
                                         activeTab === tab.label
                                         ? "text-typography-900"
