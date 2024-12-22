@@ -4,7 +4,8 @@ import gluestackPlugin from '@gluestack-ui/nativewind-utils/tailwind-plugin';
 module.exports = {
   darkMode: "media",
   content: [
-    "App.{tsx,jsx,ts,js}",
+    /*"App.{tsx,jsx,ts,js}",*/
+    "apps/fitness.app.{tsx,jsx,ts,js}",
     "index.{tsx,jsx,ts,js}",
     "components/**/*.{tsx,jsx,ts,js}",
     "scene-components/**/*.{tsx,jsx,ts,js}"

@@ -13,7 +13,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
 
     return (
         <>
-            <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-3 md: hidden">
+            <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-3 md:hidden">
             {
                 bottomTabs.map((tab: any) => {
                     return (
@@ -37,7 +37,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                             <VStack className="items-center">
                                 <Icon
                                     as={tab.icon}
-                                    size="xl"
+                                    size="md"
                                     className={`${
                                         activeTab === tab.label
                                         ? "text-typography-900"

@@ -8,9 +8,6 @@ const Explorepage = ({ activeTab, setActiveTab }: any) => {
     return (
         <>
             <Box className={`w-full ${activeTab != "Profile" ? "flex" : "hidden"}`}>
-                {/* top banner */}
-                <Banner />
-                {/* header */}
                 <Header />
             </Box>
             <ScrollView className="h-[1px] md:hidden">
