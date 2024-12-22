@@ -14,7 +14,6 @@ const Header = React.memo(() => {
 
     return (
         <>
-            {/* big screen */}
             <Box className="px-16 w-full border-b hidden md:flex border-outline-100 min-h-20">
                 <HStack className="items-center justify-between mx-auto w-full">
                     <FitnessLogo />
@@ -25,7 +24,6 @@ const Header = React.memo(() => {
                     </HStack>
                 </HStack>
             </Box>
-            {/* small screen */}
             <Box className="p-5 md:hidden w-full">
                 <Input variant="rounded" size="sm" className="w-full h-10">
                     <InputField placeholder="Anywhere • Any week • Add guests" />

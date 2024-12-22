@@ -13,9 +13,7 @@ const Explorepage = ({ activeTab, setActiveTab }: any) => {
                 {/* header */}
                 <Header />
             </Box>
-            <ScrollView
-                className="h-[1px] md:hidden"
-            >
+            <ScrollView className="h-[1px] md:hidden">
                 <Box
                     className={`${activeTab !== "Profile" ? "flex" : "hidden"} md:hidden`}
                 >
