@@ -168,6 +168,7 @@ module.exports = {
           info: 'rgb(var(--color-indicator-info)/<alpha-value>)',
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
+        'biru': '#010957',
       },
       fontFamily: {
         heading: undefined,
