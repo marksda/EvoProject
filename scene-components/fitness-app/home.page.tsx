@@ -1,9 +1,8 @@
 import { Box } from "@/components/ui/box";
 import { 
     Home, 
-    SlidersHorizontal, 
-    Plus, 
-    MessageCircle, 
+    Fence,
+    IdCard, 
     User } from "lucide-react-native";
 import { StatusBar } from "react-native";
 import MobileBottomTabs from "./MobileBottomTabs";
@@ -14,29 +13,24 @@ import Explorepage from "./explore.page";
 const bottomTabs = [
     {
       icon: Home,
-      label: "Home",
+      label: "Beranda",
     },
     {
-      icon: SlidersHorizontal,
-      label: "Filter",
+      icon: IdCard,
+      label: "Membership",
     },
     {
-      icon: Plus,
-      label: "Listing",
-    },
-    {
-      icon: MessageCircle,
-      label: "Inbox",
-      disabled: true,
+      icon: Fence,
+      label: "Kelas",
     },
     {
       icon: User,
-      label: "Profile",
+      label: "Akun",
     },
 ];
 
 const HomePage = () => {
-    const [activeTab, setActiveTab] = React.useState("Home");
+    const [activeTab, setActiveTab] = React.useState("Beranda");
 
     return (
         <>

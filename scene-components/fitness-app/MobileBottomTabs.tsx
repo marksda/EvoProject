@@ -13,7 +13,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
 
     return (
         <>
-            <HStack className="content-center absolute bottom-0 justify-between w-full py-3 px-3 md:hidden">
+            <HStack className="bg-indigo-900 content-center absolute bottom-0 justify-between w-full py-3 px-3 rounded-t-xl md:hidden">
             {
                 bottomTabs.map((tab: any) => {
                     return (
@@ -40,7 +40,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                                     size="md"
                                     className={`${
                                         activeTab === tab.label
-                                        ? "text-typography-900"
+                                        ? "text-yellow-400"
                                         : "text-typography-400"
                                     }`}
                                 />
@@ -48,7 +48,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                                     size="xs"
                                     className={`${
                                         activeTab === tab.label
-                                        ? "text-typography-900"
+                                        ? "text-yellow-400"
                                         : "text-typography-400"
                                     }`}
                                     >
