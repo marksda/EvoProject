@@ -42,7 +42,7 @@ const BasePage = () => {
                     <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
                     <AkunPage isActive={activeTab === "Akun"} />
                 </Box>
-                <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
+                <Box className="h-[52px] items-center w-full flex md:hidden border-t border-outline-50">
                     <MobileBottomTabs
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
