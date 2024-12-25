@@ -36,7 +36,7 @@ const HomePage = () => {
     return (
         <>
             <Box className="flex-1">
-                <StatusBar hidden={false} translucent={true} backgroundColor={'transparent'}/>
+                <StatusBar hidden={false} translucent={false} className="bg-biru"/>
                 <Box className="flex-1">
                     <Explorepage setActiveTab={setActiveTab} activeTab={activeTab}/>
                 </Box>
