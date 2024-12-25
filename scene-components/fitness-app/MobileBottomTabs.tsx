@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import React from "react";
 
 const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
-    const { colorMode } = React.useContext(ThemeContext);
+    const {colorMode} = React.useContext(ThemeContext);
     const [modalVisible, setModalVisible] = React.useState(false);
     const [actionsheetVisible, setActionsheetVisible] = React.useState(false);
 
