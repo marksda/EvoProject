@@ -31,7 +31,7 @@ const bottomTabs = [
 ];
 
 const HomePage = () => {
-    const [activeTab, setActiveTab] = React.useState("Beranda");
+    const [activeTab, setActiveTab] = React.useState("Akun");
 
     return (
         <>
