@@ -2,9 +2,9 @@ import { Box } from "@/components/ui/box";
 import React from "react";
 import { ScrollView } from "react-native";
 // import Header from "./Header";
-import MainContent from "./main-content/MainContent";
+import BerandaContent from "./beranda-content/BerandaContent";
 
-const Explorepage = ({ activeTab, setActiveTab }: any) => {
+const BerandaPage = ({ activeTab, setActiveTab }: any) => {
     return (
         <>
             {/* <Box className={`w-full ${activeTab != "Profile" ? "flex" : "hidden"}`}>
@@ -12,13 +12,13 @@ const Explorepage = ({ activeTab, setActiveTab }: any) => {
             </Box> */}
             <ScrollView className="h-[1px] md:hidden">
                 <Box
-                    className={`${activeTab !== "Profile" ? "flex" : "hidden"} md:hidden`}
+                    className={`${activeTab !== "Akun" ? "flex" : "hidden"} md:hidden`}
                 >
-                    <MainContent setActiveTab={setActiveTab} activeTab={activeTab} />
+                    <BerandaContent setActiveTab={setActiveTab} activeTab={activeTab} />
                 </Box>
             </ScrollView>
         </>
     );
 }
 
-export default Explorepage;
+export default BerandaPage;

@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StatusBar } from "react-native";
-import HomePage from "@/scene-components/fitness-app/home.page";
+import BasePage from "@/scene-components/fitness-app/BasePage";
 
 
 let defaultTheme: "dark" | "light" = "light";
@@ -40,7 +40,7 @@ const FitnessApp = (): React.JSX.Element => {
                                 colorMode === "light" ? "bg-white" : "bg-[#171717]"
                             } flex-1 overflow-hidden`}
                         >
-                            <HomePage />
+                            <BasePage />
                         </SafeAreaProvider>
                     </GluestackUIProvider>
                 </ThemeContext.Provider>                

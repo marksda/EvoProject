@@ -8,7 +8,8 @@ import {
 import { StatusBar } from "react-native";
 import MobileBottomTabs from "./MobileBottomTabs";
 import React from "react";
-import Explorepage from "./explore.page";
+import BerandaPage from "./BerandaPage";
+import AkunPage from "./AkunPage";
 
 
 const bottomTabs = [
@@ -30,15 +31,16 @@ const bottomTabs = [
     },
 ];
 
-const HomePage = () => {
-    const [activeTab, setActiveTab] = React.useState("Akun");
+const BasePage = () => {
+    const [activeTab, setActiveTab] = React.useState("Beranda");
 
     return (
         <>
             <Box className="flex-1">
-                <StatusBar hidden={false} translucent={false} className="bg-biru"/>
+                <StatusBar hidden={false} translucent={false} className="bg-biru" />
                 <Box className="flex-1">
-                    <Explorepage setActiveTab={setActiveTab} activeTab={activeTab}/>
+                    <BerandaPage setActiveTab={setActiveTab} activeTab={activeTab} />
+                    <AkunPage isActive={activeTab === "Akun"} />
                 </Box>
                 <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">
                     <MobileBottomTabs
@@ -52,4 +54,4 @@ const HomePage = () => {
     );
 }
 
-export default HomePage;
+export default BasePage;

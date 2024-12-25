@@ -20,15 +20,16 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
                         <Pressable
                             key={tab.label}
                             onPress={() => {
-                                if (tab.label !== "Listing" && tab.label !== "Filter") {
-                                    setActiveTab(tab.label);
-                                }
-                                if (tab.label === "Listing") {
-                                    setModalVisible(true);
-                                }
-                                if (tab.label === "Filter") {
-                                    setActionsheetVisible(true);
-                                }
+                                setActiveTab(tab.label);
+                                // if (tab.label !== "Listing" && tab.label !== "Filter") {
+                                //     setActiveTab(tab.label);
+                                // }
+                                // if (tab.label === "Listing") {
+                                //     setModalVisible(true);
+                                // }
+                                // if (tab.label === "Filter") {
+                                //     setActionsheetVisible(true);
+                                // }
                             }}
                             disabled={tab.disabled}
                             //@ts-ignore
