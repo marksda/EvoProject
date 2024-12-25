@@ -64,5 +64,4 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
     );
 }
 
-
 export default MobileBottomTabs;
