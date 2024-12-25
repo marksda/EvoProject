@@ -3,10 +3,10 @@ import React from "react";
 import { ScrollView } from "react-native";
 import AkunContent from "./akun-content/AkunContent";
 
-const AkunPage = ({ activeTab, setActiveTab }: any) => {
-    return (
+const AkunPage = ({ activeTab, setActiveTab, isActive }: any) => {
+    return isActive == true ? (
         <>
-            <ScrollView className="h-[1px] md:hidden">
+            <ScrollView className="bg-gray-200 h-[1px] md:hidden">
                 <Box
                     className={`${activeTab !== "Akun" ? "flex" : "hidden"} md:hidden`}
                 >
@@ -14,7 +14,7 @@ const AkunPage = ({ activeTab, setActiveTab }: any) => {
                 </Box>
             </ScrollView>
         </>
-    );
+    ):null;
 }
 
 export default AkunPage;

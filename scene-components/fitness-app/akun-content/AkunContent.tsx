@@ -1,5 +1,6 @@
 import { Box } from "@/components/ui/box"
 import AkunContentHeader from "./AkunContentHeader";
+import AkunContentMain from "./AkunContentMain";
 
 const AkunContent = ({
     modalVisible,
@@ -16,6 +17,7 @@ const AkunContent = ({
                 setActiveTab={setActiveTab}
                 activeTab={activeTab}
             />
+            <AkunContentMain />
         </Box>
     );
 }

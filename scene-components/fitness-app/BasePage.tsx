@@ -39,7 +39,7 @@ const BasePage = () => {
             <Box className="flex-1">
                 <StatusBar hidden={false} translucent={false} className="bg-biru" />
                 <Box className="flex-1">
-                    <BerandaPage setActiveTab={setActiveTab} activeTab={activeTab} />
+                    <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
                     <AkunPage isActive={activeTab === "Akun"} />
                 </Box>
                 <Box className="h-[72px] items-center w-full flex md:hidden border-t border-outline-50">

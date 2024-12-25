@@ -4,8 +4,8 @@ import { ScrollView } from "react-native";
 // import Header from "./Header";
 import BerandaContent from "./beranda-content/BerandaContent";
 
-const BerandaPage = ({ activeTab, setActiveTab }: any) => {
-    return (
+const BerandaPage = ({ activeTab, setActiveTab, isActive }: any) => {
+    return isActive == true ? (
         <>
             {/* <Box className={`w-full ${activeTab != "Profile" ? "flex" : "hidden"}`}>
                 <Header />
@@ -18,7 +18,7 @@ const BerandaPage = ({ activeTab, setActiveTab }: any) => {
                 </Box>
             </ScrollView>
         </>
-    );
+    ): null;
 }
 
 export default BerandaPage;
