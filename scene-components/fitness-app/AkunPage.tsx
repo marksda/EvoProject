@@ -1,7 +1,7 @@
 import { Box } from "@/components/ui/box";
 import React from "react";
 import { ScrollView } from "react-native";
-import AkunContent from "./akun-content/AkunContent";
+import AkunContentBase from "./akun-content/AkunContentBase";
 
 const AkunPage = ({ activeTab, setActiveTab, isActive }: any) => {
     return isActive == true ? (
@@ -10,7 +10,7 @@ const AkunPage = ({ activeTab, setActiveTab, isActive }: any) => {
                 <Box
                     className={`${activeTab !== "Akun" ? "flex" : "hidden"} md:hidden`}
                 >
-                    <AkunContent setActiveTab={setActiveTab} activeTab={activeTab} />
+                    <AkunContentBase setActiveTab={setActiveTab} activeTab={activeTab} />
                 </Box>
             </ScrollView>
         </>

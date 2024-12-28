@@ -2,7 +2,7 @@ import { Box } from "@/components/ui/box"
 import AkunContentHeader from "./AkunContentHeader";
 import AkunContentMain from "./AkunContentMain";
 
-const AkunContent = ({
+const AkunContentBase = ({
     modalVisible,
     setModalVisible,
     setActiveTab,
@@ -22,4 +22,4 @@ const AkunContent = ({
     );
 }
 
-export default AkunContent;
+export default AkunContentBase;
