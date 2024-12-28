@@ -6,7 +6,7 @@ const MembershipCard = () => {
         <>
             <ImageBackground
                 source={require('../../../../assets/bg_card.png')}
-                className="h-[150px] flex-1"
+                className="w-[250px] h-[150px] flex-1"
             >
 
             </ImageBackground>
