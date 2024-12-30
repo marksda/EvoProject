@@ -10,6 +10,11 @@ import AccordionBox from "./component/Accordionbox";
 import MobileSidebarActionsheet from "../MobileSidebarActionsheet";
 import PersonalTraining from "./component/PersonalTraining";
 import { useNavigation } from "@react-navigation/native";
+import { BackHandler } from "react-native";
+
+const exitApp = () => {
+    BackHandler.exitApp();
+}
 
 const AkunContentMain = () => {
     const navigation = useNavigation();
@@ -20,7 +25,10 @@ const AkunContentMain = () => {
             case "Pemesanan Kelas":
                 // @ts-ignore: Unreachable code error
                 navigation.navigate("submain");
-                break;        
+                break;
+            case "Keluar":
+                exitApp();
+                break;               
             default:
                 break;
         }
