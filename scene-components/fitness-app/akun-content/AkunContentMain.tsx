@@ -11,7 +11,7 @@ import MobileSidebarActionsheet from "../MobileSidebarActionsheet";
 
 const AkunContentMain = () => {
     const [tmblPaket, setTmblPaket] = React.useState('membership');
-    const [actionsheetDetailPaketVisible, setActionsheetDetailPaketVisible] = React.useState(false);
+    const [showDetailPaket, setShowDetailPaket] = React.useState(false);
     
     return (
         <>
@@ -26,7 +26,7 @@ const AkunContentMain = () => {
                         <Text size="sm" bold={true} className="text-biru antialiased">Paket</Text>
                         <Pressable
                             onPress={() => {
-                                setActionsheetDetailPaketVisible((prev) => !prev);
+                                setShowDetailPaket((prev) => !prev);
                             }}
                         >
                             <Text size="sm" bold={true} className="text-biru antialiased">Lihat Paket</Text>
@@ -85,8 +85,8 @@ const AkunContentMain = () => {
                 </VStack>
             </Box>
             <MobileSidebarActionsheet
-                actionsheetVisible={actionsheetDetailPaketVisible}
-                setActionsheetVisible={setActionsheetDetailPaketVisible}
+                actionsheetVisible={showDetailPaket}
+                setActionsheetVisible={setShowDetailPaket}
             />
       </>
     );
