@@ -5,7 +5,6 @@ import {
     IdCard, 
     User 
 } from "lucide-react-native";
-import { StatusBar } from "react-native";
 import MobileBottomTabs from "./MobileBottomTabs";
 import React from "react";
 import BerandaPage from "./BerandaPage";
@@ -37,7 +36,6 @@ const BasePage = () => {
     return (
         <>
             <Box className="flex-1">
-                <StatusBar hidden={false} translucent={false} className="bg-biru" />
                 <Box className="flex-1">
                     <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
                     <AkunPage isActive={activeTab === "Akun"} />

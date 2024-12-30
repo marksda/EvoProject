@@ -8,10 +8,23 @@ import React from "react";
 import MembershipCard from "./component/MembershipCard";
 import AccordionBox from "./component/Accordionbox";
 import MobileSidebarActionsheet from "../MobileSidebarActionsheet";
+import PersonalTraining from "./component/PersonalTraining";
+import { useNavigation } from "@react-navigation/native";
 
 const AkunContentMain = () => {
+    const navigation = useNavigation();
     const [tmblPaket, setTmblPaket] = React.useState('membership');
     const [showDetailPaket, setShowDetailPaket] = React.useState(false);
+    const handleAcordionBoxPress = (id: string) => {
+        switch (id) {
+            case "Pemesanan Kelas":
+                // @ts-ignore: Unreachable code error
+                navigation.navigate("submain");
+                break;        
+            default:
+                break;
+        }
+    }
     
     return (
         <>
@@ -68,20 +81,54 @@ const AkunContentMain = () => {
                             </Text>
                         </Pressable>
                     </HStack>
-                    <MembershipCard />
+                    {
+                        tmblPaket == "membership" ? <MembershipCard /> : <PersonalTraining />
+                    }
                     <Divider className="my-2"/>
                     <Text size="sm" bold={true} className="antialiased text-biru">Aktifitas</Text>
-                    <AccordionBox title="Pemesanan Kelas" variant="Kuning"/>
-                    <AccordionBox title="Pemesanan Personal Trainer" variant="Kuning"/>
-                    <AccordionBox title="Tugas Harian" variant="Kuning"/>
+                    <AccordionBox 
+                        title="Pemesanan Kelas" 
+                        variant="Kuning"
+                        setActionPress={handleAcordionBoxPress}
+                    />
+                    <AccordionBox 
+                        title="Pemesanan Personal Trainer" 
+                        variant="Kuning"
+                        setActionPress={handleAcordionBoxPress}
+                    />
+                    <AccordionBox 
+                        title="Tugas Harian" 
+                        variant="Kuning"
+                        setActionPress={handleAcordionBoxPress}
+                    />
                     <Divider className="my-2"/>
                     <Text size="sm" bold={true} className="antialiased text-biru">Riwayat</Text>
-                    <AccordionBox title="Riwayat" variant="Biru"/>
-                    <AccordionBox title="Tagihan" variant="Biru"/>
-                    <AccordionBox title="Bonus" variant="Biru"/>
+                    <AccordionBox 
+                        title="Riwayat" 
+                        variant="Biru"
+                        setActionPress={handleAcordionBoxPress}
+                    />
+                    <AccordionBox 
+                        title="Tagihan" 
+                        variant="Biru"
+                        setActionPress={handleAcordionBoxPress}
+                    />
+                    <AccordionBox 
+                        title="Bonus" 
+                        variant="Biru"
+                        setActionPress={handleAcordionBoxPress}
+                    />
                     <Divider className="my-2"/>
-                    <AccordionBox title="Pengaturan" variant="Merah"/>
-                    <AccordionBox title="Keluar" variant="Merah"/>
+                    <AccordionBox 
+                        title="Pengaturan" 
+                        variant="Merah"
+                        setActionPress={handleAcordionBoxPress}
+                    />
+                    <AccordionBox 
+                        title="Keluar" 
+                        variant="Merah"
+                        setActionPress={handleAcordionBoxPress}
+                    />
                 </VStack>
             </Box>
             <MobileSidebarActionsheet

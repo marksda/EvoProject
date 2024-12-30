@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StatusBar } from "react-native";
 import BasePage from "@/scene-components/fitness-app/BasePage";
+import AppNavigator from "@/navigation/fitness/AppNavigator";
 
 
 let defaultTheme: "dark" | "light" = "light";
@@ -39,8 +40,9 @@ const FitnessApp = (): React.JSX.Element => {
                             className={`${
                                 colorMode === "light" ? "bg-white" : "bg-[#171717]"
                             } flex-1 overflow-hidden`}
-                        >
-                            <BasePage />
+                        >                            
+                            <StatusBar hidden={false} translucent={false} className="bg-biru" />  
+                            <AppNavigator /> 
                         </SafeAreaProvider>
                     </GluestackUIProvider>
                 </ThemeContext.Provider>                
