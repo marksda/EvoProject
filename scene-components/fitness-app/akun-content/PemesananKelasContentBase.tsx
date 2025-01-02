@@ -1,23 +1,13 @@
 import { Box } from "@/components/ui/box"
-import AkunContentHeader from "./AkunContentHeader";
-import AkunContentMain from "./AkunContentMain";
+import PemesananKelasContentHeader from "./PemesananKelasContentHeader";
+import PemesananKelasContentMain from "./PemesananKelasContentMain";
 
-const PemesananKelasContentBase = ({
-    modalVisible,
-    setModalVisible,
-    setActiveTab,
-    activeTab,
-}: any) => {
+const PemesananKelasContentBase = () => {
 
     return (
         <Box className="flex-1 md:h-[calc(100vh-144px)] md:pr-16 md:pl-8 overflow-auto">
-            <AkunContentHeader
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                setActiveTab={setActiveTab}
-                activeTab={activeTab}
-            />
-            <AkunContentMain />
+            <PemesananKelasContentHeader />
+            <PemesananKelasContentMain />
         </Box>
     );
 }

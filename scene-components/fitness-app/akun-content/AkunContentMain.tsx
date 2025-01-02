@@ -56,7 +56,7 @@ const AkunContentMain = () => {
                     <HStack space="xs">
                         <Pressable 
                             className={
-                                `${tmblPaket == 'membership' ? "border bg-biru py-1 px-5 rounded-3xl" : "bg-white border border-biru py-1 px-5 rounded-3xl"}`
+                                `border ${tmblPaket == "membership" ? "bg-biru" : "bg-white border-biru"} py-1 px-5 rounded-3xl`
                             }
                             onPress={() => {
                                 setTmblPaket('membership');
@@ -65,7 +65,7 @@ const AkunContentMain = () => {
                             <Text 
                                 size="sm" 
                                 className={
-                                    `${tmblPaket == 'membership' ? 'text-white': 'text-biru subpixel-antialiased'}`
+                                    `${tmblPaket == "membership" ? "text-white": "text-biru"} subpixel-antialiased`
                                 }
                             >
                                 Membership
@@ -73,7 +73,7 @@ const AkunContentMain = () => {
                         </Pressable>
                         <Pressable 
                             className={
-                                `${tmblPaket == 'personaltraining' ? "border bg-biru py-1 px-5 rounded-3xl" : "bg-white border border-biru py-1 px-5 rounded-3xl"}`
+                                `border ${tmblPaket == 'personaltraining' ? "bg-biru" : "bg-white border border-biru"} py-1 px-5 rounded-3xl`
                             }
                             onPress={() => {
                                 setTmblPaket('personaltraining');
@@ -82,7 +82,7 @@ const AkunContentMain = () => {
                             <Text 
                                 size="sm" 
                                 className={
-                                    `${tmblPaket == 'personaltraining' ? 'text-white': 'text-biru subpixel-antialiased'}`
+                                    `${tmblPaket == 'personaltraining' ? 'text-white': 'text-biru'} subpixel-antialiased`
                                 }
                             >
                                 Personal Training
