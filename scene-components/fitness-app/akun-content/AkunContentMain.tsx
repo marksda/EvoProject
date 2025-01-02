@@ -24,7 +24,7 @@ const AkunContentMain = () => {
         switch (id) {
             case "Pemesanan Kelas":
                 // @ts-ignore: Unreachable code error
-                navigation.navigate("submain");
+                navigation.navigate("submain", { id });
                 break;
             case "Keluar":
                 exitApp();

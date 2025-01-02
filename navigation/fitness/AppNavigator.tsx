@@ -23,6 +23,7 @@ const AppNavigator = () => {
                 />
                 <Stack.Screen
                     name="submain"
+                    // @ts-ignore: Unreachable code error
                     component={BaseDetailPage}
                     options={{
                         headerShown: false
