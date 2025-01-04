@@ -22,14 +22,12 @@ const AkunContentMain = () => {
     const [showDetailPaket, setShowDetailPaket] = React.useState(false);
     const handleAcordionBoxPress = (id: string) => {
         switch (id) {
-            case "Pemesanan Kelas":
-                // @ts-ignore: Unreachable code error
-                navigation.navigate("submain", { id });
-                break;
             case "Keluar":
                 exitApp();
                 break;               
             default:
+                // @ts-ignore: Unreachable code error
+                navigation.navigate("submain", { id });
                 break;
         }
     }
