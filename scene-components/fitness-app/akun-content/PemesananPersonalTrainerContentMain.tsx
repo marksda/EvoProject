@@ -7,9 +7,6 @@ import { AddIcon, Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { GlobeIcon, MapPinIcon } from "lucide-react-native";
-import { Portal } from "@/components/ui/portal";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Popover, PopoverBackdrop, PopoverBody, PopoverContent } from "@/components/ui/popover";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 
 
