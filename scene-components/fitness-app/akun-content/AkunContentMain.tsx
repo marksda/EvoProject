@@ -22,6 +22,9 @@ const AkunContentMain = () => {
     const [showDetailPaket, setShowDetailPaket] = React.useState(false);
     const handleAcordionBoxPress = (id: string) => {
         switch (id) {
+            case "Tugas Harian":
+                exitApp();
+                break;    
             case "Keluar":
                 exitApp();
                 break;               
