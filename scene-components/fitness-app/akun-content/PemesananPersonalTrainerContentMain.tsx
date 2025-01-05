@@ -8,18 +8,27 @@ import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { GlobeIcon, MapPinIcon } from "lucide-react-native";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
+import { addDays, addMonths, eachDayOfInterval, endOfMonth } from "date-fns";
+import { Box } from "@/components/ui/box";
 
+const generateArrayOfDate = (startDate: Date, endDate: Date) => {   
+    // let start = addDays(startDate, 1);
+    // let end = addDays(endDate, 1);
+    let arrayOfDate = eachDayOfInterval({start: startDate, end: endDate});
+
+    return arrayOfDate;
+}
 
 const PemesananPersonalTrainerContentMain = () => {
-    const [showMenuPilihKlub, setShowMenuPilihKlub] = React.useState(false);
+    // const [showMenuPilihKlub, setShowMenuPilihKlub] = React.useState(false);
+    const [startDate, setStartDate] = React.useState(new Date());
+    const [endDate, setEndDate] = React.useState(endOfMonth(addMonths(startDate, 1)));
 
-    const handleOpen = () => {
-        setShowMenuPilihKlub(true)
-      }
-      const handleClose = () => {
-        setShowMenuPilihKlub(false)
-      }
-
+    const dataTanggal = React.useMemo(
+        () => generateArrayOfDate(startDate, endDate),
+        [startDate, endDate]
+    );
+    
     return (
         <>
             <ScrollView
@@ -54,6 +63,24 @@ const PemesananPersonalTrainerContentMain = () => {
                         </MenuItem>
                     </Menu>
                     <Text size="sm">Klub terpilih dijadikan kelas bawaan dan personal trainer</Text>
+                    <ScrollView
+                        horizontal
+                        style={{ width: "100%", marginTop: 8 }}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <HStack className="gap-2">
+                        {
+                            dataTanggal.map((item, index) => {
+                                return (
+                                    <VStack key={index} className="shadow-sm bg-slate-500 p-1">
+                                        <Text>{item.toLocaleString('default', { month: 'short' })}</Text>
+                                        <Text className="color-white">{item.toLocaleString('default', { day: '2-digit'})}</Text>
+                                    </VStack>
+                                )
+                            })
+                        }
+                        </HStack>
+                    </ScrollView>
                 </VStack>
             </ScrollView>
         </>
