@@ -11,6 +11,9 @@ import MobileSidebarActionsheet from "../MobileSidebarActionsheet";
 import PersonalTraining from "./component/PersonalTraining";
 import { useNavigation } from "@react-navigation/native";
 import { BackHandler } from "react-native";
+import { AlertDialog, AlertDialogBackdrop, AlertDialogBody, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { Icon } from "@/components/ui/icon";
+import { TriangleAlertIcon } from "lucide-react-native";
 
 const exitApp = () => {
     BackHandler.exitApp();
@@ -20,10 +23,12 @@ const AkunContentMain = () => {
     const navigation = useNavigation();
     const [tmblPaket, setTmblPaket] = React.useState('membership');
     const [showDetailPaket, setShowDetailPaket] = React.useState(false);
+    const [showAlertDialog, setShowAlertDialog] = React.useState(false)
+
     const handleAcordionBoxPress = (id: string) => {
         switch (id) {
             case "Tugas Harian":
-                exitApp();
+                setShowAlertDialog(true);
                 break;    
             case "Keluar":
                 exitApp();
@@ -33,7 +38,9 @@ const AkunContentMain = () => {
                 navigation.navigate("submain", { id });
                 break;
         }
-    }
+    };
+
+    const handleCloseAlertDialog = () => setShowAlertDialog(false);
     
     return (
         <>
@@ -144,6 +151,28 @@ const AkunContentMain = () => {
                 actionsheetVisible={showDetailPaket}
                 setActionsheetVisible={setShowDetailPaket}
             />
+            <AlertDialog
+                isOpen={showAlertDialog} 
+                onClose={handleCloseAlertDialog} 
+                size="md"
+            >
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogBody className="mt-3 mb-4">
+                        <VStack space="md">
+                            <Icon 
+                                as={TriangleAlertIcon} 
+                                // @ts-ignore
+                                size={48} 
+                                className="color-yellow-400 self-center"
+                            />
+                            <Text size="sm" bold={true} className="text-center">
+                                Fitur belum tersedia, tunggu kehadirannya sebentar lagi.
+                            </Text>
+                        </VStack>
+                    </AlertDialogBody>
+                </AlertDialogContent>
+            </AlertDialog>
       </>
     );
 }

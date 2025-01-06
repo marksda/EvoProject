@@ -8,7 +8,7 @@ import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { GlobeIcon, MapPinIcon } from "lucide-react-native";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
-import { addMonths, eachDayOfInterval, endOfMonth } from "date-fns";
+import { addDays, eachDayOfInterval } from "date-fns";
 const generateArrayOfDate = (startDate: Date, endDate: Date) => {   
     // let start = addDays(startDate, 1);
     // let end = addDays(endDate, 1);
@@ -20,7 +20,8 @@ const generateArrayOfDate = (startDate: Date, endDate: Date) => {
 const PemesananPersonalTrainerContentMain = () => {
     // const [showMenuPilihKlub, setShowMenuPilihKlub] = React.useState(false);
     const [startDate, setStartDate] = React.useState(new Date());
-    const [endDate, setEndDate] = React.useState(endOfMonth(addMonths(startDate, 1)));
+    // const [endDate, setEndDate] = React.useState(endOfMonth(addMonths(startDate, 1)));
+    const [endDate, setEndDate] = React.useState(addDays(startDate, 15));
     
 
     const dataTanggal = React.useMemo(
@@ -90,15 +91,15 @@ const PemesananPersonalTrainerContentMain = () => {
                                     >
                                         <VStack>
                                             <Text 
-                                                size="sm"
+                                                size="xs"
                                                 bold={true}
-                                                className={`self-center ${tmblFilterDate == item ? "color-yellow-300" : "color-biru"}`}
+                                                className={`self-center subpixel-antialiased ${tmblFilterDate == item ? "color-yellow-300" : "color-biru"}`}
                                             >
                                                 {item.toLocaleString('default', { weekday: 'short' })}
                                             </Text>
                                             <Text 
                                                 size="xs"
-                                                className={`self-center ${tmblFilterDate == item ? "color-yellow-500" : "color-biru"}`}
+                                                className={`self-center subpixel-antialiased ${tmblFilterDate == item ? "color-yellow-500" : "color-biru"}`}
                                             >
                                                 {item.toLocaleString('default', { day: '2-digit'})} {item.toLocaleString('default', { month: 'short' })}
                                             </Text>
