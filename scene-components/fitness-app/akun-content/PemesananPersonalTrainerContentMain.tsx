@@ -71,7 +71,7 @@ const PemesananPersonalTrainerContentMain = () => {
                             <MenuItemLabel size="sm">Community</MenuItemLabel>
                         </MenuItem>
                     </Menu>
-                    <Text size="sm">Klub terpilih menjadi kelas dan personal trainer bawaan</Text>
+                    <Text size="sm">Klub terpilih akan menjadi kelas dan personal trainer bawaan</Text>
                     <ScrollView
                         horizontal
                         style={{ width: "100%", marginTop: 8 }}
