@@ -8,9 +8,7 @@ import { Text } from "@/components/ui/text";
 import { HStack } from "@/components/ui/hstack";
 import { GlobeIcon, MapPinIcon } from "lucide-react-native";
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
-import { addDays, addMonths, eachDayOfInterval, endOfMonth } from "date-fns";
-import { Box } from "@/components/ui/box";
-
+import { addMonths, eachDayOfInterval, endOfMonth } from "date-fns";
 const generateArrayOfDate = (startDate: Date, endDate: Date) => {   
     // let start = addDays(startDate, 1);
     // let end = addDays(endDate, 1);
@@ -23,11 +21,22 @@ const PemesananPersonalTrainerContentMain = () => {
     // const [showMenuPilihKlub, setShowMenuPilihKlub] = React.useState(false);
     const [startDate, setStartDate] = React.useState(new Date());
     const [endDate, setEndDate] = React.useState(endOfMonth(addMonths(startDate, 1)));
+    
 
     const dataTanggal = React.useMemo(
         () => generateArrayOfDate(startDate, endDate),
         [startDate, endDate]
     );
+
+    const [tmblFilterDate, setTmblFilterDate] = React.useState(dataTanggal[0]);
+
+    const handleTmblFilterDatePress = (item: Date) => {
+        let itemSelected = _.find(dataTanggal, function(itemDate) {
+            return itemDate == item;
+        });
+        
+        setTmblFilterDate(itemSelected!);
+    }
     
     return (
         <>
@@ -62,7 +71,7 @@ const PemesananPersonalTrainerContentMain = () => {
                             <MenuItemLabel size="sm">Community</MenuItemLabel>
                         </MenuItem>
                     </Menu>
-                    <Text size="sm">Klub terpilih dijadikan kelas bawaan dan personal trainer</Text>
+                    <Text size="sm">Klub terpilih menjadi kelas dan personal trainer bawaan</Text>
                     <ScrollView
                         horizontal
                         style={{ width: "100%", marginTop: 8 }}
@@ -72,10 +81,29 @@ const PemesananPersonalTrainerContentMain = () => {
                         {
                             dataTanggal.map((item, index) => {
                                 return (
-                                    <VStack key={index} className="shadow-sm bg-slate-500 p-1">
-                                        <Text>{item.toLocaleString('default', { month: 'short' })}</Text>
-                                        <Text className="color-white">{item.toLocaleString('default', { day: '2-digit'})}</Text>
-                                    </VStack>
+                                    <Pressable
+                                        key={index}
+                                        className={
+                                            `shadow-sm rounded-md p-2 ${tmblFilterDate == item ? "bg-biru" : "bg-gray-300"}`
+                                        }
+                                        onPress={() => handleTmblFilterDatePress(item)}
+                                    >
+                                        <VStack>
+                                            <Text 
+                                                size="sm"
+                                                bold={true}
+                                                className={`self-center ${tmblFilterDate == item ? "color-yellow-300" : "color-biru"}`}
+                                            >
+                                                {item.toLocaleString('default', { weekday: 'short' })}
+                                            </Text>
+                                            <Text 
+                                                size="xs"
+                                                className={`self-center ${tmblFilterDate == item ? "color-yellow-500" : "color-biru"}`}
+                                            >
+                                                {item.toLocaleString('default', { day: '2-digit'})} {item.toLocaleString('default', { month: 'short' })}
+                                            </Text>
+                                        </VStack>
+                                    </Pressable>
                                 )
                             })
                         }
