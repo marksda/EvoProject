@@ -41,7 +41,7 @@ const FitnessApp = (): React.JSX.Element => {
                                 colorMode === "light" ? "bg-white" : "bg-[#171717]"
                             } flex-1 overflow-hidden`}
                         >                            
-                            <StatusBar hidden={false} translucent={false} className="bg-biru" />  
+                            <StatusBar hidden={false} translucent={false} className="bg-background-color" />  
                             <AppNavigator /> 
                         </SafeAreaProvider>
                     </GluestackUIProvider>

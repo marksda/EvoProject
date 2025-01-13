@@ -13,7 +13,7 @@ const MobileBottomTabs = ({ bottomTabs, activeTab, setActiveTab }: any) => {
 
     return (
         <>
-            <HStack className="bg-biru content-center absolute bottom-0 justify-between w-full py-3 px-3 rounded-t-2xl md:hidden">
+            <HStack className="bg-background-color content-center absolute bottom-0 justify-between w-full py-3 px-3 rounded-t-2xl md:hidden">
             {
                 bottomTabs.map((tab: any) => {
                     return (

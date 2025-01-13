@@ -162,13 +162,14 @@ module.exports = {
           info: 'rgb(var(--color-background-info)/<alpha-value>)',
           light: '#FBFBFB',
           dark: '#181719',
+          color: '#080e5a'
         },
         indicator: {
           primary: 'rgb(var(--color-indicator-primary)/<alpha-value>)',
           info: 'rgb(var(--color-indicator-info)/<alpha-value>)',
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
-        'biru': '#010957',
+        'biru': '#080e5a',
       },
       fontFamily: {
         heading: undefined,
