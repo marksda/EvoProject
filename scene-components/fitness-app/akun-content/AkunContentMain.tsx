@@ -14,16 +14,18 @@ import { BackHandler } from "react-native";
 import { AlertDialog, AlertDialogBackdrop, AlertDialogBody, AlertDialogContent } from "@/components/ui/alert-dialog";
 import { Icon } from "@/components/ui/icon";
 import { TriangleAlertIcon } from "lucide-react-native";
+import { useAppSelector } from "@/features/ssot/hook";
 
 const exitApp = () => {
     BackHandler.exitApp();
 }
 
 const AkunContentMain = () => {
-    const navigation = useNavigation();
-    const [tmblPaket, setTmblPaket] = React.useState('membership');
-    const [showDetailPaket, setShowDetailPaket] = React.useState(false);
-    const [showAlertDialog, setShowAlertDialog] = React.useState(false)
+  const token = useAppSelector(state => state.persisted.token);
+  const navigation = useNavigation();
+  const [tmblPaket, setTmblPaket] = React.useState('membership');
+  const [showDetailPaket, setShowDetailPaket] = React.useState(false);
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false)
 
     const handleAcordionBoxPress = (id: string) => {
         switch (id) {
@@ -136,7 +138,7 @@ const AkunContentMain = () => {
                     />
                     <Divider className="my-2"/>
                     <AccordionBox 
-                        title="Pengaturan" 
+                        title={token.token != null ? 'Pengaturan' : 'Buat Akun'}
                         variant="Merah"
                         setActionPress={handleAcordionBoxPress}
                     />

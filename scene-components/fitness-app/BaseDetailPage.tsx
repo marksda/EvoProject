@@ -33,7 +33,7 @@ const BaseDetailPage= ({ route }: Props) => {
             {(id == "Bonus") && (
                 <BonusContentBase />
             )}
-            {(id == "Pengaturan") && (
+            {(id == "Pengaturan" || id == "Buat Akun") && (
                 <PengaturanContentBase />
             )}
         </Box>
