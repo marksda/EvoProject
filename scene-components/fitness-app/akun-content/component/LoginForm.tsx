@@ -2,21 +2,32 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { FormControl, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
 import { ChevronDownIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
-import { Select, SelectIcon, SelectInput, SelectTrigger } from "@/components/ui/select";
+import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
 import { useState } from "react";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from 'dayjs';
+import { IQueryParamFilters } from "@/features/entities/query-param-filters";
+import { useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 
 const LoginForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [show, setShow] = useState(false);
 
+  const [queryPropinsiParams, setQueryPropinsiParams] = useState<IQueryParamFilters>({
+    is_pagging: 0,  
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
 
-  // const showMode = (currentMode: any) => {
-  //   setShow(true);
-  // };
+  const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
+  console.log(propinsis);
 
   const showDatepicker = () => {
     setShow(true);
@@ -132,6 +143,28 @@ const LoginForm = () => {
             <SelectInput placeholder="Select option" className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
           </SelectTrigger>
+          <SelectPortal >
+            <SelectBackdrop />
+            <SelectContent>
+              <SelectDragIndicatorWrapper>
+                <SelectDragIndicator />
+              </SelectDragIndicatorWrapper>
+              <SelectScrollView className="max-h-96">
+              {
+                propinsis != undefined ? (
+                  propinsis.map((propinsi) => (
+                    <SelectItem 
+                      key={propinsi.id} 
+                      label={propinsi.nama!} 
+                      value={propinsi.nama!} 
+                      className="text-sm"
+                    /> 
+                  ))
+                ):null
+              }
+              </SelectScrollView>
+            </SelectContent>
+          </SelectPortal>
         </Select>
       </FormControl>
       <FormControl

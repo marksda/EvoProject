@@ -1,4 +1,4 @@
 export interface IFilter {
-    fieldName: string;
+    field_name: string;
     value: string;
 };

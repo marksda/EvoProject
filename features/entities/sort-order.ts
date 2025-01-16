@@ -1,4 +1,4 @@
 export interface ISortOrder {
-    fieldName: string;
+    field_name: string;
     value: string;
 };
