@@ -1,32 +1,30 @@
-import { Button } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { FormControl, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
 import { ChevronDownIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { Select, SelectIcon, SelectInput, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
+import DateTimePicker from "react-native-ui-datepicker";
+import dayjs from 'dayjs';
 
 const LoginForm = () => {
-  const [tanggalLahir, setTanggalLahir] = useState<Date>(new Date());
-  const [mode, setMode] = useState('date');
+  const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [show, setShow] = useState(false);
 
 
-  const showMode = (currentMode: any) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  // const showMode = (currentMode: any) => {
+  //   setShow(true);
+  // };
 
   const showDatepicker = () => {
-    showMode('date');
+    setShow(true);
   };
 
-  const onChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
+  const onChangeTanggalLahir = (tanggal: any) => {
     setShow(false);
-    setTanggalLahir(currentDate);
+    setTanggalLahir(tanggal);
   };
 
   return (
@@ -234,17 +232,69 @@ const LoginForm = () => {
         <FormControlLabel>
           <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
         </FormControlLabel>
-        <Button onPress={showDatepicker} />
+        <Button onPress={showDatepicker}>
+          <ButtonText>Tanggal Lahir</ButtonText>
+        </Button>
         {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={tanggalLahir}
-          // @ts-ignore
-          mode={mode}
-          is24Hour={true}
-          onChange={onChange}
+        <DateTimePicker        
+          mode="single"
+          date={tanggalLahir}
+          onChange={(params) => onChangeTanggalLahir(params.date)}
         />
         )}
+      </FormControl>
+      <FormControl
+        isInvalid={false}
+        size="md"
+        isDisabled={false}
+        isReadOnly={false}
+        isRequired={false}
+      >
+        <FormControlLabel>
+          <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
+        </FormControlLabel>
+        <Select>
+          <SelectTrigger variant="outline" size="md" className="flex justify-between">
+            <SelectInput placeholder="Select option" className="py-1"/>
+            <SelectIcon className="mr-3" as={ChevronDownIcon} />
+          </SelectTrigger>
+        </Select>
+      </FormControl>
+      <FormControl
+        isInvalid={false}
+        size="md"
+        isDisabled={false}
+        isReadOnly={false}
+        isRequired={false}
+      >
+        <FormControlLabel>
+          <FormControlLabelText>Berat Badan</FormControlLabelText>
+        </FormControlLabel>
+        <Input className="my-1">
+          <InputField
+            placeholder="Berat badan..."
+            size="md"
+            className="py-1"
+          />
+        </Input>
+      </FormControl>
+      <FormControl
+        isInvalid={false}
+        size="md"
+        isDisabled={false}
+        isReadOnly={false}
+        isRequired={false}
+      >
+        <FormControlLabel>
+          <FormControlLabelText>Tinggi Badan</FormControlLabelText>
+        </FormControlLabel>
+        <Input className="my-1">
+          <InputField
+            placeholder="Kode pos..."
+            size="md"
+            className="py-1"
+          />
+        </Input>
       </FormControl>
     </VStack>
   )
