@@ -27,7 +27,7 @@ const LoginForm = () => {
   });
 
   const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
-  console.log(propinsis);
+  // console.log(propinsis);
 
   const showDatepicker = () => {
     setShow(true);
