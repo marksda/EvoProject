@@ -20,7 +20,7 @@ import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 // import { IKelompokAkun } from "../features/entities/akutansi-app/kelompok-akun";
 // import { IAkun } from "../features/entities/akutansi-app/akun";
 
-const urlApi: string = 'http://192.168.1.212/api/v1';
+const urlApi: string = 'http://192.168.1.12/api';
 
 export class TokenAPI {
     static getToken = async (credential: ICredential) => {

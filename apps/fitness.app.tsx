@@ -6,7 +6,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StatusBar } from "react-native";
-import BasePage from "@/scene-components/fitness-app/BasePage";
 import AppNavigator from "@/navigation/fitness/AppNavigator";
 
 
