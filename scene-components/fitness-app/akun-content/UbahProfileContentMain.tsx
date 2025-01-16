@@ -9,10 +9,10 @@ const UbahProfileContentMain = () => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={50}
-        className="py-1"
+        className="pt-1"
       >
         <VStack>
-          
+
         </VStack>
       </ScrollView>
     </>
