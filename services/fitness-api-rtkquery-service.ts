@@ -9,6 +9,7 @@ import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { IPropinsi } from "@/features/entities/propinsi";
 import { IKabupaten } from "@/features/entities/kabupaten";
 import { IKecamatan } from "@/features/entities/kecamatan";
+import { IDesa } from "@/features/entities/desa";
 
 const urlApi: string = 'http://192.168.1.12:8000/api';
 
@@ -106,7 +107,7 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 export const fitnessApi = createApi({
   reducerPath: 'aerithApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
+  tagTypes: ['Desa', 'Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
   endpoints: builder => {
     return {
       getDaftarPropinsi: builder.query<IPropinsi[], IQueryParamFilters>({
@@ -120,6 +121,10 @@ export const fitnessApi = createApi({
       getDaftarKecamatan: builder.query<IKecamatan[], IQueryParamFilters>({
         query: (queryParams) => `/kecamatans?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Kecamatan']
+      }),
+      getDaftarDesa: builder.query<IDesa[], IQueryParamFilters>({
+        query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Desa']
       }),
       saveItem: builder.mutation<IItem, Partial<IItem>>({
           query: (body) => ({
@@ -162,5 +167,6 @@ export const {
   useGetDaftarPropinsiQuery,
   useGetDaftarKabupatenQuery,
   useGetDaftarKecamatanQuery,
+  useGetDaftarDesaQuery,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation
 } = fitnessApi;

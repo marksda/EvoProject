@@ -5,11 +5,12 @@ import { Input, InputField } from "@/components/ui/input";
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarKabupatenQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarDesaQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import _ from "lodash";
 
 const LoginForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
@@ -69,9 +70,39 @@ const LoginForm = () => {
     ],
   });
 
+  const [queryDesaParams, setQueryDesaParams] = useState<IQueryParamFilters>({
+    is_paging: false,  
+    paging: {
+      pageNumber: 1,
+      pageSize: 25
+    },
+    fields_filter: [
+      {
+        field_name: 'kecamatan_id',
+        value: '35'
+      },
+    ],
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
   const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
   const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi == null ? true:false});
-  const { data: kecamatans } = useGetDaftarKabupatenQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
+  const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
+  const { data: desas } = useGetDaftarDesaQuery(queryDesaParams, {skip: selectedKeyKecamatan == null ? true:false});
+
+  const resetKabupaten = useCallback(
+    () => {
+      // resetField("alamat.kabupaten");
+      setSelectedKeyKabupaten(null);
+      // _resetKecamatan();
+    },
+    []
+  );
   
 
   const showDatepicker = () => {
@@ -184,8 +215,33 @@ const LoginForm = () => {
           <FormControlLabelText>Provinsi</FormControlLabelText>
         </FormControlLabel>
         <Select
+          selectedValue={selectedKeyPropinsi}
           onValueChange={(val) => {
             setSelectedKeyPropinsi(val);
+            resetKabupaten();
+            setQueryKabupatenParams(
+              prev => {
+                  let tmp = _.cloneDeep(prev);
+                  let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+                  let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
+                                                      
+                  if(found == -1) {
+                    fieldsFilter?.push({
+                        field_name: 'propinsi_id',
+                        value: val
+                      });
+                  }
+                  else {
+                    fieldsFilter?.splice(found, 1, {
+                      field_name: 'propinsi_id',
+                      value: val
+                    })
+                  }
+                  
+                  tmp.fields_filter = fieldsFilter;             
+                  return tmp;
+              }
+          );
           }}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -224,12 +280,14 @@ const LoginForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Kabupaten</FormControlLabelText>
+          <FormControlLabelText>Kabupaten / Kota</FormControlLabelText>
         </FormControlLabel>
         <Select 
+          selectedValue={selectedKeyKabupaten}
           isDisabled={selectedKeyPropinsi ? false : true}
           onValueChange={(val) => {
             setSelectedKeyKabupaten(val);
+
           }}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -271,7 +329,7 @@ const LoginForm = () => {
           <FormControlLabelText>Kecamatan</FormControlLabelText>
         </FormControlLabel>
         <Select
-          isDisabled={selectedKeyPropinsi ? false : true}
+          isDisabled={selectedKeyKabupaten ? false : true}
           onValueChange={(val) => {
             setSelectedKeyKecamatan(val);
           }}
@@ -314,11 +372,38 @@ const LoginForm = () => {
         <FormControlLabel>
           <FormControlLabelText>Kelurahan</FormControlLabelText>
         </FormControlLabel>
-        <Select>
+        <Select
+          isDisabled={selectedKeyKecamatan ? false : true}
+          onValueChange={(val) => {
+            setSelectedKeyDesa(val);
+          }}
+        >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
           </SelectTrigger>
+          <SelectPortal >
+            <SelectBackdrop />
+            <SelectContent>
+              <SelectDragIndicatorWrapper>
+                <SelectDragIndicator />
+              </SelectDragIndicatorWrapper>
+              <SelectScrollView className="max-h-96">
+              {
+                desas != undefined ? (
+                  desas.map((desa) => (
+                    <SelectItem 
+                      key={desa.id} 
+                      label={desa.nama} 
+                      value={desa.id} 
+                      className="text-sm"
+                    /> 
+                  ))
+                ):null
+              }
+              </SelectScrollView>
+            </SelectContent>
+          </SelectPortal>
         </Select>
       </FormControl>
       <FormControl
