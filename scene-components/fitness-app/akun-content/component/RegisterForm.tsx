@@ -12,7 +12,7 @@ import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { useGetDaftarDesaQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
 import _ from "lodash";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [show, setShow] = useState(false);
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
@@ -521,4 +521,4 @@ const LoginForm = () => {
   )
 }
 
-export default  LoginForm;
+export default  RegisterForm;
