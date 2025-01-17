@@ -95,11 +95,128 @@ const RegisterForm = () => {
   const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
   const { data: desas } = useGetDaftarDesaQuery(queryDesaParams, {skip: selectedKeyKecamatan == null ? true:false});
 
+  const handlePropinsiChange = useCallback(
+    (val: string) => {
+      setSelectedKeyPropinsi(val);
+      resetKabupaten();
+      setQueryKabupatenParams(
+        prev => {
+          let tmp = _.cloneDeep(prev);
+          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
+                                              
+          if(found == -1) {
+            fieldsFilter?.push({
+                field_name: 'propinsi_id',
+                value: val
+              });
+          }
+          else {
+            fieldsFilter?.splice(found, 1, {
+              field_name: 'propinsi_id',
+              value: val
+            })
+          }
+          
+          tmp.fields_filter = fieldsFilter;             
+          return tmp;
+        }
+      );
+    },
+    []
+  );
+
+  const handleKabupatenChange = useCallback(
+    (val: string) => {
+      setSelectedKeyKabupaten(val);
+      resetKecamatan();
+      setQueryKecamatanParams(
+        prev => {
+          let tmp = _.cloneDeep(prev);
+          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kabupaten_id'}) as number;     
+                                              
+          if(found == -1) {
+            fieldsFilter?.push({
+                field_name: 'kabupaten_id',
+                value: val
+              });
+          }
+          else {
+            fieldsFilter?.splice(found, 1, {
+              field_name: 'kabupaten_id',
+              value: val
+            })
+          }
+          
+          tmp.fields_filter = fieldsFilter;             
+          return tmp;
+        }
+      );
+    },
+    []
+  );
+
+  const handleKecamatanChange = useCallback(
+    (val: string) => {
+      setSelectedKeyKecamatan(val);
+      resetDesa();
+      setQueryDesaParams(
+        prev => {
+          let tmp = _.cloneDeep(prev);
+          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kecamatan_id'}) as number;     
+                                              
+          if(found == -1) {
+            fieldsFilter?.push({
+                field_name: 'kecamatan_id',
+                value: val
+              });
+          }
+          else {
+            fieldsFilter?.splice(found, 1, {
+              field_name: 'kecamatan_id',
+              value: val
+            })
+          }
+          
+          tmp.fields_filter = fieldsFilter;             
+          return tmp;
+        }
+      );
+    },
+    []
+  );
+
+  const handleDesaChange = useCallback(
+    (val: string) => {
+      setSelectedKeyDesa(val);
+    },
+    []
+  );
+
   const resetKabupaten = useCallback(
     () => {
       // resetField("alamat.kabupaten");
       setSelectedKeyKabupaten(null);
-      // _resetKecamatan();
+      resetKecamatan();
+    },
+    []
+  );
+
+  const resetKecamatan = useCallback(
+    () => {
+      // resetField("alamat.kabupaten");
+      setSelectedKeyKecamatan(null);
+      resetDesa();
+    },
+    []
+  );
+
+  const resetDesa = useCallback(
+    () => {
+      // resetField("alamat.kabupaten");
+      setSelectedKeyDesa(null);
     },
     []
   );
@@ -124,7 +241,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Nama</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Nama</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
@@ -142,7 +259,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Club</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Club</FormControlLabelText>
         </FormControlLabel>
         <Select>
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -159,7 +276,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>NIK</FormControlLabelText>
+          <FormControlLabelText className="font-bold">NIK</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
@@ -177,7 +294,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Nomor Hp</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Nomor Hp</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
@@ -195,7 +312,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Agama</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Agama</FormControlLabelText>
         </FormControlLabel>
         <Select>
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -212,37 +329,11 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Provinsi</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Provinsi</FormControlLabelText>
         </FormControlLabel>
         <Select
           selectedValue={selectedKeyPropinsi}
-          onValueChange={(val) => {
-            setSelectedKeyPropinsi(val);
-            resetKabupaten();
-            setQueryKabupatenParams(
-              prev => {
-                  let tmp = _.cloneDeep(prev);
-                  let fieldsFilter = _.cloneDeep(tmp.fields_filter);
-                  let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
-                                                      
-                  if(found == -1) {
-                    fieldsFilter?.push({
-                        field_name: 'propinsi_id',
-                        value: val
-                      });
-                  }
-                  else {
-                    fieldsFilter?.splice(found, 1, {
-                      field_name: 'propinsi_id',
-                      value: val
-                    })
-                  }
-                  
-                  tmp.fields_filter = fieldsFilter;             
-                  return tmp;
-              }
-          );
-          }}
+          onValueChange={handlePropinsiChange}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -262,7 +353,6 @@ const RegisterForm = () => {
                       key={propinsi.id} 
                       label={propinsi.nama} 
                       value={propinsi.id} 
-                      className="text-sm"
                     /> 
                   ))
                 ):null
@@ -280,15 +370,12 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Kabupaten / Kota</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Kabupaten / Kota</FormControlLabelText>
         </FormControlLabel>
         <Select 
           selectedValue={selectedKeyKabupaten}
           isDisabled={selectedKeyPropinsi ? false : true}
-          onValueChange={(val) => {
-            setSelectedKeyKabupaten(val);
-
-          }}
+          onValueChange={handleKabupatenChange}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -326,13 +413,12 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Kecamatan</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Kecamatan</FormControlLabelText>
         </FormControlLabel>
         <Select
+          selectedValue={selectedKeyKecamatan}
           isDisabled={selectedKeyKabupaten ? false : true}
-          onValueChange={(val) => {
-            setSelectedKeyKecamatan(val);
-          }}
+          onValueChange={handleKecamatanChange}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -370,13 +456,12 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Kelurahan</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Kelurahan</FormControlLabelText>
         </FormControlLabel>
         <Select
+          selectedValue={selectedKeyDesa}
           isDisabled={selectedKeyKecamatan ? false : true}
-          onValueChange={(val) => {
-            setSelectedKeyDesa(val);
-          }}
+          onValueChange={handleDesaChange}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -414,7 +499,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Alamat lengkap</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Alamat lengkap</FormControlLabelText>
         </FormControlLabel>
         <Textarea
           size="md"
@@ -433,7 +518,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Kode Pos</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Kode Pos</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
@@ -451,7 +536,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Tanggal Lahir</FormControlLabelText>
         </FormControlLabel>
         <Button onPress={showDatepicker}>
           <ButtonText>Tanggal Lahir</ButtonText>
@@ -472,7 +557,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Jenis Kelamin</FormControlLabelText>
         </FormControlLabel>
         <Select>
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -489,7 +574,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Berat Badan</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Berat Badan</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
@@ -507,7 +592,7 @@ const RegisterForm = () => {
         isRequired={false}
       >
         <FormControlLabel>
-          <FormControlLabelText>Tinggi Badan</FormControlLabelText>
+          <FormControlLabelText className="font-bold">Tinggi Badan</FormControlLabelText>
         </FormControlLabel>
         <Input className="my-1">
           <InputField
