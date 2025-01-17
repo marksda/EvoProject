@@ -7,19 +7,8 @@ import { resetToken, setToken } from "./fitness-redux-token-slice.service";
 import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { IPropinsi } from "@/features/entities/propinsi";
-// import { ICredential } from "../features/entities/inventaris-asset/credential";
-// import { Mutex } from "async-mutex";
-// import { RootState } from "../features/ssot/inventaris-asset-redux-store";
-// import { IToken } from "../features/entities/inventaris-asset/token";
-// import { resetToken, setToken } from "./inventaris-asset-redux-token-slice.service";
-// import { IItem } from "../features/entities/inventaris-asset/item";
-// import { IQueryParamFilters } from "../features/entities/query-param-filters";
-// import { resetToken, setToken } from "./redux-token-slice.service";
-// import { IBarang } from "../features/entities/barang";
-// import { IQueryParamFilters } from "../features/entities/query-param-filters";
-// import { ITransaksi } from "../features/entities/transaksi";
-// import { IKelompokAkun } from "../features/entities/akutansi-app/kelompok-akun";
-// import { IAkun } from "../features/entities/akutansi-app/akun";
+import { IKabupaten } from "@/features/entities/kabupaten";
+import { IKecamatan } from "@/features/entities/kecamatan";
 
 const urlApi: string = 'http://192.168.1.12:8000/api';
 
@@ -115,53 +104,63 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 };
 
 export const fitnessApi = createApi({
-    reducerPath: 'aerithApi',
-    baseQuery: baseQueryWithReauth,
-    tagTypes: ['Item', 'Propinsi', 'Kosong'],
-    endpoints: builder => {
-        return {
-          getDaftarPropinsi: builder.query<IPropinsi[], IQueryParamFilters>({
-            query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
-            providesTags: ['Propinsi']
+  reducerPath: 'aerithApi',
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ['Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
+  endpoints: builder => {
+    return {
+      getDaftarPropinsi: builder.query<IPropinsi[], IQueryParamFilters>({
+        query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Propinsi']
+      }),
+      getDaftarKabupaten: builder.query<IKabupaten[], IQueryParamFilters>({
+        query: (queryParams) => `/kabupatens?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Kabupaten']
+      }),
+      getDaftarKecamatan: builder.query<IKecamatan[], IQueryParamFilters>({
+        query: (queryParams) => `/kecamatans?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Kecamatan']
+      }),
+      saveItem: builder.mutation<IItem, Partial<IItem>>({
+          query: (body) => ({
+              url: '/item',
+              method: 'POST',
+              body,
           }),
-          saveItem: builder.mutation<IItem, Partial<IItem>>({
-              query: (body) => ({
-                  url: '/item',
-                  method: 'POST',
-                  body,
-              }),
-              invalidatesTags: (result) => result ? ['Item']:['Kosong']
+          invalidatesTags: (result) => result ? ['Item']:['Kosong']
+      }),
+      getDaftarItem: builder.query<IItem[], IQueryParamFilters>({
+          query: (queryParams) => ({
+              url: `/item?filter=${JSON.stringify(queryParams)}`,
+              method: 'GET',
           }),
-          getDaftarItem: builder.query<IItem[], IQueryParamFilters>({
-              query: (queryParams) => ({
-                  url: `/item?filter=${JSON.stringify(queryParams)}`,
-                  method: 'GET',
-              }),
-              transformResponse: (response: { data: IItem[] }, meta, arg) => {
-                  return response.data;
-              },
-              providesTags: ['Item']
+          transformResponse: (response: { data: IItem[] }, meta, arg) => {
+              return response.data;
+          },
+          providesTags: ['Item']
+      }),
+      updateItem: builder.mutation<IItem, {idLama: string; itemBaru: Partial<IItem>;}>({
+          query: ({idLama, itemBaru}) => ({
+              url: `/item/${idLama}`,
+              method: 'PUT',
+              body: itemBaru,
           }),
-          updateItem: builder.mutation<IItem, {idLama: string; itemBaru: Partial<IItem>;}>({
-              query: ({idLama, itemBaru}) => ({
-                  url: `/item/${idLama}`,
-                  method: 'PUT',
-                  body: itemBaru,
-              }),
-              invalidatesTags: (result) => result? ['Item']:['Kosong']
+          invalidatesTags: (result) => result? ['Item']:['Kosong']
+      }),
+      deleteItem: builder.mutation<Partial<IItem>, {idItem: string}>({
+          query: ({idItem}) => ({                  
+              url: `/item/${idItem}`,
+              method: 'DELETE',            
           }),
-          deleteItem: builder.mutation<Partial<IItem>, {idItem: string}>({
-              query: ({idItem}) => ({                  
-                  url: `/item/${idItem}`,
-                  method: 'DELETE',            
-              }),
-              invalidatesTags: (result) => result? ['Item']:['Kosong']
-          }),
-        }
+          invalidatesTags: (result) => result? ['Item']:['Kosong']
+      }),
     }
+  }
 });
 
 export const {
   useGetDaftarPropinsiQuery,
+  useGetDaftarKabupatenQuery,
+  useGetDaftarKecamatanQuery,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation
 } = fitnessApi;

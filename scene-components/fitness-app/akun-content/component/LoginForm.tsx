@@ -9,15 +9,58 @@ import { useState } from "react";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
+import { useGetDaftarKabupatenQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
 
 const LoginForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [show, setShow] = useState(false);
+  const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
+  const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
+  const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
+  const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
   const [queryPropinsiParams, setQueryPropinsiParams] = useState<IQueryParamFilters>({
-    is_pagging: 0,  
+    is_paging: false, 
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
+  const [queryKabupatenParams, setQueryKabupatenParams] = useState<IQueryParamFilters>({
+    is_paging: false,  
+    paging: {
+      pageNumber: 1,
+      pageSize: 25
+    },
+    fields_filter: [
+      {
+        field_name: 'propinsi_id',
+        value: '35'
+      },
+    ],
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
+  const [queryKecamatanParams, setQueryKecamatanParams] = useState<IQueryParamFilters>({
+    is_paging: false,  
+    paging: {
+      pageNumber: 1,
+      pageSize: 25
+    },
+    fields_filter: [
+      {
+        field_name: 'kabupaten_id',
+        value: '35'
+      },
+    ],
     fields_sorter: [
       {
         field_name: 'nama',
@@ -27,7 +70,9 @@ const LoginForm = () => {
   });
 
   const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
-  // console.log(propinsis);
+  const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi == null ? true:false});
+  const { data: kecamatans } = useGetDaftarKabupatenQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
+  
 
   const showDatepicker = () => {
     setShow(true);
@@ -138,7 +183,11 @@ const LoginForm = () => {
         <FormControlLabel>
           <FormControlLabelText>Provinsi</FormControlLabelText>
         </FormControlLabel>
-        <Select>
+        <Select
+          onValueChange={(val) => {
+            setSelectedKeyPropinsi(val);
+          }}
+        >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -155,8 +204,8 @@ const LoginForm = () => {
                   propinsis.map((propinsi) => (
                     <SelectItem 
                       key={propinsi.id} 
-                      label={propinsi.nama!} 
-                      value={propinsi.nama!} 
+                      label={propinsi.nama} 
+                      value={propinsi.id} 
                       className="text-sm"
                     /> 
                   ))
@@ -177,11 +226,38 @@ const LoginForm = () => {
         <FormControlLabel>
           <FormControlLabelText>Kabupaten</FormControlLabelText>
         </FormControlLabel>
-        <Select>
+        <Select 
+          isDisabled={selectedKeyPropinsi ? false : true}
+          onValueChange={(val) => {
+            setSelectedKeyKabupaten(val);
+          }}
+        >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
           </SelectTrigger>
+          <SelectPortal >
+            <SelectBackdrop />
+            <SelectContent>
+              <SelectDragIndicatorWrapper>
+                <SelectDragIndicator />
+              </SelectDragIndicatorWrapper>
+              <SelectScrollView className="max-h-96">
+              {
+                kabupatens != undefined ? (
+                  kabupatens.map((kabupaten) => (
+                    <SelectItem 
+                      key={kabupaten.id} 
+                      label={kabupaten.nama} 
+                      value={kabupaten.id} 
+                      className="text-sm"
+                    /> 
+                  ))
+                ):null
+              }
+              </SelectScrollView>
+            </SelectContent>
+          </SelectPortal>
         </Select>
       </FormControl>
       <FormControl
@@ -194,11 +270,38 @@ const LoginForm = () => {
         <FormControlLabel>
           <FormControlLabelText>Kecamatan</FormControlLabelText>
         </FormControlLabel>
-        <Select>
+        <Select
+          isDisabled={selectedKeyPropinsi ? false : true}
+          onValueChange={(val) => {
+            setSelectedKeyKecamatan(val);
+          }}
+        >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
           </SelectTrigger>
+          <SelectPortal >
+            <SelectBackdrop />
+            <SelectContent>
+              <SelectDragIndicatorWrapper>
+                <SelectDragIndicator />
+              </SelectDragIndicatorWrapper>
+              <SelectScrollView className="max-h-96">
+              {
+                kecamatans != undefined ? (
+                  kecamatans.map((kecamatan) => (
+                    <SelectItem 
+                      key={kecamatan.id} 
+                      label={kecamatan.nama} 
+                      value={kecamatan.id} 
+                      className="text-sm"
+                    /> 
+                  ))
+                ):null
+              }
+              </SelectScrollView>
+            </SelectContent>
+          </SelectPortal>
         </Select>
       </FormControl>
       <FormControl
