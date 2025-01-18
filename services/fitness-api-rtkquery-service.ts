@@ -6,10 +6,11 @@ import { Mutex } from "async-mutex";
 import { resetToken, setToken } from "./fitness-redux-token-slice.service";
 import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { IPropinsi } from "@/features/entities/propinsi";
 import { IKabupaten } from "@/features/entities/kabupaten";
 import { IKecamatan } from "@/features/entities/kecamatan";
 import { IDesa } from "@/features/entities/desa";
+import { IGender } from "@/features/entities/gender";
+import { Agama, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 
 const urlApi: string = 'http://192.168.1.12:8000/api';
 
@@ -107,10 +108,18 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 export const fitnessApi = createApi({
   reducerPath: 'aerithApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Desa', 'Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
+  tagTypes: ['Agama', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
   endpoints: builder => {
     return {
-      getDaftarPropinsi: builder.query<IPropinsi[], IQueryParamFilters>({
+      getDaftarAgama: builder.query<Agama[], IQueryParamFilters>({
+        query: (queryParams) => `/agamas?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Agama']
+      }),
+      getDaftarGender: builder.query<IGender[], IQueryParamFilters>({
+        query: (queryParams) => `/genders?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Gender']
+      }),
+      getDaftarPropinsi: builder.query<Propinsi[], IQueryParamFilters>({
         query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Propinsi']
       }),
@@ -164,6 +173,8 @@ export const fitnessApi = createApi({
 });
 
 export const {
+  useGetDaftarAgamaQuery,
+  useGetDaftarGenderQuery,
   useGetDaftarPropinsiQuery,
   useGetDaftarKabupatenQuery,
   useGetDaftarKecamatanQuery,

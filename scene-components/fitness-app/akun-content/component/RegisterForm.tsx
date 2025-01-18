@@ -1,7 +1,6 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { FormControl, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
-import { ChevronDownIcon } from "@/components/ui/icon";
-import { Input, InputField } from "@/components/ui/input";
+import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
+import { AlertCircleIcon, ChevronDownIcon } from "@/components/ui/icon";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
@@ -9,18 +8,32 @@ import { useCallback, useState } from "react";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarDesaQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarAgamaQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
 import _ from "lodash";
+import { Calendar } from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PersonSchema } from "@/features/schema-resolver/zod-schema";
+import { z } from "zod";
+import { Agama, Person, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 
 const RegisterForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [show, setShow] = useState(false);
+  const [selectedKeyGender, setSelectedKeyGender] = useState<string|null>(null); 
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
   const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
-  const [queryPropinsiParams, setQueryPropinsiParams] = useState<IQueryParamFilters>({
+  const {control, getValues, setValue, resetField, handleSubmit} = useForm<Person>({
+    defaultValues: {id: null,},
+    resolver: zodResolver(PersonSchema),
+  });
+
+  const [queryPropinsiParams] = useState<IQueryParamFilters>({
     is_paging: false, 
     fields_sorter: [
       {
@@ -90,137 +103,161 @@ const RegisterForm = () => {
     ],
   });
 
+  const { data: agamas } = useGetDaftarAgamaQuery({
+    is_paging: false, 
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
+  const { data: genders } = useGetDaftarGenderQuery({
+    is_paging: false, 
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
+
   const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
-  const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi == null ? true:false});
+  const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: getValues('alamat.propinsi') ? true:false});
   const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
   const { data: desas } = useGetDaftarDesaQuery(queryDesaParams, {skip: selectedKeyKecamatan == null ? true:false});
 
-  const handlePropinsiChange = useCallback(
-    (val: string) => {
-      setSelectedKeyPropinsi(val);
-      resetKabupaten();
-      setQueryKabupatenParams(
-        prev => {
-          let tmp = _.cloneDeep(prev);
-          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
-          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
-                                              
-          if(found == -1) {
-            fieldsFilter?.push({
-                field_name: 'propinsi_id',
-                value: val
-              });
-          }
-          else {
-            fieldsFilter?.splice(found, 1, {
-              field_name: 'propinsi_id',
-              value: val
-            })
-          }
-          
-          tmp.fields_filter = fieldsFilter;             
-          return tmp;
-        }
-      );
+  const handleChangeInputSelector = useCallback(
+    (jenis: string, nilai: string) => {
+      switch (jenis) {
+        case "agama":
+          let tmpAgama = _.find(agamas, function(agama) {
+            return agama.id == nilai;
+          }) as Agama;
+
+          setValue("agama", tmpAgama);
+          break;   
+        case "gender":
+          setSelectedKeyGender(nilai);
+          break;  
+        case "propinsi":
+          let tmpPropinsi = _.find(propinsis, function(propinsi) {
+            return propinsi.id == nilai;
+          }) as Propinsi;
+
+          setValue("alamat.propinsi", tmpPropinsi);
+          // resetData("kabupaten");
+          setQueryKabupatenParams(
+            prev => {
+              let tmp = _.cloneDeep(prev);
+              let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+              let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
+                                                  
+              if(found == -1) {
+                fieldsFilter?.push({
+                    field_name: 'propinsi_id',
+                    value: nilai
+                  });
+              }
+              else {
+                fieldsFilter?.splice(found, 1, {
+                  field_name: 'propinsi_id',
+                  value: nilai
+                })
+              }
+              
+              tmp.fields_filter = fieldsFilter;             
+              return tmp;
+            }
+          );
+          break;
+        case "kabupaten":
+          setSelectedKeyKabupaten(nilai);
+          resetData("kecamatan");
+          setQueryKecamatanParams(
+            prev => {
+              let tmp = _.cloneDeep(prev);
+              let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+              let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kabupaten_id'}) as number;     
+                                                  
+              if(found == -1) {
+                fieldsFilter?.push({
+                    field_name: 'kabupaten_id',
+                    value: nilai
+                  });
+              }
+              else {
+                fieldsFilter?.splice(found, 1, {
+                  field_name: 'kabupaten_id',
+                  value: nilai
+                })
+              }
+              
+              tmp.fields_filter = fieldsFilter;             
+              return tmp;
+            }
+          );
+          break;
+        case "kecamatan":
+          setSelectedKeyKecamatan(nilai);
+          resetData("kelurahan");
+          setQueryDesaParams(
+            prev => {
+              let tmp = _.cloneDeep(prev);
+              let fieldsFilter = _.cloneDeep(tmp.fields_filter);
+              let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kecamatan_id'}) as number;     
+                                                  
+              if(found == -1) {
+                fieldsFilter?.push({
+                    field_name: 'kecamatan_id',
+                    value: nilai
+                  });
+              }
+              else {
+                fieldsFilter?.splice(found, 1, {
+                  field_name: 'kecamatan_id',
+                  value: nilai
+                })
+              }
+              
+              tmp.fields_filter = fieldsFilter;             
+              return tmp;
+            }
+          );
+          break;           
+        case "kelurahan":
+          setSelectedKeyDesa(nilai);
+          break; 
+        default:
+          break;
+      }
     },
     []
   );
 
-  const handleKabupatenChange = useCallback(
-    (val: string) => {
-      setSelectedKeyKabupaten(val);
-      resetKecamatan();
-      setQueryKecamatanParams(
-        prev => {
-          let tmp = _.cloneDeep(prev);
-          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
-          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kabupaten_id'}) as number;     
-                                              
-          if(found == -1) {
-            fieldsFilter?.push({
-                field_name: 'kabupaten_id',
-                value: val
-              });
-          }
-          else {
-            fieldsFilter?.splice(found, 1, {
-              field_name: 'kabupaten_id',
-              value: val
-            })
-          }
-          
-          tmp.fields_filter = fieldsFilter;             
-          return tmp;
-        }
-      );
+  const resetData = useCallback(
+    (jenis: string) => {
+      switch (jenis) {
+        case "kabupaten":
+          // resetField("alamat.kabupaten");
+          setSelectedKeyKabupaten(null);
+          resetData("kecamatan");
+          break;
+        case "kecamatan":
+          setSelectedKeyKecamatan(null);
+          resetData("kelurahan");
+          break;
+        case "kelurahan":
+          setSelectedKeyDesa(null);
+          break;
+        default:
+          break;
+      }      
     },
     []
   );
-
-  const handleKecamatanChange = useCallback(
-    (val: string) => {
-      setSelectedKeyKecamatan(val);
-      resetDesa();
-      setQueryDesaParams(
-        prev => {
-          let tmp = _.cloneDeep(prev);
-          let fieldsFilter = _.cloneDeep(tmp.fields_filter);
-          let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'kecamatan_id'}) as number;     
-                                              
-          if(found == -1) {
-            fieldsFilter?.push({
-                field_name: 'kecamatan_id',
-                value: val
-              });
-          }
-          else {
-            fieldsFilter?.splice(found, 1, {
-              field_name: 'kecamatan_id',
-              value: val
-            })
-          }
-          
-          tmp.fields_filter = fieldsFilter;             
-          return tmp;
-        }
-      );
-    },
-    []
-  );
-
-  const handleDesaChange = useCallback(
-    (val: string) => {
-      setSelectedKeyDesa(val);
-    },
-    []
-  );
-
-  const resetKabupaten = useCallback(
-    () => {
-      // resetField("alamat.kabupaten");
-      setSelectedKeyKabupaten(null);
-      resetKecamatan();
-    },
-    []
-  );
-
-  const resetKecamatan = useCallback(
-    () => {
-      // resetField("alamat.kabupaten");
-      setSelectedKeyKecamatan(null);
-      resetDesa();
-    },
-    []
-  );
-
-  const resetDesa = useCallback(
-    () => {
-      // resetField("alamat.kabupaten");
-      setSelectedKeyDesa(null);
-    },
-    []
-  );
-  
 
   const showDatepicker = () => {
     setShow(true);
@@ -231,26 +268,52 @@ const RegisterForm = () => {
     setTanggalLahir(tanggal);
   };
 
+  const onSubmit: SubmitHandler<Person> = async (data) => {
+    console.log(data);
+  };
+
+  const onError: SubmitErrorHandler<Person> = async (err) => {
+    console.log('error', err);
+  };
+
   return (
     <VStack className="gap-1 pb-8">
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Nama</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="nama lengkap"
+      <Controller
+        control={control}
+        name="nama"
+        render={(
+          { 
+            field: { onChange, value },
+            fieldState: { error }
+          }) => (
+          <FormControl
+            isInvalid={error ? true : false}
             size="md"
-            className="py-1"
-          />
-        </Input>
-      </FormControl>
+            isDisabled={false}
+            isReadOnly={false}
+            isRequired={true}
+          >
+            <FormControlLabel>
+              <FormControlLabelText className="font-bold">Nama</FormControlLabelText>
+            </FormControlLabel>
+            <Input className="my-1">
+              <InputField
+                placeholder="nama sesuai ktp ..."
+                size="md"
+                className="py-1"
+                value={value ? value : undefined}
+                onChangeText={onChange}
+              />
+            </Input>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>
+                {error?.message}
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
+        )}
+      />
       <FormControl
         isInvalid={false}
         size="md"
@@ -268,100 +331,229 @@ const RegisterForm = () => {
           </SelectTrigger>
         </Select>
       </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">NIK</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="nik sesuai ktp"
-            size="md"
-            className="py-1"
-          />
-        </Input>
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Nomor Hp</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="isi dengan nomer hp"
-            size="md"
-            className="py-1"
-          />
-        </Input>
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Agama</FormControlLabelText>
-        </FormControlLabel>
-        <Select>
-          <SelectTrigger variant="outline" size="md" className="flex justify-between">
-            <SelectInput placeholder="Select option" className="py-1"/>
-            <SelectIcon className="mr-3" as={ChevronDownIcon} />
-          </SelectTrigger>
-        </Select>
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Provinsi</FormControlLabelText>
-        </FormControlLabel>
-        <Select
-          selectedValue={selectedKeyPropinsi}
-          onValueChange={handlePropinsiChange}
+      <Controller
+        control={control}
+        name="nik"
+        render={
+          ({ 
+            field: { onChange, value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={true}
+            >
+              <FormControlLabel>
+                <FormControlLabelText className="font-bold">Nik</FormControlLabelText>
+              </FormControlLabel>
+              <Input className="my-1">
+                <InputField
+                  placeholder="nik sesuai ktp ..."
+                  size="md"
+                  className="py-1"
+                  value={value ? value : undefined}
+                  onChangeText={onChange}
+                />
+              </Input>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  {error?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+          )
+        }
+      /> 
+      <Controller
+        control={control}
+        name="kontak.email"
+        render={
+          ({ 
+            field: { onChange, value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={true}
+            >
+              <FormControlLabel>
+                <FormControlLabelText className="font-bold">E-mail</FormControlLabelText>
+              </FormControlLabel>
+              <Input className="my-1">
+                <InputField
+                  placeholder="Email ..."
+                  size="md"
+                  className="py-1"
+                  value={value ? value : undefined}
+                  onChangeText={onChange}
+                />
+              </Input>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  {error?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+          )
+        }
+      />  
+      <Controller
+        control={control}
+        name="kontak.no_hp"
+        render={
+          ({ 
+            field: { onChange, value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={true}
+            >
+              <FormControlLabel>
+                <FormControlLabelText className="font-bold">Nomor Hp</FormControlLabelText>
+              </FormControlLabel>
+              <Input className="my-1">
+                <InputField
+                  placeholder="Nomor hp ..."
+                  size="md"
+                  className="py-1"
+                  value={value ? value : undefined}
+                  onChangeText={onChange}
+                />
+              </Input>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  {error?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+          )
+        }
+      />
+      <Controller
+        control={control}
+        name="agama"
+        render={
+          ({ 
+            field: { value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={true}
+            >
+              <FormControlLabel>
+                <FormControlLabelText className="font-bold">Agama</FormControlLabelText>
+              </FormControlLabel>
+              <Select
+                selectedValue={value ? value.id : undefined}
+                onValueChange={(val) => handleChangeInputSelector('agama', val)}
+              >
+                <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                  <SelectInput placeholder="Select option" className="py-1"/>
+                  <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                </SelectTrigger>
+                <SelectPortal >
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <SelectScrollView className="max-h-96">
+                    {
+                      agamas != undefined ? (
+                        agamas.map((agama) => (
+                          <SelectItem 
+                            key={agama.id} 
+                            label={agama.nama} 
+                            value={agama.id} 
+                          /> 
+                        ))
+                      ):null
+                    }
+                    </SelectScrollView>
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
+            </FormControl>
+          )
+        }
+      />  
+      <Controller
+        control={control}
+        name="alamat.propinsi"
+        render={
+          ({ 
+            field: { value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={true}
+            >
+              <FormControlLabel>
+                <FormControlLabelText className="font-bold">Provinsi</FormControlLabelText>
+              </FormControlLabel>
+              <Select
+                selectedValue={value ? value.id : undefined}
+                onValueChange={(val) => handleChangeInputSelector('propinsi', val)}
+              >
+                <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                  <SelectInput placeholder="Select option" className="py-1"/>
+                  <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                </SelectTrigger>
+                <SelectPortal >
+                  <SelectBackdrop />
+                  <SelectContent>
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <SelectScrollView className="max-h-96">
+                    {
+                      propinsis != undefined ? (
+                        propinsis.map((propinsi) => (
+                          <SelectItem 
+                            key={propinsi.id} 
+                            label={propinsi.nama} 
+                            value={propinsi.id} 
+                          /> 
+                        ))
+                      ):null
+                    }
+                    </SelectScrollView>
+                  </SelectContent>
+                </SelectPortal>
+              </Select>
+            </FormControl>
+          )
+        }
+      />   
+      <Button onPress={handleSubmit(onSubmit, onError)}>
+        <ButtonText 
+          size="md" 
+          variant="solid"
         >
-          <SelectTrigger variant="outline" size="md" className="flex justify-between">
-            <SelectInput placeholder="Select option" className="py-1"/>
-            <SelectIcon className="mr-3" as={ChevronDownIcon} />
-          </SelectTrigger>
-          <SelectPortal >
-            <SelectBackdrop />
-            <SelectContent>
-              <SelectDragIndicatorWrapper>
-                <SelectDragIndicator />
-              </SelectDragIndicatorWrapper>
-              <SelectScrollView className="max-h-96">
-              {
-                propinsis != undefined ? (
-                  propinsis.map((propinsi) => (
-                    <SelectItem 
-                      key={propinsi.id} 
-                      label={propinsi.nama} 
-                      value={propinsi.id} 
-                    /> 
-                  ))
-                ):null
-              }
-              </SelectScrollView>
-            </SelectContent>
-          </SelectPortal>
-        </Select>
-      </FormControl>
+          Simpan
+        </ButtonText>
+      </Button>
       <FormControl
         isInvalid={false}
         size="md"
@@ -375,7 +567,7 @@ const RegisterForm = () => {
         <Select 
           selectedValue={selectedKeyKabupaten}
           isDisabled={selectedKeyPropinsi ? false : true}
-          onValueChange={handleKabupatenChange}
+          onValueChange={(val) => handleChangeInputSelector('kabupaten', val)}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -418,7 +610,7 @@ const RegisterForm = () => {
         <Select
           selectedValue={selectedKeyKecamatan}
           isDisabled={selectedKeyKabupaten ? false : true}
-          onValueChange={handleKecamatanChange}
+          onValueChange={(val) => handleChangeInputSelector('kecamatan', val)}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
             <SelectInput placeholder="Select option" className="py-1"/>
@@ -461,10 +653,10 @@ const RegisterForm = () => {
         <Select
           selectedValue={selectedKeyDesa}
           isDisabled={selectedKeyKecamatan ? false : true}
-          onValueChange={handleDesaChange}
+          onValueChange={(val) => handleChangeInputSelector('kelurahan', val)}
         >
           <SelectTrigger variant="outline" size="md" className="flex justify-between">
-            <SelectInput placeholder="Select option" className="py-1"/>
+            <SelectInput placeholder="Kelurahan ..." className="py-1"/>
             <SelectIcon className="mr-3" as={ChevronDownIcon} />
           </SelectTrigger>
           <SelectPortal >
@@ -507,7 +699,7 @@ const RegisterForm = () => {
           isInvalid={false}
           isDisabled={false}
         >
-          <TextareaInput placeholder="detail alamat..." />
+          <TextareaInput placeholder="detail alamat ..." />
         </Textarea>
       </FormControl>
       <FormControl
@@ -522,86 +714,122 @@ const RegisterForm = () => {
         </FormControlLabel>
         <Input className="my-1">
           <InputField
-            placeholder="Kode pos..."
+            placeholder="Kode pos ..."
             size="md"
             className="py-1"
           />
         </Input>
       </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Tanggal Lahir</FormControlLabelText>
-        </FormControlLabel>
-        <Button onPress={showDatepicker}>
-          <ButtonText>Tanggal Lahir</ButtonText>
-        </Button>
-        {show && (
-        <DateTimePicker        
-          mode="single"
-          date={tanggalLahir}
-          onChange={(params) => onChangeTanggalLahir(params.date)}
-        />
-        )}
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Jenis Kelamin</FormControlLabelText>
-        </FormControlLabel>
-        <Select>
-          <SelectTrigger variant="outline" size="md" className="flex justify-between">
-            <SelectInput placeholder="Select option" className="py-1"/>
-            <SelectIcon className="mr-3" as={ChevronDownIcon} />
-          </SelectTrigger>
-        </Select>
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Berat Badan</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="Berat badan..."
-            size="md"
-            className="py-1"
+      <HStack className="gap-2">
+        <FormControl
+          isInvalid={false}
+          size="md"
+          isDisabled={false}
+          isReadOnly={false}
+          isRequired={false}
+          className="grow"
+        >
+          <FormControlLabel>
+            <FormControlLabelText className="font-bold">Tanggal Lahir</FormControlLabelText>
+          </FormControlLabel>
+          <Input isDisabled={true}>
+            <InputField placeholder="d-m-yyyy" className="py-1"/>          
+            <InputSlot className="px-3">
+              <InputIcon as={Calendar} color="black"/>
+            </InputSlot>
+          </Input>
+          {show && (
+          <DateTimePicker        
+            mode="single"
+            date={tanggalLahir}
+            onChange={(params) => onChangeTanggalLahir(params.date)}
           />
-        </Input>
-      </FormControl>
-      <FormControl
-        isInvalid={false}
-        size="md"
-        isDisabled={false}
-        isReadOnly={false}
-        isRequired={false}
-      >
-        <FormControlLabel>
-          <FormControlLabelText className="font-bold">Tinggi Badan</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="Kode pos..."
-            size="md"
-            className="py-1"
-          />
-        </Input>
-      </FormControl>
+          )}
+        </FormControl>
+        <FormControl
+          isInvalid={false}
+          size="md"
+          isDisabled={false}
+          isReadOnly={false}
+          isRequired={false}
+          className="w-1/2"
+        >
+          <FormControlLabel>
+            <FormControlLabelText className="font-bold">Jenis Kelamin</FormControlLabelText>
+          </FormControlLabel>
+          <Select
+            selectedValue={selectedKeyGender}
+            onValueChange={(val) => handleChangeInputSelector('gender', val)}
+          >
+            <SelectTrigger variant="outline" size="md" className="flex justify-between">
+              <SelectInput placeholder="Kelamin ..." className="py-1"/>
+              <SelectIcon className="mr-3" as={ChevronDownIcon} />
+            </SelectTrigger>
+            <SelectPortal >
+              <SelectBackdrop />
+              <SelectContent>
+                <SelectDragIndicatorWrapper>
+                  <SelectDragIndicator />
+                </SelectDragIndicatorWrapper>
+                <SelectScrollView className="max-h-96">
+                {
+                  genders != undefined ? (
+                    genders.map((gender) => (
+                      <SelectItem 
+                        key={gender.id} 
+                        label={gender.nama} 
+                        value={gender.id} 
+                        className="text-sm"
+                      /> 
+                    ))
+                  ):null
+                }
+                </SelectScrollView>
+              </SelectContent>
+            </SelectPortal>
+          </Select>
+        </FormControl>  
+      </HStack>    
+      <HStack className="gap-2">
+        <FormControl
+          isInvalid={false}
+          size="md"
+          isDisabled={false}
+          isReadOnly={false}
+          isRequired={false}
+          className="grow"
+        >
+          <FormControlLabel>
+            <FormControlLabelText className="font-bold">Berat Badan (kg)</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1">
+            <InputField
+              placeholder="Berat badan ..."
+              size="md"
+              className="py-1"
+            />
+          </Input>
+        </FormControl>
+        <FormControl
+          isInvalid={false}
+          size="md"
+          isDisabled={false}
+          isReadOnly={false}
+          isRequired={false}
+          className="w-1/2"
+        >
+          <FormControlLabel>
+            <FormControlLabelText className="font-bold">Tinggi Badan (m)</FormControlLabelText>
+          </FormControlLabel>
+          <Input className="my-1">
+            <InputField
+              placeholder="Tinggi badan ..."
+              size="md"
+              className="py-1"
+            />
+          </Input>
+        </FormControl>
+      </HStack>
     </VStack>
   )
 }
