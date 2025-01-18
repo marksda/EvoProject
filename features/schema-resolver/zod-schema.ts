@@ -49,11 +49,40 @@ export const KabupatenSchema = z.object({
   })
 });
 
-export const AlamatSchema = z.object({
-  propinsi: PropinsiSchema.pick({id: true, nama: true}),
+export const KecamatanSchema = z.object({
+  id: z.string({
+    required_error: "id harus diisi",
+    invalid_type_error: "id harus abjad",
+  })
+  .length(7, 'panjang id harus 7 digit')
+  .regex(new RegExp(/^[0-9]*$/), 'id hanya digital 7 digit tanpa sepasi'),
+  nama: z.string({
+    required_error: "Nama kecamatan harus diisi",
+    invalid_type_error: "Nama kecamatan harus abjad",
+  })
 });
 
-export const  PersonSchema = z.object({
+export const DesaSchema = z.object({
+  id: z.string({
+    required_error: "id harus diisi",
+    invalid_type_error: "id harus abjad",
+  })
+  .length(10, 'panjang id harus 10 digit')
+  .regex(new RegExp(/^[0-9]*$/), 'id hanya digital 10 digit tanpa sepasi'),
+  nama: z.string({
+    required_error: "Nama desa harus diisi",
+    invalid_type_error: "Nama desa harus abjad",
+  })
+});
+
+export const AlamatSchema = z.object({
+  propinsi: PropinsiSchema.pick({id: true, nama: true}),
+  kabupaten: KabupatenSchema.pick({id: true, nama: true}),
+  kecamatan: KecamatanSchema.pick({id: true, nama: true}),
+  desa: DesaSchema.pick({id: true, nama: true}),
+});
+
+export const PersonSchema = z.object({
   id: z.number().nullable(),
   nama: z.string({
     required_error: "Nama harus diisi",
@@ -65,5 +94,5 @@ export const  PersonSchema = z.object({
   }).regex(new RegExp(/^[0-9]*$/), 'nik hanya berisi deretan angka tanpa spasi'),
   kontak: KontakSchema.pick({email: true, no_hp: true}),
   agama: AgamaSchema.pick({id: true, nama: true}),
-  alamat: AlamatSchema.pick({propinsi: true})
+  alamat: AlamatSchema.pick({propinsi: true, kabupaten: true, kecamatan: true, desa: true})
 });

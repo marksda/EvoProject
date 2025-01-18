@@ -10,7 +10,7 @@ import { IKabupaten } from "@/features/entities/kabupaten";
 import { IKecamatan } from "@/features/entities/kecamatan";
 import { IDesa } from "@/features/entities/desa";
 import { IGender } from "@/features/entities/gender";
-import { Agama, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
+import { Agama, Desa, Kabupaten, Kecamatan, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 
 const urlApi: string = 'http://192.168.1.12:8000/api';
 
@@ -123,15 +123,15 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Propinsi']
       }),
-      getDaftarKabupaten: builder.query<IKabupaten[], IQueryParamFilters>({
+      getDaftarKabupaten: builder.query<Kabupaten[], IQueryParamFilters>({
         query: (queryParams) => `/kabupatens?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Kabupaten']
       }),
-      getDaftarKecamatan: builder.query<IKecamatan[], IQueryParamFilters>({
+      getDaftarKecamatan: builder.query<Kecamatan[], IQueryParamFilters>({
         query: (queryParams) => `/kecamatans?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Kecamatan']
       }),
-      getDaftarDesa: builder.query<IDesa[], IQueryParamFilters>({
+      getDaftarDesa: builder.query<Desa[], IQueryParamFilters>({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
       }),
