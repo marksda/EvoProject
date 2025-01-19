@@ -6,13 +6,9 @@ import { Mutex } from "async-mutex";
 import { resetToken, setToken } from "./fitness-redux-token-slice.service";
 import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { IKabupaten } from "@/features/entities/kabupaten";
-import { IKecamatan } from "@/features/entities/kecamatan";
-import { IDesa } from "@/features/entities/desa";
-import { IGender } from "@/features/entities/gender";
-import { Agama, Desa, Kabupaten, Kecamatan, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
+import { Agama, Desa, Gender, Kabupaten, Kecamatan, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 
-const urlApi: string = 'http://192.168.1.12:8000/api';
+const urlApi: string = 'http://36.85.27.242/api';
 
 export class TokenAPI {
     static getToken = async (credential: ICredential) => {
@@ -115,7 +111,7 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/agamas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Agama']
       }),
-      getDaftarGender: builder.query<IGender[], IQueryParamFilters>({
+      getDaftarGender: builder.query<Gender[], IQueryParamFilters>({
         query: (queryParams) => `/genders?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Gender']
       }),

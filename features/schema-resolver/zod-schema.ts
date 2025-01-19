@@ -13,6 +13,19 @@ export const AgamaSchema = z.object({
   })
 });
 
+export const GenderSchema = z.object({
+  id: z.string({
+    required_error: "id harus diisi",
+    invalid_type_error: "id harus abjad",
+  })
+  .length(2, 'panjang id harus 2 digit')
+  .regex(new RegExp(/^[0-9]*$/), 'id hanya digital 2 digit tanpa sepasi'),
+  nama: z.string({
+    required_error: "Nama harus diisi",
+    invalid_type_error: "nama harus abjad",
+  })
+});
+
 export const KontakSchema = z.object({
   email: z.string({
     required_error: "email harus diisi"
@@ -80,19 +93,25 @@ export const AlamatSchema = z.object({
   kabupaten: KabupatenSchema.pick({id: true, nama: true}),
   kecamatan: KecamatanSchema.pick({id: true, nama: true}),
   desa: DesaSchema.pick({id: true, nama: true}),
+  detail: z.string(),
+  kodepos: z.string()
+  .length(5, 'panjang id harus 5 digit')
+  .regex(new RegExp(/^[0-9]*$/), 'id hanya digital 2 digit tanpa sepasi')
+  .nullable(),
 });
 
 export const PersonSchema = z.object({
   id: z.number().nullable(),
-  nama: z.string({
-    required_error: "Nama harus diisi",
-    invalid_type_error: "nama harus abjad",
-  }).min(3, { message: "nama minimal 3 abjad"}),
   nik: z.string({
     required_error: "nik harus diisi",
     invalid_type_error: "nama harus abjad"
   }).regex(new RegExp(/^[0-9]*$/), 'nik hanya berisi deretan angka tanpa spasi'),
+  nama: z.string({
+    required_error: "Nama harus diisi",
+    invalid_type_error: "nama harus abjad",
+  }).min(3, { message: "nama minimal 3 abjad"}),
+  tanggal_lahir: z.date(),
   kontak: KontakSchema.pick({email: true, no_hp: true}),
   agama: AgamaSchema.pick({id: true, nama: true}),
-  alamat: AlamatSchema.pick({propinsi: true, kabupaten: true, kecamatan: true, desa: true})
+  alamat: AlamatSchema.pick({propinsi: true, kabupaten: true, kecamatan: true, desa: true, detail: true, kodepos: true})
 });
