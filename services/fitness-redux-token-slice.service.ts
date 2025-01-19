@@ -1,5 +1,5 @@
 import { ICredential } from "@/features/entities/fitness/credential";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit/react";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TokenAPI } from "./fitness-api-rtkquery-service";
 import { IToken } from "@/features/entities/fitness/token";
 

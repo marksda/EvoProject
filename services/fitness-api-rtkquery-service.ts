@@ -8,7 +8,7 @@ import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { Agama, Desa, Gender, Kabupaten, Kecamatan, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 
-const urlApi: string = 'http://36.85.27.242/api';
+const urlApi: string = 'http://192.168.1.12/api';
 
 export class TokenAPI {
     static getToken = async (credential: ICredential) => {
@@ -19,7 +19,7 @@ export class TokenAPI {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
-                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache, private'
                 },
                 body: JSON.stringify(credential)
             }
@@ -48,10 +48,14 @@ const baseQuery = fetchBaseQuery({
     const accessToken = (getState() as RootState).persisted.token;
     if(accessToken != null){
       headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
+      headers.set("Cache-Control", 'no-cache, private');
+      headers.set("Accept", 'application/json');
       headers.set("authorization", `Bearer ${accessToken}`);
     }        
     else{
       headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
+      headers.set("Cache-Control", 'no-cache, private');
+      headers.set("Accept", 'application/json');
     }    
     
     return headers;
