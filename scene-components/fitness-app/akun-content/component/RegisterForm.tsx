@@ -16,7 +16,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PersonSchema } from "@/features/schema-resolver/zod-schema";
-import { Agama, Desa, Kabupaten, Kecamatan, Person, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
+import { Agama, Desa, Gender, Kabupaten, Kecamatan, Person, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
@@ -25,14 +25,15 @@ import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";
 const RegisterForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
-  const [selectedKeyGender, setSelectedKeyGender] = useState<string|null>(null); 
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
   const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
-  const {control, setValue, resetField, handleSubmit} = useForm<Person>({
-    defaultValues: {id: null,},
+  const {control, resetField, handleSubmit} = useForm<Person>({
+    defaultValues: {
+      id: null, 
+    },
     resolver: zodResolver(PersonSchema),
   });
 
@@ -134,23 +135,8 @@ const RegisterForm = () => {
   const handleChangeInputSelector = useCallback(
     (jenis: string, nilai: string) => {
       switch (jenis) {
-        case "agama":
-          let tmpAgama = _.find(agamas, function(agama) {
-            return agama.id == nilai;
-          }) as Agama;
-
-          setValue("agama", tmpAgama);
-          break;   
-        case "gender":
-          setSelectedKeyGender(nilai);
-          break;  
         case "propinsi":
-          let tmpPropinsi = _.find(propinsis, function(propinsi) {
-            return propinsi.id == nilai;
-          }) as Propinsi;
-          
-          setSelectedKeyPropinsi(nilai);
-          setValue("alamat.propinsi", tmpPropinsi);            
+          setSelectedKeyPropinsi(nilai);           
           resetData("kabupaten");        
           setQueryKabupatenParams(
             prev => {
@@ -177,11 +163,6 @@ const RegisterForm = () => {
           );          
           break;
         case "kabupaten":
-          let tmpKabupaten = _.find(kabupatens, function(kabupaten) {
-            return kabupaten.id == nilai;
-          }) as Kabupaten;
-
-          setValue("alamat.kabupaten", tmpKabupaten);
           setSelectedKeyKabupaten(nilai);
           resetData("kecamatan");
           setQueryKecamatanParams(
@@ -209,11 +190,6 @@ const RegisterForm = () => {
           );
           break;
         case "kecamatan":
-          let tmpKecamatan = _.find(kecamatans, function(kecamatan) {
-            return kecamatan.id == nilai;
-          }) as Kecamatan;
-
-          setValue("alamat.kecamatan", tmpKecamatan);
           setSelectedKeyKecamatan(nilai);
           resetData("desa");
           setQueryDesaParams(
@@ -241,11 +217,6 @@ const RegisterForm = () => {
           );
           break;           
         case "desa":
-          let tmpDesa = _.find(desas, function(desa) {
-            return desa.id == nilai;
-          }) as Desa;
-
-          setValue("alamat.desa", tmpDesa);
           setSelectedKeyDesa(nilai);
           break; 
         default:
@@ -398,8 +369,8 @@ const RegisterForm = () => {
           name="agama"
           render={
             ({ 
-              field: { value },
-              fieldState: { error }
+              field: { value, onChange },
+              fieldState: { error,  }
             }) => (
               <FormControl
                 isInvalid={error ? true : false}
@@ -413,7 +384,13 @@ const RegisterForm = () => {
                 </FormControlLabel>
                 <Select
                   selectedValue={value ? value.id : undefined}
-                  onValueChange={(val) => handleChangeInputSelector('agama', val)}
+                  onValueChange={(val) => {
+                    let tmpAgama = _.find(agamas, function(agama) {
+                      return agama.id == val;
+                    }) as Agama;
+                    onChange(tmpAgama);
+                    // handleChangeInputSelector('agama', val);
+                  }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
                     <SelectInput placeholder="Select option" className="py-1"/>
@@ -441,6 +418,12 @@ const RegisterForm = () => {
                     </SelectContent>
                   </SelectPortal>
                 </Select>
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertCircleIcon} />
+                  <FormControlErrorText>
+                    harus dipilih
+                  </FormControlErrorText>
+                </FormControlError>
               </FormControl>
             )
           }
@@ -452,7 +435,7 @@ const RegisterForm = () => {
             isDisabled={false}
             isReadOnly={false}
             isRequired={false}
-            className="grow"
+            className="w-1/2"
           >
             <FormControlLabel>
               <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
@@ -470,89 +453,150 @@ const RegisterForm = () => {
               setActionsheetVisible={setShowActionSheetTanggalLahir}
             />
           </FormControl>
-          <FormControl
-            isInvalid={false}
-            size="md"
-            isDisabled={false}
-            isReadOnly={false}
-            isRequired={false}
-            className="w-1/2"
-          >
-            <FormControlLabel>
-              <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
-            </FormControlLabel>
-            <Select
-              selectedValue={selectedKeyGender}
-              onValueChange={(val) => handleChangeInputSelector('gender', val)}
-            >
-              <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                <SelectInput placeholder="Kelamin ..." className="py-1"/>
-                <SelectIcon className="mr-3" as={ChevronDownIcon} />
-              </SelectTrigger>
-              <SelectPortal >
-                <SelectBackdrop />
-                <SelectContent>
-                  <SelectDragIndicatorWrapper>
-                    <SelectDragIndicator />
-                  </SelectDragIndicatorWrapper>
-                  <SelectScrollView className="max-h-96">
-                  {
-                    genders != undefined ? (
-                      genders.map((gender) => (
-                        <SelectItem 
-                          key={gender.id} 
-                          label={gender.nama} 
-                          value={gender.id} 
-                          className="text-sm"
-                        /> 
-                      ))
-                    ):null
-                  }
-                  </SelectScrollView>
-                </SelectContent>
-              </SelectPortal>
-            </Select>
-          </FormControl>  
+          <Controller
+            control={control}
+            name="gender"
+            render={
+              ({ 
+                field: { value, onChange },
+                fieldState: { error,  }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                  className="grow"
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
+                  </FormControlLabel>
+                  <Select
+                    selectedValue={value ? value.id : undefined}
+                    onValueChange={(val) => {
+                      let tmpGender = _.find(genders, function(gender) {
+                        return gender.id == val;
+                      }) as Gender;
+                      onChange(tmpGender);
+                    }}
+                  >
+                    <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                      <SelectInput placeholder="Jenis kelamin ..." className="py-1"/>
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal >
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectScrollView className="max-h-96">
+                        {
+                          genders != undefined ? (
+                            genders.map((gender) => (
+                              <SelectItem 
+                                key={gender.id} 
+                                label={gender.nama} 
+                                value={gender.id} 
+                                className="text-sm"
+                              /> 
+                            ))
+                          ):null
+                        }
+                        </SelectScrollView>
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      harus dipilih
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
         </HStack>
         <HStack className="gap-2 mt-1">
-          <FormControl
-            isInvalid={false}
-            size="md"
-            isDisabled={false}
-            isReadOnly={false}
-            isRequired={false}
-            className="grow"
-          >
-            <FormControlLabel>
-              <FormControlLabelText>Berat Badan (kg)</FormControlLabelText>
-            </FormControlLabel>
-            <Input className="my-1">
-              <InputField
-                placeholder="Berat badan ..."
-                size="md"
-                className="py-1"
-              />
-            </Input>
-          </FormControl>
-          <FormControl
-            isInvalid={false}
-            size="md"
-            isDisabled={false}
-            isReadOnly={false}
-            isRequired={false}
-            className="w-1/2"
-          >
-            <FormControlLabel>
-              <FormControlLabelText>Tinggi Badan (m)</FormControlLabelText>
-            </FormControlLabel>
-            <Input className="my-1">
-              <InputField
-                placeholder="Tinggi badan ..."
-                size="md"
-                className="py-1"
-              />
-            </Input>
-          </FormControl>
+          <Controller
+            control={control}
+            name="berat_badan"
+            render={
+              ({ 
+                field: { value, onChange },
+                fieldState: { error,  }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                  className="w-1/2"
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Berat Badan (kg)</FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="my-1">
+                    <InputField
+                      placeholder="Berat badan ..."
+                      inputMode="numeric"
+                      size="md"
+                      className="py-1"
+                      value={value ? value.toString() : undefined}
+                      onChangeText={(val) => onChange(Number(val))}
+                    />
+                  </Input>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
+          <Controller
+            control={control}
+            name="tinggi_badan"
+            render={
+              ({ 
+                field: { value, onChange },
+                fieldState: { error,  }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                  className="grow"
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Tinggi Badan (m)</FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="my-1">
+                    <InputField
+                      placeholder="Tinggi badan ..."
+                      size="md"
+                      className="py-1"
+                      value={value ? value.toString() : undefined}
+                      onChangeText={(val) => onChange(Number(val))}
+                    />
+                  </Input>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
         </HStack>
       </Card>
       <Card variant="elevated">
@@ -565,6 +609,7 @@ const RegisterForm = () => {
           name="alamat.propinsi"
           render={
             ({ 
+              field: { onChange},
               fieldState: { error }
             }) => (
               <FormControl
@@ -579,7 +624,13 @@ const RegisterForm = () => {
                 </FormControlLabel>
                 <Select
                   selectedValue={selectedKeyPropinsi}
-                  onValueChange={(val) => handleChangeInputSelector('propinsi', val)}
+                  onValueChange={(val) => {
+                    let tmpPropinsi = _.find(propinsis, function(propinsi) {
+                      return propinsi.id == val;
+                    }) as Propinsi; 
+                    onChange(tmpPropinsi);         
+                    handleChangeInputSelector('propinsi', val)
+                  }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
                     <SelectInput placeholder="Select option" className="py-1"/>
@@ -607,6 +658,12 @@ const RegisterForm = () => {
                     </SelectContent>
                   </SelectPortal>
                 </Select>
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertCircleIcon} />
+                  <FormControlErrorText>
+                    harus dipilih
+                  </FormControlErrorText>
+                </FormControlError>
               </FormControl>
             )
           }
@@ -616,6 +673,7 @@ const RegisterForm = () => {
           name="alamat.kabupaten"
           render={
             ({ 
+              field: { onChange},
               fieldState: { error }
             }) => (
               <FormControl
@@ -630,7 +688,13 @@ const RegisterForm = () => {
                 </FormControlLabel>
                 <Select 
                   selectedValue={selectedKeyKabupaten}
-                  onValueChange={(val) => handleChangeInputSelector('kabupaten', val)}
+                  onValueChange={(val) => {
+                    let tmpKabupaten = _.find(kabupatens, function(kabupaten) {
+                      return kabupaten.id == val;
+                    }) as Kabupaten; 
+                    onChange(tmpKabupaten);   
+                    handleChangeInputSelector('kabupaten', val);
+                  }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
                     <SelectInput placeholder="Select option" className="py-1"/>
@@ -662,7 +726,7 @@ const RegisterForm = () => {
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
                   <FormControlErrorText>
-                    {error?.message}
+                    harus dipilih
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
@@ -674,6 +738,7 @@ const RegisterForm = () => {
           name="alamat.kecamatan"
           render={
             ({ 
+              field: { onChange},
               fieldState: { error }
             }) => (
               <FormControl
@@ -688,7 +753,13 @@ const RegisterForm = () => {
                 </FormControlLabel>
                 <Select 
                   selectedValue={selectedKeyKecamatan}
-                  onValueChange={(val) => handleChangeInputSelector('kecamatan', val)}
+                  onValueChange={(val) => {
+                    let tmpKecamatan = _.find(kecamatans, function(kecamatan) {
+                      return kecamatan.id == val;
+                    }) as Kecamatan; 
+                    onChange(tmpKecamatan); 
+                    handleChangeInputSelector('kecamatan', val);
+                  }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
                     <SelectInput placeholder="Select option" className="py-1"/>
@@ -720,7 +791,7 @@ const RegisterForm = () => {
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
                   <FormControlErrorText>
-                    {error?.message}
+                    harus dipilih
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
@@ -732,6 +803,7 @@ const RegisterForm = () => {
           name="alamat.desa"
           render={
             ({ 
+              field: { onChange},
               fieldState: { error }
             }) => (
               <FormControl
@@ -746,7 +818,13 @@ const RegisterForm = () => {
                 </FormControlLabel>
                 <Select 
                   selectedValue={selectedKeyDesa}
-                  onValueChange={(val) => handleChangeInputSelector('desa', val)}
+                  onValueChange={(val) => {
+                    let tmpDesa = _.find(desas, function(desa) {
+                      return desa.id == val;
+                    }) as Desa; 
+                    onChange(tmpDesa); 
+                    handleChangeInputSelector('desa', val);
+                  }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
                     <SelectInput placeholder="Select option" className="py-1"/>
@@ -778,7 +856,7 @@ const RegisterForm = () => {
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
                   <FormControlErrorText>
-                    {error?.message}
+                    harus dipilih
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
@@ -795,7 +873,7 @@ const RegisterForm = () => {
               <FormControl
                 isInvalid={error ? true : false}
                 size="md"
-                isDisabled={ selectedKeyKecamatan ? false : true }
+                isDisabled={ selectedKeyDesa ? false : true }
                 isReadOnly={false}
                 isRequired={true}
               >
@@ -808,7 +886,7 @@ const RegisterForm = () => {
                   isInvalid={false}
                   isDisabled={false}
                 >
-                  <TextareaInput placeholder="jalan, komplek, nomer rumah, rt dan rw ..." />
+                  <TextareaInput placeholder="jalan, komplek, nomer rumah, rt dan rw ..." className="align-top"/>
                 </Textarea>
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
