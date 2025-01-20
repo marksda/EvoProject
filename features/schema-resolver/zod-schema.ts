@@ -82,7 +82,7 @@ export const AlamatSchema = z.object({
 });
 
 export const PersonSchema = z.object({
-  id: z.number().nullable(),
+  id: z.number().optional(),
   nik: z.string({required_error: "harus diisi", invalid_type_error: "nama harus abjad"}).length(16, 'panjang nik harus 16 digit').regex(new RegExp(/^[0-9]*$/), 'nik hanya berisi deretan angka tanpa spasi'),
   nama: z.string({required_error: "harus diisi", invalid_type_error: "nama harus abjad"}).min(3, { message: "nama minimal 3 abjad"}),
   tanggal_lahir: z.date(),
@@ -95,9 +95,18 @@ export const PersonSchema = z.object({
 });
 
 export const PatnerSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   nama: z.string(),
   npwp: z.string(),
   alamat: AlamatSchema.pick({propinsi: true, kabupaten: true, kecamatan: true, desa: true, detail: true, kodepos: true}),
-  pemilik: PersonSchema.pick({id: true, nik: true, nama: true})
+  person: PersonSchema.pick({id: true, nik: true, nama: true}),
+  status: z.boolean()
+});
+
+export const ClubSchema = z.object({
+  id: z.number().optional(),
+  nama: z.string(),
+  alamat: AlamatSchema.pick({propinsi: true, kabupaten: true, kecamatan: true, desa: true, detail: true, kodepos: true}),
+  patner: PatnerSchema.pick({id: true, nama: true}),
+  status: z.boolean()
 });

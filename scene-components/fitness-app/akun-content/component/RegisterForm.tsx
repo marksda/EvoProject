@@ -5,7 +5,6 @@ import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragI
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
 import { useCallback, useState } from "react";
-import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { useGetDaftarAgamaQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
@@ -31,9 +30,7 @@ const RegisterForm = () => {
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
   const {control, resetField, handleSubmit} = useForm<Person>({
-    defaultValues: {
-      id: null, 
-    },
+    defaultValues: {},
     resolver: zodResolver(PersonSchema),
   });
 
