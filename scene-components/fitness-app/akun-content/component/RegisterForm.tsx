@@ -630,7 +630,7 @@ const RegisterForm = () => {
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Select option" className="py-1"/>
+                    <SelectInput placeholder="Provinsi ..." className="py-1"/>
                     <SelectIcon className="mr-3" as={ChevronDownIcon} />
                   </SelectTrigger>
                   <SelectPortal >
