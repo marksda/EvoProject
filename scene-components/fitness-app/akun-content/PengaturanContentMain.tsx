@@ -25,36 +25,34 @@ const PengaturanContentMain = () => {
   };
 
   return (
-    <>
-      <ScrollView
-        className="p-4"
-      >
-      {token ? (<RegisterForm />) : (
-        <VStack space="md">
-          <AccordionBox 
-            title="Ubah Profile" 
-            variant="Kuning"
-            setActionPress={handleAcordionBoxPress}
-          />
-          <AccordionBox 
-            title="Ubah Kata Sandi" 
-            variant="Kuning"
-            setActionPress={handleAcordionBoxPress}
-          />
-          <AccordionBox 
-            title="Kartu Kredit" 
-            variant="Kuning"
-            setActionPress={handleAcordionBoxPress}
-          />
-          <AccordionBox 
-            title="Hapus Akun" 
-            variant="Merah"
-            setActionPress={handleAcordionBoxPress}
-          />
-        </VStack>
-      )}
-      </ScrollView>
-    </>
+    <ScrollView
+      className="p-2"
+    >
+    {token ? (<RegisterForm />) : (
+      <VStack space="md">
+        <AccordionBox 
+          title="Ubah Profile" 
+          variant="Kuning"
+          setActionPress={handleAcordionBoxPress}
+        />
+        <AccordionBox 
+          title="Ubah Kata Sandi" 
+          variant="Kuning"
+          setActionPress={handleAcordionBoxPress}
+        />
+        <AccordionBox 
+          title="Kartu Kredit" 
+          variant="Kuning"
+          setActionPress={handleAcordionBoxPress}
+        />
+        <AccordionBox 
+          title="Hapus Akun" 
+          variant="Merah"
+          setActionPress={handleAcordionBoxPress}
+        />
+      </VStack>
+    )}
+    </ScrollView>
   );
 }
 

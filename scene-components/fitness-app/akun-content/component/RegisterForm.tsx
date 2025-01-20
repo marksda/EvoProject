@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useCallback, useState } from "react";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarAgamaQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
 import _ from "lodash";
 import { Calendar } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
@@ -19,7 +19,8 @@ import { Agama, Desa, Gender, Kabupaten, Kecamatan, Person, Propinsi } from "@/f
 import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";
+import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";  
+import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 
 const RegisterForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
@@ -32,6 +33,16 @@ const RegisterForm = () => {
   const {control, resetField, handleSubmit} = useForm<Person>({
     defaultValues: {},
     resolver: zodResolver(PersonSchema),
+  });
+
+  const [queryClubParams] = useState<IQueryParamFilters>({
+    is_paging: false, 
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
   });
 
   const [queryPropinsiParams] = useState<IQueryParamFilters>({
@@ -124,6 +135,7 @@ const RegisterForm = () => {
     ],
   });
 
+  const { data: clubs } = useGetDaftarClubQuery(queryClubParams);
   const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
   const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi ? false:true});
   const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
@@ -266,7 +278,7 @@ const RegisterForm = () => {
 
   return (
     <VStack className="gap-2 pb-8">
-      <Card variant="elevated">
+      <Card variant="outline" className="bg-white">
         <Heading size="sm">
           Data diri
         </Heading>
@@ -356,9 +368,51 @@ const RegisterForm = () => {
           </FormControlLabel>
           <Select>
             <SelectTrigger variant="outline" size="md" className="flex justify-between">
-              <SelectInput placeholder="Select option" className="py-1"/>
+              <SelectInput placeholder="Pilih club ..." className="py-1"/>
               <SelectIcon className="mr-3" as={ChevronDownIcon} />
             </SelectTrigger>
+            <SelectPortal>
+              <SelectBackdrop />
+              <SelectContent  className="min-h-[300px]">  
+                <SelectDragIndicatorWrapper>
+                  <SelectDragIndicator />
+                </SelectDragIndicatorWrapper>
+                <Menu
+                  placement="bottom left"
+                  offset={-20}
+                  trigger={({ ...triggerProps }) => {
+                    return (
+                      <Button {...triggerProps}>
+                        <ButtonText>Pilih Area</ButtonText>
+                      </Button>
+                    )
+                  }}
+                >
+                  <MenuItem key="Add account" textValue="Add account">
+                    <MenuItemLabel size="sm">Add account</MenuItemLabel>
+                  </MenuItem>
+                  <MenuItem key="Community" textValue="Community">
+                    <MenuItemLabel size="sm">Community</MenuItemLabel>
+                  </MenuItem>
+                  <MenuItem key="Plugins" textValue="Plugins">
+                    <MenuItemLabel size="sm">Plugins</MenuItemLabel>
+                  </MenuItem>
+                </Menu>
+                <SelectScrollView>
+                {
+                  clubs != undefined ? (
+                    clubs.map((club) => (
+                      <SelectItem 
+                        key={club.id} 
+                        label={club.nama} 
+                        value={`${club.id}`} 
+                      /> 
+                    ))
+                  ):null
+                }
+                </SelectScrollView>
+              </SelectContent>
+            </SelectPortal >
           </Select>
         </FormControl>
         <Controller
@@ -596,7 +650,7 @@ const RegisterForm = () => {
           />
         </HStack>
       </Card>
-      <Card variant="elevated">
+      <Card variant="outline" className="bg-white">
         <Heading size="sm">
           Data alamat
         </Heading>
@@ -933,7 +987,7 @@ const RegisterForm = () => {
           }
         /> 
       </Card> 
-      <Card variant="elevated">
+      <Card variant="outline" className="bg-white">
         <Heading size="sm">
           Data kontak
         </Heading>
