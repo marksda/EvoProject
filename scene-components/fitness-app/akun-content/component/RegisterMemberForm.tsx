@@ -9,7 +9,6 @@ import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
 import _ from "lodash";
-import { Calendar } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
@@ -31,17 +30,15 @@ import { TouchableOpacity } from "react-native";
 import { Pressable } from "@/components/ui/pressable";
 
 const RegisterMemberForm = () => {
-  const [tanggalLahir, setTanggalLahir] = useState(null);
+  const [tanggalLahir, setTanggalLahir] = useState<Date|null>(null);
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
   const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
-  console.log(tanggalLahir);
-
-  const {control, resetField, handleSubmit} = useForm<Member>({
-    defaultValues: {id: null},
+  const {control, setValue, resetField, handleSubmit} = useForm<Member>({
+    defaultValues: {},
     resolver: zodResolver(MemberSchema),
   });
 
@@ -273,13 +270,13 @@ const RegisterMemberForm = () => {
     setShowActionSheetTanggalLahir(prev => !prev);
   };
 
-  const onChangeTanggalLahir = (tanggal: any) => {
-    // setShowActionSheetTanggalLahir(false);
+  const onChangeTanggalLahir = (tanggal: Date) => {
+    setValue("person.tanggal_lahir", dayjs(tanggal).format('YYYY-MM-DD'));
     setTanggalLahir(tanggal);
   };
 
   const onSubmit: SubmitHandler<Member> = async (data) => {
-    console.log(data);
+    console.log(JSON.stringify(data));
   };
 
   const onError: SubmitErrorHandler<Member> = async (err) => {
@@ -386,7 +383,11 @@ const RegisterMemberForm = () => {
               <Select
                 selectedValue={value ? value.nama : undefined}
                 onValueChange={(val) => {
-                  console.log(val);
+                  let tmpClub = _.find(clubs, function(club) {
+                    return club.id == Number(val);
+                  }) as Club;
+
+                  onChange(tmpClub);
                 }}
               >
                 <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -401,20 +402,24 @@ const RegisterMemberForm = () => {
                     </SelectDragIndicatorWrapper>
                     <SelectFlatList                      
                       data={clubs}
-                      renderItem={({item}) => (                        
-                        <TouchableOpacity onPress={() => onChange(item)}>
-                          <SelectItem 
-                              key={(item as Club).id} 
-                              label={(item as Club).nama} 
-                              value={(item as Club).id!.toString()} 
-                          />                           
-                        </TouchableOpacity>  
+                      renderItem={({item}) => (  
+                        <SelectItem 
+                          key={(item as Club).id} 
+                          label={(item as Club).nama} 
+                          value={(item as Club).id!.toString()} 
+                        />   
                       )}
                       keyExtractor={item => `${(item as Club).id}`}
                     />
                   </SelectContent>
                 </SelectPortal >
               </Select>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>
+                  harus dipilih
+                </FormControlErrorText>
+              </FormControlError>
             </FormControl>
           )}
         />        
@@ -482,27 +487,44 @@ const RegisterMemberForm = () => {
           }
         />  
         <HStack className="gap-2 mt-1">
-          <FormControl
-            isInvalid={false}
-            size="md"
-            isDisabled={false}
-            isReadOnly={false}
-            isRequired={false}
-            className="w-1/2"
-          >
-            <FormControlLabel>
-              <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
-            </FormControlLabel>
-            <Pressable onPress={showDatepicker} className="flex justify-between px-3 py-[5px] h-10 border border-gray-300 rounded-[3px]">
-              <Text className={tanggalLahir == null ? "text-gray-400": "text-black"}>{tanggalLahir == null ? 'Tanggal lahir ...' : dayjs(tanggalLahir).format('DD-MM-YYYY')}</Text>
-            </Pressable>
-            <MobileTanggalLahirActionsheet
-              tanggal_lahir={tanggalLahir}
-              onChangeTanggalLahir={onChangeTanggalLahir}
-              actionsheetVisible={showActionSheetTanggalLahir}
-              setActionsheetVisible={setShowActionSheetTanggalLahir}
-            />
-          </FormControl>
+          <Controller 
+            control={control}
+            name="person.tanggal_lahir"
+            render={
+              ({ 
+                field: { value },
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={false}
+                  className="w-1/2"
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
+                  </FormControlLabel>
+                  <Pressable onPress={showDatepicker} className="flex justify-between px-3 py-[5px] h-10 border border-gray-300 rounded-[3px]">
+                    <Text className={tanggalLahir == null ? "text-gray-400": "text-black"}>{tanggalLahir == null ? 'Tanggal lahir ...' : dayjs(tanggalLahir).format('DD-MM-YYYY')}</Text>
+                  </Pressable>
+                  <MobileTanggalLahirActionsheet
+                    tanggal_lahir={value}
+                    onChangeTanggalLahir={onChangeTanggalLahir}
+                    actionsheetVisible={showActionSheetTanggalLahir}
+                    setActionsheetVisible={setShowActionSheetTanggalLahir}
+                  />
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      harus dipilih
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
           <Controller
             control={control}
             name="person.gender"
@@ -631,6 +653,7 @@ const RegisterMemberForm = () => {
                   <Input className="my-1">
                     <InputField
                       placeholder="Tinggi badan ..."
+                      inputMode="numeric"
                       size="md"
                       className="py-1"
                       value={value ? value.toString() : undefined}
@@ -656,7 +679,7 @@ const RegisterMemberForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="person.alamat.propinsi"
+          name="person.alamat.provinsi"
           render={
             ({ 
               field: { onChange},
@@ -678,6 +701,7 @@ const RegisterMemberForm = () => {
                     let tmpProvinsi = _.find(propinsis, function(propinsi) {
                       return propinsi.id == val;
                     }) as Provinsi; 
+
                     onChange(tmpProvinsi);         
                     handleChangeInputSelector('propinsi', val)
                   }}
@@ -918,6 +942,7 @@ const RegisterMemberForm = () => {
           name="person.alamat.detail"
           render={
             ({ 
+              field: { onChange, value },
               fieldState: { error }
             }) => (
               <FormControl
@@ -934,9 +959,14 @@ const RegisterMemberForm = () => {
                   size="md"
                   isReadOnly={false}
                   isInvalid={false}
-                  isDisabled={false}
+                  isDisabled={false}                  
                 >
-                  <TextareaInput placeholder="jalan, komplek, nomer rumah, rt dan rw ..." className="align-top"/>
+                  <TextareaInput 
+                    placeholder="jalan, komplek, nomer rumah, rt dan rw ..." 
+                    className="align-top" 
+                    value={value}
+                    onChangeText={onChange}
+                  />
                 </Textarea>
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />

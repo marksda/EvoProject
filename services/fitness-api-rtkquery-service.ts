@@ -13,6 +13,7 @@ import { Club } from "@/features/schema-resolver/Club";
 import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
 import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
+import { Member } from "@/features/schema-resolver/Member";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -114,7 +115,7 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 export const fitnessApi = createApi({
   reducerPath: 'aerithApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Agama', 'Club', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Propinsi', 'Kosong'],
+  tagTypes: ['Agama', 'Club', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Member', 'Propinsi', 'Kosong'],
   endpoints: builder => {
     return {
       getDaftarClub: builder.query<Club[], IQueryParamFilters>({
@@ -144,6 +145,14 @@ export const fitnessApi = createApi({
       getDaftarDesa: builder.query<Desa[], IQueryParamFilters>({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
+      }),
+      registerMember: builder.mutation<Member, Partial<Member>>({
+        query: (body) => ({
+            url: '/register/member',
+            method: 'POST',
+            body,
+        }),
+        invalidatesTags: (result) => result ? ['Member']:['Kosong']
       }),
       saveItem: builder.mutation<IItem, Partial<IItem>>({
           query: (body) => ({
@@ -190,5 +199,6 @@ export const {
   useGetDaftarKabupatenQuery,
   useGetDaftarKecamatanQuery,
   useGetDaftarDesaQuery,
+  useRegisterMemberMutation,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation
 } = fitnessApi;

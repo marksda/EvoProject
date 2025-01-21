@@ -5,7 +5,7 @@ import { KecamatanSchema } from "./Kecamatan";
 import { DesaSchema } from "./Desa";
 
 export const AlamatSchema = z.object({
-  propinsi: ProvinsiSchema.pick({id: true, nama: true}),
+  provinsi: ProvinsiSchema.pick({id: true, nama: true}),
   kabupaten: KabupatenSchema.pick({id: true, nama: true}),
   kecamatan: KecamatanSchema.pick({id: true, nama: true}),
   desa: DesaSchema.pick({id: true, nama: true}),
