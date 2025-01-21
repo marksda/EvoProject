@@ -1,7 +1,7 @@
 import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
 import { AlertCircleIcon, ChevronDownIcon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
+import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectFlatList, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
 import { useCallback, useState } from "react";
@@ -18,7 +18,6 @@ import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";  
-import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
 import { Member, MemberSchema } from "@/features/schema-resolver/Member";
 import { Agama } from "@/features/schema-resolver/Agama";
 import { Club } from "@/features/schema-resolver/Club";
@@ -27,14 +26,19 @@ import { Provinsi } from "@/features/schema-resolver/Provinsi";
 import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
 import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
+import { Text } from "@/components/ui/text";
+import { TouchableOpacity } from "react-native";
+import { Pressable } from "@/components/ui/pressable";
 
 const RegisterMemberForm = () => {
-  const [tanggalLahir, setTanggalLahir] = useState(dayjs());
+  const [tanggalLahir, setTanggalLahir] = useState(null);
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
   const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
+
+  console.log(tanggalLahir);
 
   const {control, resetField, handleSubmit} = useForm<Member>({
     defaultValues: {id: null},
@@ -380,12 +384,9 @@ const RegisterMemberForm = () => {
                 <FormControlLabelText>Club</FormControlLabelText>
               </FormControlLabel>
               <Select
-                selectedValue={value ? `${value.id}` : undefined}
+                selectedValue={value ? value.nama : undefined}
                 onValueChange={(val) => {
-                  let tmpClub = _.find(clubs, function(club) {
-                    return club.id == Number(val);
-                  }) as Club;
-                  onChange(tmpClub);
+                  console.log(val);
                 }}
               >
                 <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -398,42 +399,19 @@ const RegisterMemberForm = () => {
                     <SelectDragIndicatorWrapper>
                       <SelectDragIndicator />
                     </SelectDragIndicatorWrapper>
-                    <Menu
-                      placement="bottom left"
-                      offset={-20}
-                      trigger={({ ...triggerProps }) => {
-                        return (
-                          <Button {...triggerProps}>
-                            <ButtonText>Pilih Area</ButtonText>
-                          </Button>
-                        )
-                      }}
-                    >
-                      <MenuItem key="Add account" textValue="Add account">
-                        <MenuItemLabel size="sm">Add account</MenuItemLabel>
-                      </MenuItem>
-                      <MenuItem key="Community" textValue="Community">
-                        <MenuItemLabel size="sm">Community</MenuItemLabel>
-                      </MenuItem>
-                      <MenuItem key="Plugins" textValue="Plugins">
-                        <MenuItemLabel size="sm">Plugins</MenuItemLabel>
-                      </MenuItem>
-                    </Menu>
-                    <SelectScrollView>
-                    {
-                      clubs != undefined ? (
-                        clubs.map((club) => (
+                    <SelectFlatList                      
+                      data={clubs}
+                      renderItem={({item}) => (                        
+                        <TouchableOpacity onPress={() => onChange(item)}>
                           <SelectItem 
-                            key={club.id} 
-                            label={`${club.nama}`} 
-                            value={`${club.id}`} 
-                          > 
-                            tes
-                          </SelectItem>
-                        ))
-                      ):null
-                    }
-                    </SelectScrollView>
+                              key={(item as Club).id} 
+                              label={(item as Club).nama} 
+                              value={(item as Club).id!.toString()} 
+                          />                           
+                        </TouchableOpacity>  
+                      )}
+                      keyExtractor={item => `${(item as Club).id}`}
+                    />
                   </SelectContent>
                 </SelectPortal >
               </Select>
@@ -515,12 +493,9 @@ const RegisterMemberForm = () => {
             <FormControlLabel>
               <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
             </FormControlLabel>
-            <Input isDisabled={true}>
-              <InputField placeholder="d-m-yyyy" className="py-1"/>          
-              <InputSlot className="px-3" onPress={showDatepicker}>
-                <InputIcon as={Calendar} color="black"/>
-              </InputSlot>
-            </Input>
+            <Pressable onPress={showDatepicker} className="flex justify-between px-3 py-[5px] h-10 border border-gray-300 rounded-[3px]">
+              <Text className={tanggalLahir == null ? "text-gray-400": "text-black"}>{tanggalLahir == null ? 'Tanggal lahir ...' : dayjs(tanggalLahir).format('DD-MM-YYYY')}</Text>
+            </Pressable>
             <MobileTanggalLahirActionsheet
               tanggal_lahir={tanggalLahir}
               onChangeTanggalLahir={onChangeTanggalLahir}
