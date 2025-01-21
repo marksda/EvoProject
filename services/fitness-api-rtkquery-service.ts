@@ -6,7 +6,13 @@ import { Mutex } from "async-mutex";
 import { resetToken, setToken } from "./fitness-redux-token-slice.service";
 import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { Agama, Club, Desa, Gender, Kabupaten, Kecamatan, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
+import { Agama } from "@/features/schema-resolver/Agama";
+import { Gender } from "@/features/schema-resolver/Gender";
+import { Provinsi } from "@/features/schema-resolver/Provinsi";
+import { Club } from "@/features/schema-resolver/Club";
+import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
+import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
+import { Desa } from "@/features/schema-resolver/Desa";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -123,7 +129,7 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/genders?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Gender']
       }),
-      getDaftarPropinsi: builder.query<Propinsi[], IQueryParamFilters>({
+      getDaftarPropinsi: builder.query<Provinsi[], IQueryParamFilters>({
         query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Propinsi']
       }),

@@ -4,7 +4,7 @@ import { ScrollView } from "react-native";
 import AccordionBox from "./component/Accordionbox";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "@/features/ssot/hook";
-import RegisterForm from "./component/RegisterForm";
+import RegisterMemberForm from "./component/RegisterMemberForm";
 
 const PengaturanContentMain = () => {
 
@@ -28,7 +28,7 @@ const PengaturanContentMain = () => {
     <ScrollView
       className="p-2"
     >
-    {token ? (<RegisterForm />) : (
+    {token ? (<RegisterMemberForm />) : (
       <VStack space="md">
         <AccordionBox 
           title="Ubah Profile" 

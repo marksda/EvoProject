@@ -14,15 +14,21 @@ import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PersonSchema } from "@/features/schema-resolver/zod-schema";
-import { Agama, Desa, Gender, Kabupaten, Kecamatan, Person, Propinsi } from "@/features/schema-resolver/entity-zod-generate";
 import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";  
 import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
+import { Member, MemberSchema } from "@/features/schema-resolver/Member";
+import { Agama } from "@/features/schema-resolver/Agama";
+import { Club } from "@/features/schema-resolver/Club";
+import { Gender } from "@/features/schema-resolver/Gender";
+import { Provinsi } from "@/features/schema-resolver/Provinsi";
+import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
+import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
+import { Desa } from "@/features/schema-resolver/Desa";
 
-const RegisterForm = () => {
+const RegisterMemberForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState(dayjs());
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
   const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
@@ -30,9 +36,9 @@ const RegisterForm = () => {
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
-  const {control, resetField, handleSubmit} = useForm<Person>({
-    defaultValues: {},
-    resolver: zodResolver(PersonSchema),
+  const {control, resetField, handleSubmit} = useForm<Member>({
+    defaultValues: {id: null},
+    resolver: zodResolver(MemberSchema),
   });
 
   const [queryClubParams] = useState<IQueryParamFilters>({
@@ -239,17 +245,17 @@ const RegisterForm = () => {
     (jenis: string) => {
       switch (jenis) {
         case "kabupaten":
-          resetField("alamat.kabupaten");
+          resetField("person.alamat.kabupaten");
           setSelectedKeyKabupaten(null);
           resetData("kecamatan");
           break;
         case "kecamatan":
-          resetField("alamat.kecamatan");
+          resetField("person.alamat.kecamatan");
           setSelectedKeyKecamatan(null);
           resetData("desa");
           break;
         case "desa":
-          resetField("alamat.desa");
+          resetField("person.alamat.desa");
           setSelectedKeyDesa(null);
           break;
         default:
@@ -268,11 +274,11 @@ const RegisterForm = () => {
     setTanggalLahir(tanggal);
   };
 
-  const onSubmit: SubmitHandler<Person> = async (data) => {
+  const onSubmit: SubmitHandler<Member> = async (data) => {
     console.log(data);
   };
 
-  const onError: SubmitErrorHandler<Person> = async (err) => {
+  const onError: SubmitErrorHandler<Member> = async (err) => {
     console.log('error', err);
   };
 
@@ -285,7 +291,7 @@ const RegisterForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="nik"
+          name="person.nik"
           render={
             ({ 
               field: { onChange, value },
@@ -322,7 +328,7 @@ const RegisterForm = () => {
         /> 
         <Controller
           control={control}
-          name="nama"
+          name="person.nama"
           render={(
             { 
               field: { onChange, value },
@@ -356,68 +362,87 @@ const RegisterForm = () => {
             </FormControl>
           )}
         /> 
-        <FormControl
-          isInvalid={false}
-          size="md"
-          isDisabled={false}
-          isReadOnly={false}
-          isRequired={false}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Club</FormControlLabelText>
-          </FormControlLabel>
-          <Select>
-            <SelectTrigger variant="outline" size="md" className="flex justify-between">
-              <SelectInput placeholder="Pilih club ..." className="py-1"/>
-              <SelectIcon className="mr-3" as={ChevronDownIcon} />
-            </SelectTrigger>
-            <SelectPortal>
-              <SelectBackdrop />
-              <SelectContent  className="min-h-[300px]">  
-                <SelectDragIndicatorWrapper>
-                  <SelectDragIndicator />
-                </SelectDragIndicatorWrapper>
-                <Menu
-                  placement="bottom left"
-                  offset={-20}
-                  trigger={({ ...triggerProps }) => {
-                    return (
-                      <Button {...triggerProps}>
-                        <ButtonText>Pilih Area</ButtonText>
-                      </Button>
-                    )
-                  }}
-                >
-                  <MenuItem key="Add account" textValue="Add account">
-                    <MenuItemLabel size="sm">Add account</MenuItemLabel>
-                  </MenuItem>
-                  <MenuItem key="Community" textValue="Community">
-                    <MenuItemLabel size="sm">Community</MenuItemLabel>
-                  </MenuItem>
-                  <MenuItem key="Plugins" textValue="Plugins">
-                    <MenuItemLabel size="sm">Plugins</MenuItemLabel>
-                  </MenuItem>
-                </Menu>
-                <SelectScrollView>
-                {
-                  clubs != undefined ? (
-                    clubs.map((club) => (
-                      <SelectItem 
-                        key={club.id} 
-                        label={club.nama} 
-                        value={`${club.id}`} 
-                      /> 
-                    ))
-                  ):null
-                }
-                </SelectScrollView>
-              </SelectContent>
-            </SelectPortal >
-          </Select>
-        </FormControl>
         <Controller
           control={control}
-          name="agama"
+          name="club"
+          render={({ 
+            field: { onChange, value },
+            fieldState: { error }
+          }) => (
+            <FormControl
+              isInvalid={error ? true : false}
+              size="md"
+              isDisabled={false}
+              isReadOnly={false}
+              isRequired={false}
+            >
+              <FormControlLabel>
+                <FormControlLabelText>Club</FormControlLabelText>
+              </FormControlLabel>
+              <Select
+                selectedValue={value ? `${value.id}` : undefined}
+                onValueChange={(val) => {
+                  let tmpClub = _.find(clubs, function(club) {
+                    return club.id == Number(val);
+                  }) as Club;
+                  onChange(tmpClub);
+                }}
+              >
+                <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                  <SelectInput placeholder="Pilih club ..." className="py-1"/>
+                  <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                </SelectTrigger>
+                <SelectPortal>
+                  <SelectBackdrop />
+                  <SelectContent  className="min-h-[300px]">  
+                    <SelectDragIndicatorWrapper>
+                      <SelectDragIndicator />
+                    </SelectDragIndicatorWrapper>
+                    <Menu
+                      placement="bottom left"
+                      offset={-20}
+                      trigger={({ ...triggerProps }) => {
+                        return (
+                          <Button {...triggerProps}>
+                            <ButtonText>Pilih Area</ButtonText>
+                          </Button>
+                        )
+                      }}
+                    >
+                      <MenuItem key="Add account" textValue="Add account">
+                        <MenuItemLabel size="sm">Add account</MenuItemLabel>
+                      </MenuItem>
+                      <MenuItem key="Community" textValue="Community">
+                        <MenuItemLabel size="sm">Community</MenuItemLabel>
+                      </MenuItem>
+                      <MenuItem key="Plugins" textValue="Plugins">
+                        <MenuItemLabel size="sm">Plugins</MenuItemLabel>
+                      </MenuItem>
+                    </Menu>
+                    <SelectScrollView>
+                    {
+                      clubs != undefined ? (
+                        clubs.map((club) => (
+                          <SelectItem 
+                            key={club.id} 
+                            label={`${club.nama}`} 
+                            value={`${club.id}`} 
+                          > 
+                            tes
+                          </SelectItem>
+                        ))
+                      ):null
+                    }
+                    </SelectScrollView>
+                  </SelectContent>
+                </SelectPortal >
+              </Select>
+            </FormControl>
+          )}
+        />        
+        <Controller
+          control={control}
+          name="person.agama"
           render={
             ({ 
               field: { value, onChange },
@@ -440,7 +465,6 @@ const RegisterForm = () => {
                       return agama.id == val;
                     }) as Agama;
                     onChange(tmpAgama);
-                    // handleChangeInputSelector('agama', val);
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -506,7 +530,7 @@ const RegisterForm = () => {
           </FormControl>
           <Controller
             control={control}
-            name="gender"
+            name="person.gender"
             render={
               ({ 
                 field: { value, onChange },
@@ -573,7 +597,7 @@ const RegisterForm = () => {
         <HStack className="gap-2 mt-1">
           <Controller
             control={control}
-            name="berat_badan"
+            name="person.berat_badan"
             render={
               ({ 
                 field: { value, onChange },
@@ -612,7 +636,7 @@ const RegisterForm = () => {
           />
           <Controller
             control={control}
-            name="tinggi_badan"
+            name="person.tinggi_badan"
             render={
               ({ 
                 field: { value, onChange },
@@ -657,7 +681,7 @@ const RegisterForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="alamat.propinsi"
+          name="person.alamat.propinsi"
           render={
             ({ 
               field: { onChange},
@@ -676,10 +700,10 @@ const RegisterForm = () => {
                 <Select
                   selectedValue={selectedKeyPropinsi}
                   onValueChange={(val) => {
-                    let tmpPropinsi = _.find(propinsis, function(propinsi) {
+                    let tmpProvinsi = _.find(propinsis, function(propinsi) {
                       return propinsi.id == val;
-                    }) as Propinsi; 
-                    onChange(tmpPropinsi);         
+                    }) as Provinsi; 
+                    onChange(tmpProvinsi);         
                     handleChangeInputSelector('propinsi', val)
                   }}
                 >
@@ -721,7 +745,7 @@ const RegisterForm = () => {
         />
         <Controller
           control={control}
-          name="alamat.kabupaten"
+          name="person.alamat.kabupaten"
           render={
             ({ 
               field: { onChange},
@@ -786,7 +810,7 @@ const RegisterForm = () => {
         />
         <Controller
           control={control}
-          name="alamat.kecamatan"
+          name="person.alamat.kecamatan"
           render={
             ({ 
               field: { onChange},
@@ -851,7 +875,7 @@ const RegisterForm = () => {
         />
         <Controller
           control={control}
-          name="alamat.desa"
+          name="person.alamat.desa"
           render={
             ({ 
               field: { onChange},
@@ -916,7 +940,7 @@ const RegisterForm = () => {
         />
         <Controller
           control={control}
-          name="alamat.detail"
+          name="person.alamat.detail"
           render={
             ({ 
               fieldState: { error }
@@ -951,7 +975,7 @@ const RegisterForm = () => {
         />
         <Controller
           control={control}
-          name="alamat.kodepos"
+          name="person.alamat.kodepos"
           render={
             ({ 
               field: { onChange, value },
@@ -994,7 +1018,7 @@ const RegisterForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="kontak.email"
+          name="person.kontak.email"
           render={
             ({ 
               field: { onChange, value },
@@ -1031,7 +1055,7 @@ const RegisterForm = () => {
         />  
         <Controller
           control={control}
-          name="kontak.no_hp"
+          name="person.kontak.no_hp"
           render={
             ({ 
               field: { onChange, value },
@@ -1079,4 +1103,4 @@ const RegisterForm = () => {
   )
 }
 
-export default  RegisterForm;
+export default  RegisterMemberForm;
