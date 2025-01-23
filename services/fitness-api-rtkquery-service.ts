@@ -13,7 +13,7 @@ import { Club } from "@/features/schema-resolver/Club";
 import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
 import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
-import { Member } from "@/features/schema-resolver/Member";
+import { Member, RegistrasiMember } from "@/features/schema-resolver/Member";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -148,7 +148,7 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
       }),
-      registerMember: builder.mutation<Member, Partial<Member>>({
+      registerMember: builder.mutation<Member, RegistrasiMember>({
         query: (body) => ({
             url: '/register/member',
             method: 'POST',

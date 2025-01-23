@@ -1,6 +1,6 @@
-import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
+import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
 import { AlertCircleIcon, ChevronDownIcon } from "@/components/ui/icon";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { Input, InputField } from "@/components/ui/input";
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectFlatList, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from "@/components/ui/select";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
@@ -17,28 +17,22 @@ import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";  
-import { Member, MemberSchema } from "@/features/schema-resolver/Member";
-import { Agama } from "@/features/schema-resolver/Agama";
+import { RegistrasiMember, RegistrasiMemberSchema } from "@/features/schema-resolver/Member";
 import { Club } from "@/features/schema-resolver/Club";
-import { Gender } from "@/features/schema-resolver/Gender";
-import { Provinsi } from "@/features/schema-resolver/Provinsi";
-import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
-import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
-import { Desa } from "@/features/schema-resolver/Desa";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 
 const RegisterMemberForm = () => {
   const [tanggalLahir, setTanggalLahir] = useState<Date|null>(null);
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
-  const [selectedKeyPropinsi, setSelectedKeyPropinsi] = useState<string|null>(null); 
+  const [selectedKeyProvinsi, setSelectedKeyProvinsi] = useState<string|null>(null); 
   const [selectedKeyKabupaten, setSelectedKeyKabupaten] = useState<string|null>(null); 
   const [selectedKeyKecamatan, setSelectedKeyKecamatan] = useState<string|null>(null); 
   const [selectedKeyDesa, setSelectedKeyDesa] = useState<string|null>(null);
 
-  const {control, setValue, resetField, handleSubmit} = useForm<Member>({
+  const {control, setValue, resetField, handleSubmit} = useForm<RegistrasiMember>({
     defaultValues: {},
-    resolver: zodResolver(MemberSchema),
+    resolver: zodResolver(RegistrasiMemberSchema),
   });
 
   const [queryClubParams] = useState<IQueryParamFilters>({
@@ -51,7 +45,7 @@ const RegisterMemberForm = () => {
     ],
   });
 
-  const [queryPropinsiParams] = useState<IQueryParamFilters>({
+  const [queryProvinsiParams] = useState<IQueryParamFilters>({
     is_paging: false, 
     fields_sorter: [
       {
@@ -69,7 +63,7 @@ const RegisterMemberForm = () => {
     },
     fields_filter: [
       {
-        field_name: 'propinsi_id',
+        field_name: 'provinsi_id',
         value: '35'
       },
     ],
@@ -142,8 +136,8 @@ const RegisterMemberForm = () => {
   });
 
   const { data: clubs } = useGetDaftarClubQuery(queryClubParams);
-  const { data: propinsis } = useGetDaftarPropinsiQuery(queryPropinsiParams);
-  const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi ? false:true});
+  const { data: provinsis } = useGetDaftarPropinsiQuery(queryProvinsiParams);
+  const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyProvinsi ? false:true});
   const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
   const { data: desas } = useGetDaftarDesaQuery(queryDesaParams, {skip: selectedKeyKecamatan == null ? true:false});
 
@@ -152,24 +146,24 @@ const RegisterMemberForm = () => {
   const handleChangeInputSelector = useCallback(
     (jenis: string, nilai: string) => {
       switch (jenis) {
-        case "propinsi":
-          setSelectedKeyPropinsi(nilai);           
+        case "provinsi":
+          setSelectedKeyProvinsi(nilai);           
           resetData("kabupaten");        
           setQueryKabupatenParams(
             prev => {
               let tmp = _.cloneDeep(prev);
               let fieldsFilter = _.cloneDeep(tmp.fields_filter);
-              let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'propinsi_id'}) as number;     
+              let found = fieldsFilter?.findIndex((obj) => {return obj.field_name == 'provinsi_id'}) as number;     
                                                   
               if(found == -1) {
                 fieldsFilter?.push({
-                    field_name: 'propinsi_id',
+                    field_name: 'provinsi_id',
                     value: nilai
                   });
               }
               else {
                 fieldsFilter?.splice(found, 1, {
-                  field_name: 'propinsi_id',
+                  field_name: 'provinsi_id',
                   value: nilai
                 })
               }
@@ -247,17 +241,17 @@ const RegisterMemberForm = () => {
     (jenis: string) => {
       switch (jenis) {
         case "kabupaten":
-          resetField("person.alamat.kabupaten");
+          resetField("kabupaten_id");
           setSelectedKeyKabupaten(null);
           resetData("kecamatan");
           break;
         case "kecamatan":
-          resetField("person.alamat.kecamatan");
+          resetField("kecamatan_id");
           setSelectedKeyKecamatan(null);
           resetData("desa");
           break;
         case "desa":
-          resetField("person.alamat.desa");
+          resetField("desa_id");
           setSelectedKeyDesa(null);
           break;
         default:
@@ -272,16 +266,16 @@ const RegisterMemberForm = () => {
   };
 
   const onChangeTanggalLahir = (tanggal: Date) => {
-    setValue("person.tanggal_lahir", dayjs(tanggal).format('YYYY-MM-DD'));
+    setValue("tanggal_lahir", dayjs(tanggal).format('YYYY-MM-DD'));
     setTanggalLahir(tanggal);
   };
 
-  const onSubmit: SubmitHandler<Member> = async (data) => {
+  const onSubmit: SubmitHandler<RegistrasiMember> = async (data) => {
     console.log(JSON.stringify(data));
-    registerMember(data);
+    // registerMember(data);
   };
 
-  const onError: SubmitErrorHandler<Member> = async (err) => {
+  const onError: SubmitErrorHandler<RegistrasiMember> = async (err) => {
     console.log('error', err);
   };
 
@@ -294,7 +288,7 @@ const RegisterMemberForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="person.identifier"
+          name="identifier"
           render={
             ({ 
               field: { onChange, value },
@@ -331,7 +325,7 @@ const RegisterMemberForm = () => {
         /> 
         <Controller
           control={control}
-          name="person.nama"
+          name="nama"
           render={(
             { 
               field: { onChange, value },
@@ -367,7 +361,7 @@ const RegisterMemberForm = () => {
         /> 
         <Controller
           control={control}
-          name="club"
+          name="club_id"
           render={({ 
             field: { onChange, value },
             fieldState: { error }
@@ -383,13 +377,13 @@ const RegisterMemberForm = () => {
                 <FormControlLabelText>Club</FormControlLabelText>
               </FormControlLabel>
               <Select
-                selectedValue={value ? value.nama : undefined}
+                selectedValue={value ? value.toString() : undefined}
                 onValueChange={(val) => {
-                  let tmpClub = _.find(clubs, function(club) {
-                    return club.id == Number(val);
-                  }) as Club;
+                  // let tmpClub = _.find(clubs, function(club) {
+                  //   return club.id == Number(val);
+                  // }) as Club;
 
-                  onChange(tmpClub);
+                  onChange(Number(val));
                 }}
               >
                 <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -427,7 +421,7 @@ const RegisterMemberForm = () => {
         />        
         <Controller
           control={control}
-          name="person.agama"
+          name="agama_id"
           render={
             ({ 
               field: { value, onChange },
@@ -444,12 +438,12 @@ const RegisterMemberForm = () => {
                   <FormControlLabelText>Agama</FormControlLabelText>
                 </FormControlLabel>
                 <Select
-                  selectedValue={value ? value.id : undefined}
+                  selectedValue={value ? value.toString() : undefined}
                   onValueChange={(val) => {
-                    let tmpAgama = _.find(agamas, function(agama) {
-                      return agama.id == val;
-                    }) as Agama;
-                    onChange(tmpAgama);
+                    // let tmpAgama = _.find(agamas, function(agama) {
+                    //   return agama.id == val;
+                    // }) as Agama;
+                    onChange(Number(val));
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -491,7 +485,7 @@ const RegisterMemberForm = () => {
         <HStack className="gap-2 mt-1">
           <Controller 
             control={control}
-            name="person.tanggal_lahir"
+            name="tanggal_lahir"
             render={
               ({ 
                 field: { value },
@@ -529,7 +523,7 @@ const RegisterMemberForm = () => {
           />
           <Controller
             control={control}
-            name="person.gender"
+            name="jenis_kelamin_id"
             render={
               ({ 
                 field: { value, onChange },
@@ -547,12 +541,12 @@ const RegisterMemberForm = () => {
                     <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
                   </FormControlLabel>
                   <Select
-                    selectedValue={value ? value.id : undefined}
+                    selectedValue={value ? value : undefined}
                     onValueChange={(val) => {
-                      let tmpGender = _.find(genders, function(gender) {
-                        return gender.id == val;
-                      }) as Gender;
-                      onChange(tmpGender);
+                      // let tmpGender = _.find(genders, function(gender) {
+                      //   return gender.id == val;
+                      // }) as Gender;
+                      onChange(val);
                     }}
                   >
                     <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -596,7 +590,7 @@ const RegisterMemberForm = () => {
         <HStack className="gap-2 mt-1">
           <Controller
             control={control}
-            name="person.berat_badan"
+            name="berat_badan"
             render={
               ({ 
                 field: { value, onChange },
@@ -635,7 +629,7 @@ const RegisterMemberForm = () => {
           />
           <Controller
             control={control}
-            name="person.tinggi_badan"
+            name="tinggi_badan"
             render={
               ({ 
                 field: { value, onChange },
@@ -681,7 +675,7 @@ const RegisterMemberForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="person.alamat.provinsi"
+          name="provinsi_id"
           render={
             ({ 
               field: { onChange},
@@ -698,14 +692,14 @@ const RegisterMemberForm = () => {
                   <FormControlLabelText>Provinsi</FormControlLabelText>
                 </FormControlLabel>
                 <Select
-                  selectedValue={selectedKeyPropinsi}
+                  selectedValue={selectedKeyProvinsi}
                   onValueChange={(val) => {
-                    let tmpProvinsi = _.find(propinsis, function(propinsi) {
-                      return propinsi.id == val;
-                    }) as Provinsi; 
+                    // let tmpProvinsi = _.find(propinsis, function(propinsi) {
+                    //   return propinsi.id == val;
+                    // }) as Provinsi; 
 
-                    onChange(tmpProvinsi);         
-                    handleChangeInputSelector('propinsi', val)
+                    onChange(val);         
+                    handleChangeInputSelector('provinsi', val)
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -720,12 +714,12 @@ const RegisterMemberForm = () => {
                       </SelectDragIndicatorWrapper>
                       <SelectScrollView className="max-h-96">
                       {
-                        propinsis != undefined ? (
-                          propinsis.map((propinsi) => (
+                        provinsis != undefined ? (
+                          provinsis.map((provinsi) => (
                             <SelectItem 
-                              key={propinsi.id} 
-                              label={propinsi.nama} 
-                              value={propinsi.id} 
+                              key={provinsi.id} 
+                              label={provinsi.nama} 
+                              value={provinsi.id} 
                             /> 
                           ))
                         ):null
@@ -746,7 +740,7 @@ const RegisterMemberForm = () => {
         />
         <Controller
           control={control}
-          name="person.alamat.kabupaten"
+          name="kabupaten_id"
           render={
             ({ 
               field: { onChange},
@@ -755,7 +749,7 @@ const RegisterMemberForm = () => {
               <FormControl
                 isInvalid={error ? true : false}
                 size="md"
-                isDisabled={ selectedKeyPropinsi ? false : true }
+                isDisabled={ selectedKeyProvinsi ? false : true }
                 isReadOnly={false}
                 isRequired={true}
               >
@@ -765,10 +759,10 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyKabupaten}
                   onValueChange={(val) => {
-                    let tmpKabupaten = _.find(kabupatens, function(kabupaten) {
-                      return kabupaten.id == val;
-                    }) as Kabupaten; 
-                    onChange(tmpKabupaten);   
+                    // let tmpKabupaten = _.find(kabupatens, function(kabupaten) {
+                    //   return kabupaten.id == val;
+                    // }) as Kabupaten; 
+                    onChange(val);   
                     handleChangeInputSelector('kabupaten', val);
                   }}
                 >
@@ -811,7 +805,7 @@ const RegisterMemberForm = () => {
         />
         <Controller
           control={control}
-          name="person.alamat.kecamatan"
+          name="kecamatan_id"
           render={
             ({ 
               field: { onChange},
@@ -830,10 +824,10 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyKecamatan}
                   onValueChange={(val) => {
-                    let tmpKecamatan = _.find(kecamatans, function(kecamatan) {
-                      return kecamatan.id == val;
-                    }) as Kecamatan; 
-                    onChange(tmpKecamatan); 
+                    // let tmpKecamatan = _.find(kecamatans, function(kecamatan) {
+                    //   return kecamatan.id == val;
+                    // }) as Kecamatan; 
+                    onChange(val); 
                     handleChangeInputSelector('kecamatan', val);
                   }}
                 >
@@ -876,7 +870,7 @@ const RegisterMemberForm = () => {
         />
         <Controller
           control={control}
-          name="person.alamat.desa"
+          name="desa_id"
           render={
             ({ 
               field: { onChange},
@@ -895,10 +889,10 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyDesa}
                   onValueChange={(val) => {
-                    let tmpDesa = _.find(desas, function(desa) {
-                      return desa.id == val;
-                    }) as Desa; 
-                    onChange(tmpDesa); 
+                    // let tmpDesa = _.find(desas, function(desa) {
+                    //   return desa.id == val;
+                    // }) as Desa; 
+                    onChange(val); 
                     handleChangeInputSelector('desa', val);
                   }}
                 >
@@ -941,7 +935,7 @@ const RegisterMemberForm = () => {
         />
         <Controller
           control={control}
-          name="person.alamat.detail"
+          name="alamat"
           render={
             ({ 
               field: { onChange, value },
@@ -982,7 +976,7 @@ const RegisterMemberForm = () => {
         />
         <Controller
           control={control}
-          name="person.alamat.kodepos"
+          name="kode_pos"
           render={
             ({ 
               field: { onChange, value },
@@ -1020,12 +1014,12 @@ const RegisterMemberForm = () => {
       </Card> 
       <Card variant="outline" className="bg-white">
         <Heading size="sm">
-          Data kontak
+          Data login & kontak
         </Heading>
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="person.kontak.email"
+          name="email"
           render={
             ({ 
               field: { onChange, value },
@@ -1041,6 +1035,11 @@ const RegisterMemberForm = () => {
                 <FormControlLabel>
                   <FormControlLabelText>E-mail</FormControlLabelText>
                 </FormControlLabel>
+                <FormControlHelper>
+                  <FormControlHelperText>
+                    email akan dijadikan sebagai username pada saat login
+                  </FormControlHelperText>
+                </FormControlHelper>
                 <Input className="my-1">
                   <InputField
                     placeholder="Email ..."
@@ -1062,7 +1061,7 @@ const RegisterMemberForm = () => {
         />  
         <Controller
           control={control}
-          name="person.kontak.no_hp"
+          name="no_hp"
           render={
             ({ 
               field: { onChange, value },
@@ -1097,6 +1096,43 @@ const RegisterMemberForm = () => {
             )
           }
         />
+        <Controller
+          control={control}
+          name="password"
+          render={
+            ({ 
+              field: { onChange, value },
+              fieldState: { error }
+            }) => (
+              <FormControl
+                isInvalid={error ? true : false}
+                size="md"
+                isDisabled={false}
+                isReadOnly={false}
+                isRequired={true}
+              >
+                <FormControlLabel>
+                  <FormControlLabelText>Password</FormControlLabelText>
+                </FormControlLabel>
+                <Input className="my-1">
+                  <InputField
+                    placeholder="password ..."
+                    size="md"
+                    className="py-1"
+                    value={value ? value : undefined}
+                    onChangeText={onChange}
+                  />
+                </Input>
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertCircleIcon} />
+                  <FormControlErrorText>
+                    {error?.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              </FormControl>
+            )
+          }
+        />  
       </Card> 
       <Button 
         onPress={handleSubmit(onSubmit, onError)}
