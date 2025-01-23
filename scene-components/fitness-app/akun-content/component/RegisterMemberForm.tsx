@@ -292,7 +292,7 @@ const RegisterMemberForm = () => {
         <Divider className="my-2"/>
         <Controller
           control={control}
-          name="person.nik"
+          name="person.identifier"
           render={
             ({ 
               field: { onChange, value },
