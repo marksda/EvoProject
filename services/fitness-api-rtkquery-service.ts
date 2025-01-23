@@ -56,12 +56,14 @@ const baseQuery = fetchBaseQuery({
     if(accessToken != null){
       headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
       headers.set("Cache-Control", 'no-cache, private');
+      headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
       headers.set("authorization", `Bearer ${accessToken}`);
     }        
     else{
       headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
       headers.set("Cache-Control", 'no-cache, private');
+      headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
     }    
     
@@ -70,46 +72,46 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
-    await mutex.waitForUnlock();
+  await mutex.waitForUnlock();
 
-    let result = await baseQuery(args, api, extraOptions);
-    if (result.error && result.error.status === 401) {
-        if (!mutex.isLocked()) {
-            const release = await mutex.acquire();
-            try {
-                const refreshToken = (api.getState() as RootState).persisted.token.refresh_token;
-                const userId = (api.getState() as RootState).persisted.token.id;
-                const refreshResult = await baseQuery(
-                    {
-                        url: `/token/${userId}`,
-                        method: 'PUT',
-                        body: refreshToken
-                    },
-                    api,
-                    extraOptions,
-                );
+  let result = await baseQuery(args, api, extraOptions);
+  if (result.error && result.error.status === 401) {
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+      try {
+        const refreshToken = (api.getState() as RootState).persisted.token.refresh_token;
+        const userId = (api.getState() as RootState).persisted.token.id;
+        const refreshResult = await baseQuery(
+          {
+            url: `/token/${userId}`,
+            method: 'PUT',
+            body: refreshToken
+          },
+          api,
+          extraOptions,
+        );
 
-                if(refreshResult.data) {
-                    api.dispatch(setToken(refreshResult.data as IToken));
-                    result = await baseQuery(args, api, extraOptions);
-                } 
-                else {                    
-                    api.dispatch(resetToken(null));
-                }
-
-            } catch (error) {
-                release();
-            } finally {
-                release();
-            }
+        if(refreshResult.data) {
+          api.dispatch(setToken(refreshResult.data as IToken));
+          result = await baseQuery(args, api, extraOptions);
+        } 
+        else {                    
+          api.dispatch(resetToken(null));
         }
-        else {
-            await mutex.waitForUnlock()
-            result = await baseQuery(args, api, extraOptions);
-        }
+
+      } catch (error) {
+        release();
+      } finally {
+        release();
+      }
     }
+    else {
+      await mutex.waitForUnlock()
+      result = await baseQuery(args, api, extraOptions);
+    }
+  }
 
-    return result;
+  return result;
 };
 
 export const fitnessApi = createApi({

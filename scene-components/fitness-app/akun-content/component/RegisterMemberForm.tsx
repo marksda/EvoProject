@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useCallback, useState } from "react";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery, useRegisterMemberMutation } from "@/services/fitness-api-rtkquery-service";
 import _ from "lodash";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -26,7 +26,6 @@ import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
 import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
 import { Text } from "@/components/ui/text";
-import { TouchableOpacity } from "react-native";
 import { Pressable } from "@/components/ui/pressable";
 
 const RegisterMemberForm = () => {
@@ -147,6 +146,8 @@ const RegisterMemberForm = () => {
   const { data: kabupatens } = useGetDaftarKabupatenQuery(queryKabupatenParams, {skip: selectedKeyPropinsi ? false:true});
   const { data: kecamatans } = useGetDaftarKecamatanQuery(queryKecamatanParams, {skip: selectedKeyKabupaten == null ? true:false});
   const { data: desas } = useGetDaftarDesaQuery(queryDesaParams, {skip: selectedKeyKecamatan == null ? true:false});
+
+  const  [registerMember, {isLoading: saveProgressMember}] = useRegisterMemberMutation();
 
   const handleChangeInputSelector = useCallback(
     (jenis: string, nilai: string) => {
@@ -277,6 +278,7 @@ const RegisterMemberForm = () => {
 
   const onSubmit: SubmitHandler<Member> = async (data) => {
     console.log(JSON.stringify(data));
+    registerMember(data);
   };
 
   const onError: SubmitErrorHandler<Member> = async (err) => {
@@ -1096,7 +1098,10 @@ const RegisterMemberForm = () => {
           }
         />
       </Card> 
-      <Button onPress={handleSubmit(onSubmit, onError)}>
+      <Button 
+        onPress={handleSubmit(onSubmit, onError)}
+        isDisabled={saveProgressMember ? true : false}
+      >
         <ButtonText 
           size="md" 
           variant="solid"
