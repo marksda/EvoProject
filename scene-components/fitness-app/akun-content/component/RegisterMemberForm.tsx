@@ -271,7 +271,7 @@ const RegisterMemberForm = () => {
   };
 
   const onSubmit: SubmitHandler<RegistrasiMember> = async (data) => {
-    console.log(JSON.stringify(data));
+    console.log(data);
     // registerMember(data);
   };
 
@@ -379,10 +379,6 @@ const RegisterMemberForm = () => {
               <Select
                 selectedValue={value ? value.toString() : undefined}
                 onValueChange={(val) => {
-                  // let tmpClub = _.find(clubs, function(club) {
-                  //   return club.id == Number(val);
-                  // }) as Club;
-
                   onChange(Number(val));
                 }}
               >
@@ -440,10 +436,7 @@ const RegisterMemberForm = () => {
                 <Select
                   selectedValue={value ? value.toString() : undefined}
                   onValueChange={(val) => {
-                    // let tmpAgama = _.find(agamas, function(agama) {
-                    //   return agama.id == val;
-                    // }) as Agama;
-                    onChange(Number(val));
+                    onChange(val);
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
@@ -543,9 +536,6 @@ const RegisterMemberForm = () => {
                   <Select
                     selectedValue={value ? value : undefined}
                     onValueChange={(val) => {
-                      // let tmpGender = _.find(genders, function(gender) {
-                      //   return gender.id == val;
-                      // }) as Gender;
                       onChange(val);
                     }}
                   >
@@ -694,10 +684,6 @@ const RegisterMemberForm = () => {
                 <Select
                   selectedValue={selectedKeyProvinsi}
                   onValueChange={(val) => {
-                    // let tmpProvinsi = _.find(propinsis, function(propinsi) {
-                    //   return propinsi.id == val;
-                    // }) as Provinsi; 
-
                     onChange(val);         
                     handleChangeInputSelector('provinsi', val)
                   }}
@@ -759,9 +745,6 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyKabupaten}
                   onValueChange={(val) => {
-                    // let tmpKabupaten = _.find(kabupatens, function(kabupaten) {
-                    //   return kabupaten.id == val;
-                    // }) as Kabupaten; 
                     onChange(val);   
                     handleChangeInputSelector('kabupaten', val);
                   }}
@@ -824,9 +807,6 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyKecamatan}
                   onValueChange={(val) => {
-                    // let tmpKecamatan = _.find(kecamatans, function(kecamatan) {
-                    //   return kecamatan.id == val;
-                    // }) as Kecamatan; 
                     onChange(val); 
                     handleChangeInputSelector('kecamatan', val);
                   }}
@@ -873,7 +853,7 @@ const RegisterMemberForm = () => {
           name="desa_id"
           render={
             ({ 
-              field: { onChange},
+              field: {onChange},
               fieldState: { error }
             }) => (
               <FormControl
@@ -889,9 +869,6 @@ const RegisterMemberForm = () => {
                 <Select 
                   selectedValue={selectedKeyDesa}
                   onValueChange={(val) => {
-                    // let tmpDesa = _.find(desas, function(desa) {
-                    //   return desa.id == val;
-                    // }) as Desa; 
                     onChange(val); 
                     handleChangeInputSelector('desa', val);
                   }}
@@ -1035,20 +1012,21 @@ const RegisterMemberForm = () => {
                 <FormControlLabel>
                   <FormControlLabelText>E-mail</FormControlLabelText>
                 </FormControlLabel>
-                <FormControlHelper>
-                  <FormControlHelperText>
-                    email akan dijadikan sebagai username pada saat login
-                  </FormControlHelperText>
-                </FormControlHelper>
                 <Input className="my-1">
                   <InputField
                     placeholder="Email ..."
+                    inputMode="email"
                     size="md"
                     className="py-1"
                     value={value ? value : undefined}
                     onChangeText={onChange}
                   />
-                </Input>
+                </Input>                
+                <FormControlHelper>
+                  <FormControlHelperText>
+                    email sebagai username saat login
+                  </FormControlHelperText>
+                </FormControlHelper>
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
                   <FormControlErrorText>
@@ -1117,6 +1095,7 @@ const RegisterMemberForm = () => {
                 <Input className="my-1">
                   <InputField
                     placeholder="password ..."
+                    secureTextEntry={true}
                     size="md"
                     className="py-1"
                     value={value ? value : undefined}
