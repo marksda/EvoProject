@@ -21,8 +21,12 @@ import { RegistrasiMember, RegistrasiMemberSchema } from "@/features/schema-reso
 import { Club } from "@/features/schema-resolver/Club";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
+import { useAppDispatch } from "@/features/ssot/hook";
+import { setToken } from "@/services/fitness-redux-token-slice.service";
 
 const RegisterMemberForm = () => {
+  const dispatch = useAppDispatch();
+
   const [tanggalLahir, setTanggalLahir] = useState<Date|null>(null);
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
   const [selectedKeyProvinsi, setSelectedKeyProvinsi] = useState<string|null>(null); 
@@ -273,10 +277,11 @@ const RegisterMemberForm = () => {
   const onSubmit: SubmitHandler<RegistrasiMember> = async (data) => {
     console.log(data);
 
-    await registerMember(data).unwrap().then((originalPromiseResult) => {
+    await registerMember(data).unwrap().then((payload) => {
       // setDisableForm(false);
-      console.log(originalPromiseResult);
-    }).catch((rejectedValueOrSerializedError) => {
+      console.log(payload);
+      // dispatch(setToken())
+    }).catch((error) => {
       // setDisableForm(false);
     }); 
   };
