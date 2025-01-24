@@ -54,14 +54,12 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persisted.token;
     if(accessToken != null){
-      headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
       headers.set("Cache-Control", 'no-cache, private');
       headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
       headers.set("authorization", `Bearer ${accessToken}`);
     }        
     else{
-      headers.set("XDEBUG_SESSION_START", 'PHPSTORM');
       headers.set("Cache-Control", 'no-cache, private');
       headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
@@ -150,7 +148,7 @@ export const fitnessApi = createApi({
       }),
       registerMember: builder.mutation<Member, RegistrasiMember>({
         query: (body) => ({
-            url: '/register/member',
+            url: '/register/member?XDEBUG_SESSION_START=PHPSTORM',
             method: 'POST',
             body,
         }),

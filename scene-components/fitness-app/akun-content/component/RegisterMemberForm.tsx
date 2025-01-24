@@ -272,7 +272,13 @@ const RegisterMemberForm = () => {
 
   const onSubmit: SubmitHandler<RegistrasiMember> = async (data) => {
     console.log(data);
-    // registerMember(data);
+
+    await registerMember(data).unwrap().then((originalPromiseResult) => {
+      // setDisableForm(false);
+      console.log(originalPromiseResult);
+    }).catch((rejectedValueOrSerializedError) => {
+      // setDisableForm(false);
+    }); 
   };
 
   const onError: SubmitErrorHandler<RegistrasiMember> = async (err) => {
