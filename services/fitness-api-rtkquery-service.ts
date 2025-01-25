@@ -18,33 +18,33 @@ import { Member, RegistrasiMember } from "@/features/schema-resolver/Member";
 const urlApi: string = 'http://192.168.1.12/api';
 
 export class TokenAPI {
-    static getToken = async (credential: ICredential) => {
-        // let data = null;
-        return fetch(
-            `${urlApi}/token`, 
-            {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Cache-Control': 'no-cache, private'
-                },
-                body: JSON.stringify(credential)
-            }
-        )
-        // .then((response) => {
-        //     response.json()
-        //             .then((dataJson) => {
-        //                 return dataJson;
-        //             })
-        //             .catch((error) => {
-        //                 console.log(error);
-        //             });
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        // })
-        ;        
-    }
+  static getToken = async (credential: ICredential) => {
+    // let data = null;
+    return fetch(
+      `${urlApi}/token`, 
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          ["Cache-Control"]: 'no-cache, private'
+        },
+        body: JSON.stringify(credential)
+      }
+    )
+    // .then((response) => {
+    //     response.json()
+    //             .then((dataJson) => {
+    //                 return dataJson;
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //             });
+    // })
+    // .catch((error) => {
+    //     console.log(error);
+    // })
+    ;        
+  }
 }
 
 const mutex = new Mutex();
@@ -78,10 +78,10 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
       const release = await mutex.acquire();
       try {
         const refreshToken = (api.getState() as RootState).persisted.token.refresh_token;
-        const userId = (api.getState() as RootState).persisted.token.id;
+        const id = (api.getState() as RootState).persisted.token.id;
         const refreshResult = await baseQuery(
           {
-            url: `/token/${userId}`,
+            url: `/token/${id}`,
             method: 'PUT',
             body: refreshToken
           },
@@ -146,7 +146,7 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
       }),
-      registerMember: builder.mutation<Member, RegistrasiMember>({
+      registerMember: builder.mutation<IToken, RegistrasiMember>({
         query: (body) => ({
             url: '/register/member?XDEBUG_SESSION_START=PHPSTORM',
             method: 'POST',

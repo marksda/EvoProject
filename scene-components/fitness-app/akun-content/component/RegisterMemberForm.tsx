@@ -280,7 +280,7 @@ const RegisterMemberForm = () => {
     await registerMember(data).unwrap().then((payload) => {
       // setDisableForm(false);
       console.log(payload);
-      // dispatch(setToken())
+      // dispatch(setToken(payload.token));
     }).catch((error) => {
       // setDisableForm(false);
     }); 
