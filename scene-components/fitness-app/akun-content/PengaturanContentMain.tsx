@@ -4,7 +4,7 @@ import { ScrollView } from "react-native";
 import AccordionBox from "./component/Accordionbox";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "@/features/ssot/hook";
-import RegisterMemberForm from "./component/RegisterMemberForm";
+import RegisterMemberForm from "../formulir/RegisterMemberForm";
 
 const PengaturanContentMain = () => {
 

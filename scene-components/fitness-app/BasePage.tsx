@@ -6,9 +6,11 @@ import {
     User 
 } from "lucide-react-native";
 import MobileBottomTabs from "./MobileBottomTabs";
-import React from "react";
+import React, { useCallback } from "react";
 import BerandaPage from "./BerandaPage";
 import AkunPage from "./AkunPage";
+import { useAppSelector } from "@/features/ssot/hook";
+import { useNavigation } from "@react-navigation/native";
 
 
 const bottomTabs = [
@@ -31,25 +33,46 @@ const bottomTabs = [
 ];
 
 const BasePage = () => {
-    const [activeTab, setActiveTab] = React.useState("Beranda");
+  const token = useAppSelector(state => state.persisted.token);
+  const navigation = useNavigation();
+  const [activeTab, setActiveTab] = React.useState("Beranda");
 
-    return (
-        <>
-            <Box className="flex-1">
-                <Box className="flex-1">
-                    <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
-                    <AkunPage isActive={activeTab === "Akun"} />
-                </Box>
-                <Box className="h-[52px] items-center w-full flex md:hidden border-t border-outline-50">
-                    <MobileBottomTabs
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        bottomTabs={bottomTabs}
-                    />
-                </Box>
-            </Box>
-        </>
-    );
+  // console.log(token);
+
+  const handleActiveTabChange = useCallback(
+    (id: string) => {
+      if(id == "Akun") {
+        if(token.token != null) {
+          setActiveTab(id);
+        } 
+        else {
+          //redirect to navigation
+          // @ts-ignore: Unreachable code error
+          navigation.navigate("formulir", {id: "Login"});
+        }
+      }
+      else {
+        setActiveTab(id);
+      }
+    },
+    []
+  );
+
+  return (
+    <Box className="flex-1">
+      <Box className="flex-1">
+        <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
+        <AkunPage isActive={activeTab === "Akun"} />
+      </Box>
+      <Box className="h-[52px] items-center w-full flex">
+          <MobileBottomTabs
+            activeTab={activeTab}
+            setActiveTab={handleActiveTabChange}
+            bottomTabs={bottomTabs}
+          />
+      </Box>
+    </Box>
+  );
 }
 
 export default BasePage;

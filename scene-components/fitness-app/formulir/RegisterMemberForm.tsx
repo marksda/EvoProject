@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Divider } from "@/components/ui/divider";
 import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import MobileTanggalLahirActionsheet from "../../MobileTanggalLahirActionsheet";  
+import MobileTanggalLahirActionsheet from "../MobileTanggalLahirActionsheet";  
 import { RegistrasiMember, RegistrasiMemberSchema } from "@/features/schema-resolver/Member";
 import { Club } from "@/features/schema-resolver/Club";
 import { Text } from "@/components/ui/text";
