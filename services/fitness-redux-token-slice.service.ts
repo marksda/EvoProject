@@ -2,6 +2,7 @@ import { ICredential } from "@/features/entities/fitness/credential";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TokenAPI } from "./fitness-api-rtkquery-service";
 import { IToken } from "@/features/entities/fitness/token";
+import { storage } from "@/features/ssot/storageMMKV";
 
 
 export const fetchToken = createAsyncThunk(
@@ -23,11 +24,10 @@ export const fetchToken = createAsyncThunk(
   }
 );
 
-const initialState: IToken =  {
-  id: null,
-  token: "",
-  refresh_token: ""
-};
+const initialState: IToken = storage.getString('token') != undefined ? 
+      JSON.parse(storage.getString('token')!) 
+      : 
+      {id: null, token: null, refresh_token: null};
 
 export const tokenSlice = createSlice({
   name: 'token',

@@ -1,7 +1,7 @@
 import { Storage } from "redux-persist";
 import { MMKV } from "react-native-mmkv";
 
-const storage = new MMKV();
+export const storage = new MMKV();
 
 const reduxStorageMMKV: Storage = {
   setItem: (key, value) => {
@@ -17,6 +17,7 @@ const reduxStorageMMKV: Storage = {
     return Promise.resolve();
   },
 };
+
 
 // export const StorageMMKV = {
 //   setTheme: (key: string, value: Theme) => {

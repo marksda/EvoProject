@@ -1,5 +1,5 @@
 export interface IToken {
   id: number|null;
-  token: string;
-  refresh_token?: string;
+  token: string|null;
+  refresh_token?: string|null;
 };

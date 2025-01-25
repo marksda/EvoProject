@@ -22,6 +22,7 @@ const exitApp = () => {
 
 const AkunContentMain = () => {
   const token = useAppSelector(state => state.persisted.token);
+  console.log(token);
   const navigation = useNavigation();
   const [tmblPaket, setTmblPaket] = React.useState('membership');
   const [showDetailPaket, setShowDetailPaket] = React.useState(false);
