@@ -1,4 +1,3 @@
-import { ICredential } from "@/features/entities/fitness/credential";
 import { IToken } from "@/features/entities/fitness/token";
 import { RootState } from "@/features/ssot/fitness-redux-store";
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -13,12 +12,13 @@ import { Club } from "@/features/schema-resolver/Club";
 import { Kabupaten } from "@/features/schema-resolver/Kabupaten";
 import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
-import { Member, RegistrasiMember } from "@/features/schema-resolver/Member";
+import { RegistrasiMember } from "@/features/schema-resolver/Member";
+import { Credential } from "@/features/schema-resolver/Credential";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
 export class TokenAPI {
-  static getToken = async (credential: ICredential) => {
+  static getToken = async (credential: Credential) => {
     // let data = null;
     return fetch(
       `${urlApi}/token`, 

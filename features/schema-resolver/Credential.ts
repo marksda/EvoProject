@@ -5,4 +5,4 @@ export const CredentialSchema = z.object({
   password: z.string({required_error: "harus diisi"})
 });
 
-export type Member = z.infer<typeof CredentialSchema>;
+export type Credential = z.infer<typeof CredentialSchema>;
