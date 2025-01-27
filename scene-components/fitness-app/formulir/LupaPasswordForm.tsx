@@ -14,7 +14,7 @@ import { useCallback } from "react";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
 
-const LoginForm = () => {
+const LupaPasswordForm = () => {
   const navigation = useNavigation();
   const {control, handleSubmit} = useForm<Credential>({
     defaultValues: {},
@@ -62,7 +62,11 @@ const LoginForm = () => {
           source={require('../../../assets/fitness-logo.png')}
           alt="image"
           className="self-center mb-4"
-        />
+        />        
+        <Text bold={true} className="text-black mb-2">Pulihkan akun Anda</Text>
+        <Text size="xs">
+          Isikan alamat email login Anda dan ikuti petunjuk yang akan dikirim ke email tersebut.
+        </Text>
         <Controller
           control={control}
           name="email"
@@ -77,10 +81,8 @@ const LoginForm = () => {
                 isDisabled={false}
                 isReadOnly={false}
                 isRequired={false}          
+                className="mt-4"
               >
-                <FormControlLabel>
-                <FormControlLabelText>Email</FormControlLabelText>
-                </FormControlLabel>
                 <Input className="my-1">
                   <InputField
                     placeholder="email ..."
@@ -92,82 +94,14 @@ const LoginForm = () => {
                 </Input>
                 <FormControlError>
                 <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
+                  <FormControlErrorText size="2xs">
                     {error?.message}
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
             )
           } 
-        />   
-        <Controller
-          control={control}
-          name="password"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={false}          
-              >
-                <FormControlLabel>
-                <FormControlLabelText>Password</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="my-1">
-                  <InputField
-                    type="password"
-                    placeholder="password ..."
-                    size="md"
-                    className="py-1"
-                    value={value ? value : undefined}
-                    onChangeText={onChange}
-                  />
-                </Input>
-                <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />    
-        <HStack className="flex justify-start mt-6">
-          <Text 
-            size="sm" 
-            className="w-[114px]"
-          >
-            Belum punya akun ?
-          </Text>    
-          <Pressable 
-            onPress={handleRegisterForm}
-            className="ml-2"
-          >
-            <Text
-              size="sm"
-              className="text-blue-600"
-            >
-              Buat akun sekarang!
-            </Text>   
-          </Pressable>
-        </HStack>
-        <Pressable 
-          onPress={handleLupaPassword}
-          className="mt-2"
-        >
-          <Text
-            size="sm"
-            className="text-orange-600"
-          >
-            Anda lupa password ?
-          </Text>   
-        </Pressable>
+        />
         <Button 
           className="w-fit self-end mt-11" 
           size="sm"
@@ -180,4 +114,4 @@ const LoginForm = () => {
   );
 }
 
-export default LoginForm;
+export default LupaPasswordForm;
