@@ -14,6 +14,7 @@ import { Desa } from "@/features/schema-resolver/Desa";
 import { RegistrasiMember } from "@/features/schema-resolver/Member";
 import { Credential } from "@/features/schema-resolver/Credential";
 import { Token } from "@/features/entities/fitness/token";
+import { LoginResponse } from "@/features/entities/login-response";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -147,7 +148,7 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
       }),
-      login: builder.mutation<Token, Credential>({
+      login: builder.mutation<LoginResponse, Credential>({
         query: (body) => ({
           url: '/register/login?XDEBUG_SESSION_START=PHPSTORM',
           method: 'POST',
@@ -208,5 +209,6 @@ export const {
   useGetDaftarKecamatanQuery,
   useGetDaftarDesaQuery,
   useRegisterMemberMutation,
+  useLoginMutation,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation
 } = fitnessApi;

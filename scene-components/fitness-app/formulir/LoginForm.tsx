@@ -8,6 +8,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Credential, CredentialSchema } from "@/features/schema-resolver/Credential";
+import { useLoginMutation } from "@/services/fitness-api-rtkquery-service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
@@ -20,6 +21,7 @@ const LoginForm = () => {
     defaultValues: {},
     resolver: zodResolver(CredentialSchema),
   });
+  const [login] = useLoginMutation();
 
   // navigation.navigate("formulir", {id: "Login"});
 
@@ -42,12 +44,13 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<Credential> = async (data) => {
     console.log(data);
 
-    // await registerMember(data).unwrap().then((payload) => {
-      // console.log(payload);
+    await login(data).unwrap().then((payload) => {
+      console.log(payload);
       // dispatch(setToken(payload));
-    // }).catch((error) => {
+    }).catch((error) => {
+      console.log(error);
       // setDisableForm(false);
-    // }); 
+    }); 
   };
 
   const onError: SubmitErrorHandler<Credential> = async (err) => {
