@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TokenAPI } from "./fitness-api-rtkquery-service";
-import { IToken } from "@/features/entities/fitness/token";
 import { storage } from "@/features/ssot/storageMMKV";
 import { Credential } from "@/features/schema-resolver/Credential";
+import { Token } from "@/features/entities/fitness/token";
 
 
 export const fetchToken = createAsyncThunk(
@@ -24,7 +24,7 @@ export const fetchToken = createAsyncThunk(
   }
 );
 
-const initialState: IToken = storage.getString('token') != undefined ? 
+const initialState: Token = storage.getString('token') != undefined ? 
       JSON.parse(storage.getString('token')!) 
       : 
       {token: null, refresh_token: null};
@@ -33,7 +33,7 @@ export const tokenSlice = createSlice({
   name: 'token',
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<IToken>) => {
+    setToken: (state, action: PayloadAction<Token>) => {
       state.token = action.payload.token;
       state.refresh_token = action.payload.refresh_token;
     },

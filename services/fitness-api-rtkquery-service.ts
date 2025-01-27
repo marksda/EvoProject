@@ -1,4 +1,3 @@
-import { IToken } from "@/features/entities/fitness/token";
 import { RootState } from "@/features/ssot/fitness-redux-store";
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
@@ -14,6 +13,7 @@ import { Kecamatan } from "@/features/schema-resolver/Kecamatan";
 import { Desa } from "@/features/schema-resolver/Desa";
 import { RegistrasiMember } from "@/features/schema-resolver/Member";
 import { Credential } from "@/features/schema-resolver/Credential";
+import { Token } from "@/features/entities/fitness/token";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -91,7 +91,7 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
         );
 
         if(refreshResult.data) {
-          api.dispatch(setToken(refreshResult.data as IToken));
+          api.dispatch(setToken(refreshResult.data as Token));
           result = await baseQuery(args, api, extraOptions);
         } 
         else {                    
@@ -147,14 +147,14 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
       }),
-      login: builder.mutation<IToken, Credential>({
+      login: builder.mutation<Token, Credential>({
         query: (body) => ({
           url: '/register/login?XDEBUG_SESSION_START=PHPSTORM',
           method: 'POST',
           body,
         }),
       }),
-      registerMember: builder.mutation<IToken, RegistrasiMember>({
+      registerMember: builder.mutation<Token, RegistrasiMember>({
         query: (body) => ({
             url: '/register/member?XDEBUG_SESSION_START=PHPSTORM',
             method: 'POST',

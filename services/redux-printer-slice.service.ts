@@ -3,44 +3,44 @@ import { IPrinterScanner } from "../features/entities/printer-scanner";
 import _ from "lodash";
 
 type ListPrinter = {
-    printers: IPrinterScanner[];
+  printers: IPrinterScanner[];
 };
 
 const initialState: ListPrinter =  {
-    printers: [],
+  printers: [],
 };
 
 export const PrinterScannerSlice = createSlice({
-    name: 'printer',
-    initialState,
-    reducers: {
-        setPrinterScanner: (state, action: PayloadAction<IPrinterScanner[]>) => {
-            state.printers = _.cloneDeep(action.payload);
-        },
-        removePrinterScanner: (state, action: PayloadAction<IPrinterScanner>) => {
-            let tmp = _.cloneDeep(state.printers);
-            _.remove(tmp, (item) => {return item.address == action.payload.address});
-            state.printers = tmp;
-        },
-        addPrinterScanner: (state, action: PayloadAction<IPrinterScanner>) => {
-            let i = _.findIndex(state.printers, (o) => { return o.address == action.payload.address });
-            if( i == -1){
-                state.printers = _.concat(state.printers, action.payload);
-            }            
-        },
-        updatePrinterScanner: (state, action: PayloadAction<{dtLama:IPrinterScanner; dtBaru:IPrinterScanner}>) => {            
-            let tmp = _.cloneDeep(state.printers);
-            let i = _.findIndex(tmp, (o) => { return o.address == action.payload.dtLama.address });
+  name: 'printer',
+  initialState,
+  reducers: {
+    setPrinterScanner: (state, action: PayloadAction<IPrinterScanner[]>) => {
+      state.printers = _.cloneDeep(action.payload);
+    },
+    removePrinterScanner: (state, action: PayloadAction<IPrinterScanner>) => {
+      let tmp = _.cloneDeep(state.printers);
+      _.remove(tmp, (item) => {return item.address == action.payload.address});
+      state.printers = tmp;
+    },
+    addPrinterScanner: (state, action: PayloadAction<IPrinterScanner>) => {
+      let i = _.findIndex(state.printers, (o) => { return o.address == action.payload.address });
+      if( i == -1){
+          state.printers = _.concat(state.printers, action.payload);
+      }            
+    },
+    updatePrinterScanner: (state, action: PayloadAction<{dtLama:IPrinterScanner; dtBaru:IPrinterScanner}>) => {            
+      let tmp = _.cloneDeep(state.printers);
+      let i = _.findIndex(tmp, (o) => { return o.address == action.payload.dtLama.address });
 
-            if( i >= 0){
-                tmp.splice(i, 1, action.payload.dtBaru);
-                state.printers = tmp;
-            }            
-        },
-        resetPrinterScanner: (state, action: PayloadAction<null>) => {
-            state.printers = [];
-        },
-    }
+      if( i >= 0){
+        tmp.splice(i, 1, action.payload.dtBaru);
+        state.printers = tmp;
+      }            
+    },
+    resetPrinterScanner: (state, action: PayloadAction<null>) => {
+      state.printers = [];
+    },
+  }
 });
 
 export const { setPrinterScanner, removePrinterScanner, addPrinterScanner, updatePrinterScanner, resetPrinterScanner } = PrinterScannerSlice.actions;
