@@ -48,7 +48,7 @@ const BasePage = () => {
         else {
           //redirect to navigation
           // @ts-ignore: Unreachable code error
-          navigation.navigate("formulir", {id: "Login"});
+          navigation.navigate("submain", {id: "Login"});
         }
       }
       else {

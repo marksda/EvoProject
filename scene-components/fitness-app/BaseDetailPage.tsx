@@ -7,6 +7,7 @@ import RiwayatContentBase from "./akun-content/RiwayatContentBase";
 import TagihanContentBase from "./akun-content/TagihanContentBase";
 import BonusContentBase from "./akun-content/BonusContentBase";
 import PengaturanContentBase from "./akun-content/PengaturanContentBase";
+import LoginContentBase from "./login-content/LoginContentBase";
 
 type Props = StaticScreenProps<{
     id: string;
@@ -35,6 +36,9 @@ const BaseDetailPage= ({ route }: Props) => {
             )}
             {(id == "Pengaturan" || id == "Buat Akun") && (
                 <PengaturanContentBase />
+            )}
+            {(id == "Login") && (
+              <LoginContentBase />
             )}
         </Box>
     );

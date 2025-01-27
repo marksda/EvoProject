@@ -53,14 +53,14 @@ const baseQuery = fetchBaseQuery({
   baseUrl: urlApi,
   prepareHeaders: (headers, { getState }) => {
     const accessToken = (getState() as RootState).persisted.token;
-    if(accessToken != null){
-      headers.set("Cache-Control", 'no-cache, private');
+    if(accessToken != null) {
+      // headers.set("Cache-Control", 'no-cache, private');
       headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
       headers.set("authorization", `Bearer ${accessToken}`);
     }        
     else{
-      headers.set("Cache-Control", 'no-cache, private');
+      // headers.set("Cache-Control", 'no-cache, private');
       headers.set("Content-Type", 'application/json');
       headers.set("Accept", 'application/json');
     }    
@@ -78,10 +78,11 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
       const release = await mutex.acquire();
       try {
         const refreshToken = (api.getState() as RootState).persisted.token.refresh_token;
-        const id = (api.getState() as RootState).persisted.token.id;
+        // const id = (api.getState() as RootState).persisted.token.id;
         const refreshResult = await baseQuery(
           {
-            url: `/token/${id}`,
+            // url: `/token/${id}`,
+            url: '/token',
             method: 'PUT',
             body: refreshToken
           },
@@ -145,6 +146,13 @@ export const fitnessApi = createApi({
       getDaftarDesa: builder.query<Desa[], IQueryParamFilters>({
         query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Desa']
+      }),
+      login: builder.mutation<IToken, Credential>({
+        query: (body) => ({
+          url: '/register/login?XDEBUG_SESSION_START=PHPSTORM',
+          method: 'POST',
+          body,
+        }),
       }),
       registerMember: builder.mutation<IToken, RegistrasiMember>({
         query: (body) => ({

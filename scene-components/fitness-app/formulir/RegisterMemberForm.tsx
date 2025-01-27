@@ -23,6 +23,7 @@ import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { useAppDispatch } from "@/features/ssot/hook";
 import { setToken } from "@/services/fitness-redux-token-slice.service";
+import { ScrollView } from "react-native";
 
 const RegisterMemberForm = () => {
   const dispatch = useAppDispatch();
@@ -291,20 +292,58 @@ const RegisterMemberForm = () => {
   };
 
   return (
-    <VStack className="gap-2 pb-8">
-      <Card variant="outline" className="bg-white">
-        <Heading size="sm">
-          Data diri
-        </Heading>
-        <Divider className="my-2"/>
-        <Controller
-          control={control}
-          name="identifier"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
+    <ScrollView className="p-2">
+      <VStack className="gap-2 pb-8">
+        <Card variant="outline" className="bg-white">
+          <Heading size="sm">
+            Data diri
+          </Heading>
+          <Divider className="my-2"/>
+          <Controller
+            control={control}
+            name="identifier"
+            render={
+              ({ 
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Nik</FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="my-1">
+                    <InputField
+                      placeholder="nik sesuai ktp ..."
+                      size="md"
+                      className="py-1"
+                      value={value ? value : undefined}
+                      onChangeText={onChange}
+                    />
+                  </Input>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          /> 
+          <Controller
+            control={control}
+            name="nama"
+            render={(
+              { 
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
               <FormControl
                 isInvalid={error ? true : false}
                 size="md"
@@ -313,11 +352,11 @@ const RegisterMemberForm = () => {
                 isRequired={true}
               >
                 <FormControlLabel>
-                  <FormControlLabelText>Nik</FormControlLabelText>
+                  <FormControlLabelText>Nama</FormControlLabelText>
                 </FormControlLabel>
                 <Input className="my-1">
                   <InputField
-                    placeholder="nik sesuai ktp ..."
+                    placeholder="nama sesuai ktp ..."
                     size="md"
                     className="py-1"
                     value={value ? value : undefined}
@@ -331,150 +370,54 @@ const RegisterMemberForm = () => {
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
-            )
-          }
-        /> 
-        <Controller
-          control={control}
-          name="nama"
-          render={(
-            { 
+            )}
+          /> 
+          <Controller
+            control={control}
+            name="club_id"
+            render={({ 
               field: { onChange, value },
               fieldState: { error }
-            }) => (
-            <FormControl
-              isInvalid={error ? true : false}
-              size="md"
-              isDisabled={false}
-              isReadOnly={false}
-              isRequired={true}
-            >
-              <FormControlLabel>
-                <FormControlLabelText>Nama</FormControlLabelText>
-              </FormControlLabel>
-              <Input className="my-1">
-                <InputField
-                  placeholder="nama sesuai ktp ..."
-                  size="md"
-                  className="py-1"
-                  value={value ? value : undefined}
-                  onChangeText={onChange}
-                />
-              </Input>
-              <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>
-                  {error?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-          )}
-        /> 
-        <Controller
-          control={control}
-          name="club_id"
-          render={({ 
-            field: { onChange, value },
-            fieldState: { error }
-          }) => (
-            <FormControl
-              isInvalid={error ? true : false}
-              size="md"
-              isDisabled={false}
-              isReadOnly={false}
-              isRequired={false}
-            >
-              <FormControlLabel>
-                <FormControlLabelText>Club</FormControlLabelText>
-              </FormControlLabel>
-              <Select
-                selectedValue={value ? value.toString() : undefined}
-                onValueChange={(val) => {
-                  onChange(Number(val));
-                }}
-              >
-                <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                  <SelectInput placeholder="Pilih club ..." className="py-1"/>
-                  <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                </SelectTrigger>
-                <SelectPortal>
-                  <SelectBackdrop />
-                  <SelectContent  className="min-h-[300px]">  
-                    <SelectDragIndicatorWrapper>
-                      <SelectDragIndicator />
-                    </SelectDragIndicatorWrapper>
-                    <SelectFlatList                      
-                      data={clubs}
-                      renderItem={({item}) => (  
-                        <SelectItem 
-                          key={(item as Club).id} 
-                          label={(item as Club).nama} 
-                          value={(item as Club).id!.toString()} 
-                        />   
-                      )}
-                      keyExtractor={item => `${(item as Club).id}`}
-                    />
-                  </SelectContent>
-                </SelectPortal >
-              </Select>
-              <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>
-                  harus dipilih
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-          )}
-        />        
-        <Controller
-          control={control}
-          name="agama_id"
-          render={
-            ({ 
-              field: { value, onChange },
-              fieldState: { error,  }
             }) => (
               <FormControl
                 isInvalid={error ? true : false}
                 size="md"
                 isDisabled={false}
                 isReadOnly={false}
-                isRequired={true}
+                isRequired={false}
               >
                 <FormControlLabel>
-                  <FormControlLabelText>Agama</FormControlLabelText>
+                  <FormControlLabelText>Club</FormControlLabelText>
                 </FormControlLabel>
                 <Select
                   selectedValue={value ? value.toString() : undefined}
                   onValueChange={(val) => {
-                    onChange(val);
+                    onChange(Number(val));
                   }}
                 >
                   <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Select option" className="py-1"/>
+                    <SelectInput placeholder="Pilih club ..." className="py-1"/>
                     <SelectIcon className="mr-3" as={ChevronDownIcon} />
                   </SelectTrigger>
-                  <SelectPortal >
+                  <SelectPortal>
                     <SelectBackdrop />
-                    <SelectContent>
+                    <SelectContent  className="min-h-[300px]">  
                       <SelectDragIndicatorWrapper>
                         <SelectDragIndicator />
                       </SelectDragIndicatorWrapper>
-                      <SelectScrollView className="max-h-96">
-                      {
-                        agamas != undefined ? (
-                          agamas.map((agama) => (
-                            <SelectItem 
-                              key={agama.id} 
-                              label={agama.nama} 
-                              value={agama.id} 
-                            /> 
-                          ))
-                        ):null
-                      }
-                      </SelectScrollView>
+                      <SelectFlatList                      
+                        data={clubs}
+                        renderItem={({item}) => (  
+                          <SelectItem 
+                            key={(item as Club).id} 
+                            label={(item as Club).nama} 
+                            value={(item as Club).id!.toString()} 
+                          />   
+                        )}
+                        keyExtractor={item => `${(item as Club).id}`}
+                      />
                     </SelectContent>
-                  </SelectPortal>
+                  </SelectPortal >
                 </Select>
                 <FormControlError>
                   <FormControlErrorIcon as={AlertCircleIcon} />
@@ -483,16 +426,262 @@ const RegisterMemberForm = () => {
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>
-            )
-          }
-        />  
-        <HStack className="gap-2 mt-1">
-          <Controller 
+            )}
+          />        
+          <Controller
             control={control}
-            name="tanggal_lahir"
+            name="agama_id"
             render={
               ({ 
-                field: { value },
+                field: { value, onChange },
+                fieldState: { error,  }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Agama</FormControlLabelText>
+                  </FormControlLabel>
+                  <Select
+                    selectedValue={value ? value.toString() : undefined}
+                    onValueChange={(val) => {
+                      onChange(val);
+                    }}
+                  >
+                    <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                      <SelectInput placeholder="Select option" className="py-1"/>
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal >
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectScrollView className="max-h-96">
+                        {
+                          agamas != undefined ? (
+                            agamas.map((agama) => (
+                              <SelectItem 
+                                key={agama.id} 
+                                label={agama.nama} 
+                                value={agama.id} 
+                              /> 
+                            ))
+                          ):null
+                        }
+                        </SelectScrollView>
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      harus dipilih
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />  
+          <HStack className="gap-2 mt-1">
+            <Controller 
+              control={control}
+              name="tanggal_lahir"
+              render={
+                ({ 
+                  field: { value },
+                  fieldState: { error }
+                }) => (
+                  <FormControl
+                    isInvalid={error ? true : false}
+                    size="md"
+                    isDisabled={false}
+                    isReadOnly={false}
+                    isRequired={false}
+                    className="w-1/2"
+                  >
+                    <FormControlLabel>
+                      <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
+                    </FormControlLabel>
+                    <Pressable onPress={showDatepicker} className="flex justify-between px-3 py-[5px] h-10 border border-gray-300 rounded-[3px]">
+                      <Text className={tanggalLahir == null ? "text-gray-400": "text-black"}>{tanggalLahir == null ? 'Tanggal lahir ...' : dayjs(tanggalLahir).format('DD-MM-YYYY')}</Text>
+                    </Pressable>
+                    <MobileTanggalLahirActionsheet
+                      tanggal_lahir={value}
+                      onChangeTanggalLahir={onChangeTanggalLahir}
+                      actionsheetVisible={showActionSheetTanggalLahir}
+                      setActionsheetVisible={setShowActionSheetTanggalLahir}
+                    />
+                    <FormControlError>
+                      <FormControlErrorIcon as={AlertCircleIcon} />
+                      <FormControlErrorText>
+                        harus dipilih
+                      </FormControlErrorText>
+                    </FormControlError>
+                  </FormControl>
+                )
+              }
+            />
+            <Controller
+              control={control}
+              name="jenis_kelamin_id"
+              render={
+                ({ 
+                  field: { value, onChange },
+                  fieldState: { error,  }
+                }) => (
+                  <FormControl
+                    isInvalid={error ? true : false}
+                    size="md"
+                    isDisabled={false}
+                    isReadOnly={false}
+                    isRequired={true}
+                    className="grow"
+                  >
+                    <FormControlLabel>
+                      <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
+                    </FormControlLabel>
+                    <Select
+                      selectedValue={value ? value : undefined}
+                      onValueChange={(val) => {
+                        onChange(val);
+                      }}
+                    >
+                      <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                        <SelectInput placeholder="Jenis kelamin ..." className="py-1"/>
+                        <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                      </SelectTrigger>
+                      <SelectPortal >
+                        <SelectBackdrop />
+                        <SelectContent>
+                          <SelectDragIndicatorWrapper>
+                            <SelectDragIndicator />
+                          </SelectDragIndicatorWrapper>
+                          <SelectScrollView className="max-h-96">
+                          {
+                            genders != undefined ? (
+                              genders.map((gender) => (
+                                <SelectItem 
+                                  key={gender.id} 
+                                  label={gender.nama} 
+                                  value={gender.id} 
+                                  className="text-sm"
+                                /> 
+                              ))
+                            ):null
+                          }
+                          </SelectScrollView>
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
+                    <FormControlError>
+                      <FormControlErrorIcon as={AlertCircleIcon} />
+                      <FormControlErrorText>
+                        harus dipilih
+                      </FormControlErrorText>
+                    </FormControlError>
+                  </FormControl>
+                )
+              }
+            />
+          </HStack>
+          <HStack className="gap-2 mt-1">
+            <Controller
+              control={control}
+              name="berat_badan"
+              render={
+                ({ 
+                  field: { value, onChange },
+                  fieldState: { error,  }
+                }) => (
+                  <FormControl
+                    isInvalid={error ? true : false}
+                    size="md"
+                    isDisabled={false}
+                    isReadOnly={false}
+                    isRequired={true}
+                    className="w-1/2"
+                  >
+                    <FormControlLabel>
+                      <FormControlLabelText>Berat Badan (kg)</FormControlLabelText>
+                    </FormControlLabel>
+                    <Input className="my-1">
+                      <InputField
+                        placeholder="Berat badan ..."
+                        inputMode="numeric"
+                        size="md"
+                        className="py-1"
+                        value={value ? value.toString() : undefined}
+                        onChangeText={(val) => onChange(Number(val))}
+                      />
+                    </Input>
+                    <FormControlError>
+                      <FormControlErrorIcon as={AlertCircleIcon} />
+                      <FormControlErrorText>
+                        {error?.message}
+                      </FormControlErrorText>
+                    </FormControlError>
+                  </FormControl>
+                )
+              }
+            />
+            <Controller
+              control={control}
+              name="tinggi_badan"
+              render={
+                ({ 
+                  field: { value, onChange },
+                  fieldState: { error,  }
+                }) => (
+                  <FormControl
+                    isInvalid={error ? true : false}
+                    size="md"
+                    isDisabled={false}
+                    isReadOnly={false}
+                    isRequired={true}
+                    className="grow"
+                  >
+                    <FormControlLabel>
+                      <FormControlLabelText>Tinggi Badan (m)</FormControlLabelText>
+                    </FormControlLabel>
+                    <Input className="my-1">
+                      <InputField
+                        placeholder="Tinggi badan ..."
+                        inputMode="numeric"
+                        size="md"
+                        className="py-1"
+                        value={value ? value.toString() : undefined}
+                        onChangeText={(val) => onChange(Number(val))}
+                      />
+                    </Input>
+                    <FormControlError>
+                      <FormControlErrorIcon as={AlertCircleIcon} />
+                      <FormControlErrorText>
+                        {error?.message}
+                      </FormControlErrorText>
+                    </FormControlError>
+                  </FormControl>
+                )
+              }
+            />
+          </HStack>
+        </Card>
+        <Card variant="outline" className="bg-white">
+          <Heading size="sm">
+            Data alamat
+          </Heading>
+          <Divider className="my-2"/>
+          <Controller
+            control={control}
+            name="provinsi_id"
+            render={
+              ({ 
+                field: { onChange},
                 fieldState: { error }
               }) => (
                 <FormControl
@@ -500,21 +689,44 @@ const RegisterMemberForm = () => {
                   size="md"
                   isDisabled={false}
                   isReadOnly={false}
-                  isRequired={false}
-                  className="w-1/2"
+                  isRequired={true}
                 >
                   <FormControlLabel>
-                    <FormControlLabelText>Tanggal Lahir</FormControlLabelText>
+                    <FormControlLabelText>Provinsi</FormControlLabelText>
                   </FormControlLabel>
-                  <Pressable onPress={showDatepicker} className="flex justify-between px-3 py-[5px] h-10 border border-gray-300 rounded-[3px]">
-                    <Text className={tanggalLahir == null ? "text-gray-400": "text-black"}>{tanggalLahir == null ? 'Tanggal lahir ...' : dayjs(tanggalLahir).format('DD-MM-YYYY')}</Text>
-                  </Pressable>
-                  <MobileTanggalLahirActionsheet
-                    tanggal_lahir={value}
-                    onChangeTanggalLahir={onChangeTanggalLahir}
-                    actionsheetVisible={showActionSheetTanggalLahir}
-                    setActionsheetVisible={setShowActionSheetTanggalLahir}
-                  />
+                  <Select
+                    selectedValue={selectedKeyProvinsi}
+                    onValueChange={(val) => {
+                      onChange(val);         
+                      handleChangeInputSelector('provinsi', val)
+                    }}
+                  >
+                    <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                      <SelectInput placeholder="Provinsi ..." className="py-1"/>
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal >
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectScrollView className="max-h-96">
+                        {
+                          provinsis != undefined ? (
+                            provinsis.map((provinsi) => (
+                              <SelectItem 
+                                key={provinsi.id} 
+                                label={provinsi.nama} 
+                                value={provinsi.id} 
+                              /> 
+                            ))
+                          ):null
+                        }
+                        </SelectScrollView>
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
                   <FormControlError>
                     <FormControlErrorIcon as={AlertCircleIcon} />
                     <FormControlErrorText>
@@ -527,31 +739,31 @@ const RegisterMemberForm = () => {
           />
           <Controller
             control={control}
-            name="jenis_kelamin_id"
+            name="kabupaten_id"
             render={
               ({ 
-                field: { value, onChange },
-                fieldState: { error,  }
+                field: { onChange},
+                fieldState: { error }
               }) => (
                 <FormControl
                   isInvalid={error ? true : false}
                   size="md"
-                  isDisabled={false}
+                  isDisabled={ selectedKeyProvinsi ? false : true }
                   isReadOnly={false}
                   isRequired={true}
-                  className="grow"
                 >
                   <FormControlLabel>
-                    <FormControlLabelText>Jenis Kelamin</FormControlLabelText>
+                    <FormControlLabelText>Kabupaten / Kota</FormControlLabelText>
                   </FormControlLabel>
-                  <Select
-                    selectedValue={value ? value : undefined}
+                  <Select 
+                    selectedValue={selectedKeyKabupaten}
                     onValueChange={(val) => {
-                      onChange(val);
+                      onChange(val);   
+                      handleChangeInputSelector('kabupaten', val);
                     }}
                   >
                     <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                      <SelectInput placeholder="Jenis kelamin ..." className="py-1"/>
+                      <SelectInput placeholder="Select option" className="py-1"/>
                       <SelectIcon className="mr-3" as={ChevronDownIcon} />
                     </SelectTrigger>
                     <SelectPortal >
@@ -562,12 +774,12 @@ const RegisterMemberForm = () => {
                         </SelectDragIndicatorWrapper>
                         <SelectScrollView className="max-h-96">
                         {
-                          genders != undefined ? (
-                            genders.map((gender) => (
+                          kabupatens != undefined ? (
+                            kabupatens.map((kabupaten) => (
                               <SelectItem 
-                                key={gender.id} 
-                                label={gender.nama} 
-                                value={gender.id} 
+                                key={kabupaten.id} 
+                                label={kabupaten.nama} 
+                                value={kabupaten.id} 
                                 className="text-sm"
                               /> 
                             ))
@@ -587,15 +799,178 @@ const RegisterMemberForm = () => {
               )
             }
           />
-        </HStack>
-        <HStack className="gap-2 mt-1">
           <Controller
             control={control}
-            name="berat_badan"
+            name="kecamatan_id"
             render={
               ({ 
-                field: { value, onChange },
-                fieldState: { error,  }
+                field: { onChange},
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={ selectedKeyKabupaten ? false : true }
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Kecamatan</FormControlLabelText>
+                  </FormControlLabel>
+                  <Select 
+                    selectedValue={selectedKeyKecamatan}
+                    onValueChange={(val) => {
+                      onChange(val); 
+                      handleChangeInputSelector('kecamatan', val);
+                    }}
+                  >
+                    <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                      <SelectInput placeholder="Select option" className="py-1"/>
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal >
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectScrollView className="max-h-96">
+                        {
+                          kecamatans != undefined ? (
+                            kecamatans.map((kecamatan) => (
+                              <SelectItem 
+                                key={kecamatan.id} 
+                                label={kecamatan.nama} 
+                                value={kecamatan.id} 
+                                className="text-sm"
+                              /> 
+                            ))
+                          ):null
+                        }
+                        </SelectScrollView>
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      harus dipilih
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
+          <Controller
+            control={control}
+            name="desa_id"
+            render={
+              ({ 
+                field: {onChange},
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={ selectedKeyKecamatan ? false : true }
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Desa</FormControlLabelText>
+                  </FormControlLabel>
+                  <Select 
+                    selectedValue={selectedKeyDesa}
+                    onValueChange={(val) => {
+                      onChange(val); 
+                      handleChangeInputSelector('desa', val);
+                    }}
+                  >
+                    <SelectTrigger variant="outline" size="md" className="flex justify-between">
+                      <SelectInput placeholder="Select option" className="py-1"/>
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal >
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        <SelectScrollView className="max-h-96">
+                        {
+                          desas != undefined ? (
+                            desas.map((desa) => (
+                              <SelectItem 
+                                key={desa.id} 
+                                label={desa.nama} 
+                                value={desa.id} 
+                                className="text-sm"
+                              /> 
+                            ))
+                          ):null
+                        }
+                        </SelectScrollView>
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      harus dipilih
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
+          <Controller
+            control={control}
+            name="alamat"
+            render={
+              ({ 
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={ selectedKeyDesa ? false : true }
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Detail alamat</FormControlLabelText>
+                  </FormControlLabel>
+                  <Textarea
+                    size="md"
+                    isReadOnly={false}
+                    isInvalid={false}
+                    isDisabled={false}                  
+                  >
+                    <TextareaInput 
+                      placeholder="jalan, komplek, nomer rumah, rt dan rw ..." 
+                      className="align-top" 
+                      value={value}
+                      onChangeText={onChange}
+                    />
+                  </Textarea>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />
+          <Controller
+            control={control}
+            name="kode_pos"
+            render={
+              ({ 
+                field: { onChange, value },
+                fieldState: { error }
               }) => (
                 <FormControl
                   isInvalid={error ? true : false}
@@ -603,19 +978,103 @@ const RegisterMemberForm = () => {
                   isDisabled={false}
                   isReadOnly={false}
                   isRequired={true}
-                  className="w-1/2"
                 >
                   <FormControlLabel>
-                    <FormControlLabelText>Berat Badan (kg)</FormControlLabelText>
+                    <FormControlLabelText>Kodepos</FormControlLabelText>
                   </FormControlLabel>
                   <Input className="my-1">
                     <InputField
-                      placeholder="Berat badan ..."
-                      inputMode="numeric"
+                      placeholder="kodepos ..."
                       size="md"
                       className="py-1"
-                      value={value ? value.toString() : undefined}
-                      onChangeText={(val) => onChange(Number(val))}
+                      value={value ? value : undefined}
+                      onChangeText={onChange}
+                    />
+                  </Input>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          /> 
+        </Card> 
+        <Card variant="outline" className="bg-white">
+          <Heading size="sm">
+            Data login & kontak
+          </Heading>
+          <Divider className="my-2"/>
+          <Controller
+            control={control}
+            name="email"
+            render={
+              ({ 
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>E-mail</FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="my-1">
+                    <InputField
+                      placeholder="Email ..."
+                      inputMode="email"
+                      size="md"
+                      className="py-1"
+                      value={value ? value : undefined}
+                      onChangeText={onChange}
+                    />
+                  </Input>                
+                  <FormControlHelper>
+                    <FormControlHelperText>
+                      email sebagai username saat login
+                    </FormControlHelperText>
+                  </FormControlHelper>
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {error?.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                </FormControl>
+              )
+            }
+          />  
+          <Controller
+            control={control}
+            name="no_hp"
+            render={
+              ({ 
+                field: { onChange, value },
+                fieldState: { error }
+              }) => (
+                <FormControl
+                  isInvalid={error ? true : false}
+                  size="md"
+                  isDisabled={false}
+                  isReadOnly={false}
+                  isRequired={true}
+                >
+                  <FormControlLabel>
+                    <FormControlLabelText>Nomor Hp</FormControlLabelText>
+                  </FormControlLabel>
+                  <Input className="my-1">
+                    <InputField
+                      placeholder="Nomor hp ..."
+                      size="md"
+                      className="py-1"
+                      value={value ? value : undefined}
+                      onChangeText={onChange}
                     />
                   </Input>
                   <FormControlError>
@@ -630,11 +1089,11 @@ const RegisterMemberForm = () => {
           />
           <Controller
             control={control}
-            name="tinggi_badan"
+            name="password"
             render={
               ({ 
-                field: { value, onChange },
-                fieldState: { error,  }
+                field: { onChange, value },
+                fieldState: { error }
               }) => (
                 <FormControl
                   isInvalid={error ? true : false}
@@ -642,19 +1101,18 @@ const RegisterMemberForm = () => {
                   isDisabled={false}
                   isReadOnly={false}
                   isRequired={true}
-                  className="grow"
                 >
                   <FormControlLabel>
-                    <FormControlLabelText>Tinggi Badan (m)</FormControlLabelText>
+                    <FormControlLabelText>Password</FormControlLabelText>
                   </FormControlLabel>
                   <Input className="my-1">
                     <InputField
-                      placeholder="Tinggi badan ..."
-                      inputMode="numeric"
+                      placeholder="password ..."
+                      secureTextEntry={true}
                       size="md"
                       className="py-1"
-                      value={value ? value.toString() : undefined}
-                      onChangeText={(val) => onChange(Number(val))}
+                      value={value ? value : undefined}
+                      onChangeText={onChange}
                     />
                   </Input>
                   <FormControlError>
@@ -666,476 +1124,21 @@ const RegisterMemberForm = () => {
                 </FormControl>
               )
             }
-          />
-        </HStack>
-      </Card>
-      <Card variant="outline" className="bg-white">
-        <Heading size="sm">
-          Data alamat
-        </Heading>
-        <Divider className="my-2"/>
-        <Controller
-          control={control}
-          name="provinsi_id"
-          render={
-            ({ 
-              field: { onChange},
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Provinsi</FormControlLabelText>
-                </FormControlLabel>
-                <Select
-                  selectedValue={selectedKeyProvinsi}
-                  onValueChange={(val) => {
-                    onChange(val);         
-                    handleChangeInputSelector('provinsi', val)
-                  }}
-                >
-                  <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Provinsi ..." className="py-1"/>
-                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                  </SelectTrigger>
-                  <SelectPortal >
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectScrollView className="max-h-96">
-                      {
-                        provinsis != undefined ? (
-                          provinsis.map((provinsi) => (
-                            <SelectItem 
-                              key={provinsi.id} 
-                              label={provinsi.nama} 
-                              value={provinsi.id} 
-                            /> 
-                          ))
-                        ):null
-                      }
-                      </SelectScrollView>
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    harus dipilih
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="kabupaten_id"
-          render={
-            ({ 
-              field: { onChange},
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={ selectedKeyProvinsi ? false : true }
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Kabupaten / Kota</FormControlLabelText>
-                </FormControlLabel>
-                <Select 
-                  selectedValue={selectedKeyKabupaten}
-                  onValueChange={(val) => {
-                    onChange(val);   
-                    handleChangeInputSelector('kabupaten', val);
-                  }}
-                >
-                  <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Select option" className="py-1"/>
-                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                  </SelectTrigger>
-                  <SelectPortal >
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectScrollView className="max-h-96">
-                      {
-                        kabupatens != undefined ? (
-                          kabupatens.map((kabupaten) => (
-                            <SelectItem 
-                              key={kabupaten.id} 
-                              label={kabupaten.nama} 
-                              value={kabupaten.id} 
-                              className="text-sm"
-                            /> 
-                          ))
-                        ):null
-                      }
-                      </SelectScrollView>
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    harus dipilih
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="kecamatan_id"
-          render={
-            ({ 
-              field: { onChange},
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={ selectedKeyKabupaten ? false : true }
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Kecamatan</FormControlLabelText>
-                </FormControlLabel>
-                <Select 
-                  selectedValue={selectedKeyKecamatan}
-                  onValueChange={(val) => {
-                    onChange(val); 
-                    handleChangeInputSelector('kecamatan', val);
-                  }}
-                >
-                  <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Select option" className="py-1"/>
-                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                  </SelectTrigger>
-                  <SelectPortal >
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectScrollView className="max-h-96">
-                      {
-                        kecamatans != undefined ? (
-                          kecamatans.map((kecamatan) => (
-                            <SelectItem 
-                              key={kecamatan.id} 
-                              label={kecamatan.nama} 
-                              value={kecamatan.id} 
-                              className="text-sm"
-                            /> 
-                          ))
-                        ):null
-                      }
-                      </SelectScrollView>
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    harus dipilih
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="desa_id"
-          render={
-            ({ 
-              field: {onChange},
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={ selectedKeyKecamatan ? false : true }
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Desa</FormControlLabelText>
-                </FormControlLabel>
-                <Select 
-                  selectedValue={selectedKeyDesa}
-                  onValueChange={(val) => {
-                    onChange(val); 
-                    handleChangeInputSelector('desa', val);
-                  }}
-                >
-                  <SelectTrigger variant="outline" size="md" className="flex justify-between">
-                    <SelectInput placeholder="Select option" className="py-1"/>
-                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                  </SelectTrigger>
-                  <SelectPortal >
-                    <SelectBackdrop />
-                    <SelectContent>
-                      <SelectDragIndicatorWrapper>
-                        <SelectDragIndicator />
-                      </SelectDragIndicatorWrapper>
-                      <SelectScrollView className="max-h-96">
-                      {
-                        desas != undefined ? (
-                          desas.map((desa) => (
-                            <SelectItem 
-                              key={desa.id} 
-                              label={desa.nama} 
-                              value={desa.id} 
-                              className="text-sm"
-                            /> 
-                          ))
-                        ):null
-                      }
-                      </SelectScrollView>
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    harus dipilih
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="alamat"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={ selectedKeyDesa ? false : true }
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Detail alamat</FormControlLabelText>
-                </FormControlLabel>
-                <Textarea
-                  size="md"
-                  isReadOnly={false}
-                  isInvalid={false}
-                  isDisabled={false}                  
-                >
-                  <TextareaInput 
-                    placeholder="jalan, komplek, nomer rumah, rt dan rw ..." 
-                    className="align-top" 
-                    value={value}
-                    onChangeText={onChange}
-                  />
-                </Textarea>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="kode_pos"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Kodepos</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="my-1">
-                  <InputField
-                    placeholder="kodepos ..."
-                    size="md"
-                    className="py-1"
-                    value={value ? value : undefined}
-                    onChangeText={onChange}
-                  />
-                </Input>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        /> 
-      </Card> 
-      <Card variant="outline" className="bg-white">
-        <Heading size="sm">
-          Data login & kontak
-        </Heading>
-        <Divider className="my-2"/>
-        <Controller
-          control={control}
-          name="email"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>E-mail</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="my-1">
-                  <InputField
-                    placeholder="Email ..."
-                    inputMode="email"
-                    size="md"
-                    className="py-1"
-                    value={value ? value : undefined}
-                    onChangeText={onChange}
-                  />
-                </Input>                
-                <FormControlHelper>
-                  <FormControlHelperText>
-                    email sebagai username saat login
-                  </FormControlHelperText>
-                </FormControlHelper>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />  
-        <Controller
-          control={control}
-          name="no_hp"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Nomor Hp</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="my-1">
-                  <InputField
-                    placeholder="Nomor hp ..."
-                    size="md"
-                    className="py-1"
-                    value={value ? value : undefined}
-                    onChangeText={onChange}
-                  />
-                </Input>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />
-        <Controller
-          control={control}
-          name="password"
-          render={
-            ({ 
-              field: { onChange, value },
-              fieldState: { error }
-            }) => (
-              <FormControl
-                isInvalid={error ? true : false}
-                size="md"
-                isDisabled={false}
-                isReadOnly={false}
-                isRequired={true}
-              >
-                <FormControlLabel>
-                  <FormControlLabelText>Password</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="my-1">
-                  <InputField
-                    placeholder="password ..."
-                    secureTextEntry={true}
-                    size="md"
-                    className="py-1"
-                    value={value ? value : undefined}
-                    onChangeText={onChange}
-                  />
-                </Input>
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertCircleIcon} />
-                  <FormControlErrorText>
-                    {error?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )
-          }
-        />  
-      </Card> 
-      <Button 
-        onPress={handleSubmit(onSubmit, onError)}
-        isDisabled={saveProgressMember ? true : false}
-      >
-        <ButtonText 
-          size="md" 
-          variant="solid"
+          />  
+        </Card> 
+        <Button 
+          onPress={handleSubmit(onSubmit, onError)}
+          isDisabled={saveProgressMember ? true : false}
         >
-          Simpan
-        </ButtonText>
-      </Button>
-    </VStack>
+          <ButtonText 
+            size="md" 
+            variant="solid"
+          >
+            Simpan
+          </ButtonText>
+        </Button>
+      </VStack>
+    </ScrollView>
   )
 }
 
