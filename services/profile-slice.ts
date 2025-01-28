@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 const initialState: Profile = storage.getString('profile') != undefined ? JSON.parse(storage.getString('profile')!) : {person: null, club: null, tanggal_gabung: null, role: null, status: null};
 
-export const tokenSlice = createSlice({
+export const profileSlice = createSlice({
   name: 'profile',
   initialState,
   reducers: {
@@ -17,11 +17,15 @@ export const tokenSlice = createSlice({
       state.status = _.cloneDeep(action.payload.status);
     },
     resetProfile: (state, action: PayloadAction<null>) => {
-      state.person = null;
-      state.club = null;
-      state.tanggal_gabung = null;
-      state.role = null;
-      state.status = null;
+      state.person = action.payload;
+      state.club = action.payload;
+      state.tanggal_gabung = action.payload;
+      state.role = action.payload;
+      state.status = action.payload;
     },
   }
 });
+
+export const { setProfile, resetProfile } = profileSlice.actions;
+
+export default profileSlice.reducer;

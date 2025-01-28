@@ -10,12 +10,14 @@ import { VStack } from "@/components/ui/vstack";
 import { Credential, CredentialSchema } from "@/features/schema-resolver/Credential";
 import { useAppDispatch } from "@/features/ssot/hook";
 import { useLoginMutation } from "@/services/fitness-api-rtkquery-service";
+import { setProfile } from "@/services/profile-slice";
 import { setToken } from "@/services/token-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
+import _ from 'lodash';
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -53,6 +55,7 @@ const LoginForm = () => {
         token: payload.token,
         refresh_token: payload.refresh_token
       }));
+      dispatch(setProfile(_.cloneDeep(payload.profile)));
     }).catch((error) => {
       console.log(error);
       // setDisableForm(false);

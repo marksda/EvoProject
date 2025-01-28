@@ -24,10 +24,7 @@ export const fetchToken = createAsyncThunk(
   }
 );
 
-const initialState: Token = storage.getString('token') != undefined ? 
-      JSON.parse(storage.getString('token')!) 
-      : 
-      {token: null, refresh_token: null};
+const initialState: Token = storage.getString('token') != undefined ? JSON.parse(storage.getString('token')!) : {token: null, refresh_token: null};
 
 export const tokenSlice = createSlice({
   name: 'token',
