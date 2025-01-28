@@ -17,6 +17,7 @@ import { TriangleAlertIcon } from "lucide-react-native";
 import { useAppDispatch } from "@/features/ssot/hook";
 import { resetProfile } from "@/services/profile-slice";
 import { resetToken } from "@/services/token-slice";
+import { setBottomTab } from "@/services/bottom-tab-slice";
 
 const exitApp = () => {
   BackHandler.exitApp();
@@ -37,6 +38,7 @@ const AkunContentMain = () => {
       case "Keluar":
         dispatch(resetProfile(null));
         dispatch(resetToken(null));
+        dispatch(setBottomTab("Beranda"));
         exitApp();
         break;               
       default:
