@@ -53,7 +53,7 @@ const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({ 
   baseUrl: urlApi,
   prepareHeaders: (headers, { getState }) => {
-    const accessToken = (getState() as RootState).persisted.token;
+    const accessToken = (getState() as RootState).persisted.token.token;
     if(accessToken != null) {
       // headers.set("Cache-Control", 'no-cache, private');
       headers.set("Content-Type", 'application/json');
@@ -150,9 +150,15 @@ export const fitnessApi = createApi({
       }),
       login: builder.mutation<LoginResponse, Credential>({
         query: (body) => ({
-          url: '/login?XDEBUG_SESSION_START=PHPSTORM',
+          url: '/login',
           method: 'POST',
           body,
+        }),
+      }),
+      logout: builder.mutation({
+        query: () => ({
+          url: '/logout',
+          method: 'POST',
         }),
       }),
       registerMember: builder.mutation<Token, RegistrasiMember>({
@@ -209,6 +215,6 @@ export const {
   useGetDaftarKecamatanQuery,
   useGetDaftarDesaQuery,
   useRegisterMemberMutation,
-  useLoginMutation,
+  useLoginMutation, useLogoutMutation,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation
 } = fitnessApi;

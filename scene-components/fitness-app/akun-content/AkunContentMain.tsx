@@ -18,6 +18,9 @@ import { useAppDispatch } from "@/features/ssot/hook";
 import { resetProfile } from "@/services/profile-slice";
 import { resetToken } from "@/services/token-slice";
 import { setBottomTab } from "@/services/bottom-tab-slice";
+import ExitAlertDialog from "../ExitAlertDialog";
+import NotAvailableAlertDialog from "../NotAvailableAlertDialog";
+import { useLogoutMutation } from "@/services/fitness-api-rtkquery-service";
 
 const exitApp = () => {
   BackHandler.exitApp();
@@ -28,18 +31,18 @@ const AkunContentMain = () => {
   const navigation = useNavigation();
   const [tmblPaket, setTmblPaket] = React.useState('membership');
   const [showDetailPaket, setShowDetailPaket] = React.useState(false);
-  const [showAlertDialog, setShowAlertDialog] = React.useState(false)
+  const [showAlertDialog, setShowAlertDialog] = React.useState(false);
+  const [showExitAlertDialog, setShowExitAlertDialog] = React.useState(false);
+
+  const [logout] = useLogoutMutation();
 
   const handleAcordionBoxPress = (id: string) => {
     switch (id) {
       case "Tugas Harian":
         setShowAlertDialog(true);
         break;    
-      case "Keluar":
-        dispatch(resetProfile(null));
-        dispatch(resetToken(null));
-        dispatch(setBottomTab("Beranda"));
-        exitApp();
+      case "Logout dan Keluar":        
+        setShowExitAlertDialog(true);        
         break;               
       default:
         // @ts-ignore: Unreachable code error
@@ -49,6 +52,23 @@ const AkunContentMain = () => {
   };
 
   const handleCloseAlertDialog = () => setShowAlertDialog(false);
+
+  const handleCloseExitAlertDialog = (isClose: boolean) => {
+    if(isClose == true) {
+      logout(null).unwrap().then(() => {
+        dispatch(resetProfile(null));
+        dispatch(resetToken(null));
+        dispatch(setBottomTab("Beranda"));
+        setShowExitAlertDialog(false);
+        exitApp();
+      }).catch((error) => {
+        console.log(error);
+      });      
+    }
+    else {
+      setShowExitAlertDialog(false);
+    }
+  };
     
   return (
     <>
@@ -149,7 +169,7 @@ const AkunContentMain = () => {
               setActionPress={handleAcordionBoxPress}
             />
             <AccordionBox 
-              title="Keluar" 
+              title="Logout dan Keluar" 
               variant="Merah"
               setActionPress={handleAcordionBoxPress}
             />
@@ -159,28 +179,11 @@ const AkunContentMain = () => {
         actionsheetVisible={showDetailPaket}
         setActionsheetVisible={setShowDetailPaket}
       />
-      <AlertDialog
-        isOpen={showAlertDialog} 
-        onClose={handleCloseAlertDialog} 
-        size="md"
-      >
-        <AlertDialogBackdrop />
-        <AlertDialogContent>
-          <AlertDialogBody className="mt-3 mb-4">
-            <VStack space="md">
-              <Icon 
-                as={TriangleAlertIcon} 
-                // @ts-ignore
-                size={48} 
-                className="color-yellow-400 self-center"
-              />
-              <Text size="sm" bold={true} className="text-center">
-                Fitur belum tersedia, tunggu kehadirannya sebentar lagi.
-              </Text>
-            </VStack>
-          </AlertDialogBody>
-        </AlertDialogContent>
-      </AlertDialog>
+      <NotAvailableAlertDialog isOpen={showAlertDialog} handleClose={handleCloseAlertDialog} />
+      <ExitAlertDialog 
+        isOpen={showExitAlertDialog}
+        handleClose={handleCloseExitAlertDialog}
+      />
     </>
   );
 }
