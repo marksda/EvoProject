@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import reduxStorageMMKV from "./storageMMKV";
 import tokenReducer from "@/services/token-slice";
+import bottomTabReducer from "@/services/bottom-tab-slice";
 import profileReducer from "@/services/profile-slice";
 import { persistReducer, persistStore } from "redux-persist";
 import { fitnessApi } from "@/services/fitness-api-rtkquery-service";
@@ -9,13 +10,14 @@ const persistConfig = {
   key: 'root',
   // version: 1,
   storage: reduxStorageMMKV,
-  // blacklist: ['nonPersistedSlice'], // these reduce will not persist data
+  blacklist: ['bottom_tab'], // these reduce will not persist data
   whitelist: ['token', 'profile'], // these reduce will persist data
 };
 
 const rootReducer = combineReducers({ 
   token: tokenReducer,
-  profile: profileReducer
+  bottom_tab: bottomTabReducer,
+  profile: profileReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

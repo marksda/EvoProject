@@ -18,6 +18,7 @@ import { useCallback } from "react";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
 import _ from 'lodash';
+import { setBottomTab } from "@/services/bottom-tab-slice";
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -53,6 +54,8 @@ const LoginForm = () => {
         refresh_token: payload.refresh_token
       }));
       dispatch(setProfile(_.cloneDeep(payload.profile)));
+      dispatch(setBottomTab("Akun"));
+      navigation.goBack();
     }).catch((error) => {
       console.log(error);
       // setDisableForm(false);

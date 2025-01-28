@@ -9,8 +9,9 @@ import MobileBottomTabs from "./MobileBottomTabs";
 import React, { useCallback } from "react";
 import BerandaPage from "./BerandaPage";
 import AkunPage from "./AkunPage";
-import { useAppSelector } from "@/features/ssot/hook";
+import { useAppDispatch, useAppSelector } from "@/features/ssot/hook";
 import { useNavigation } from "@react-navigation/native";
+import { setBottomTab } from "@/services/bottom-tab-slice";
 
 
 const bottomTabs = [
@@ -33,15 +34,16 @@ const bottomTabs = [
 ];
 
 const BasePage = () => {
+  const dispatch = useAppDispatch();
   const token = useAppSelector(state => state.persisted.token);
+  const bottom_tab = useAppSelector(state => state.persisted.bottom_tab);
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = React.useState("Beranda");
 
   const handleActiveTabChange = useCallback(
     (id: string) => {
       if(id == "Akun") {
         if(token.token != null) {
-          setActiveTab(id);
+          dispatch(setBottomTab(id));
         } 
         else {
           // @ts-ignore: Unreachable code error
@@ -49,24 +51,24 @@ const BasePage = () => {
         }
       }
       else {
-        setActiveTab(id);
+        dispatch(setBottomTab(id));
       }
     },
-    [token]
+    [token, bottom_tab]
   );
 
   return (
     <Box className="flex-1">
       <Box className="flex-1">
-        <BerandaPage  isActive={activeTab === "Beranda"} setActiveTab={setActiveTab} activeTab={activeTab} />
-        <AkunPage isActive={activeTab === "Akun"} />
+        <BerandaPage  isActive={bottom_tab === "Beranda"} activeTab={bottom_tab} />
+        <AkunPage isActive={bottom_tab === "Akun"} />
       </Box>
       <Box className="h-[52px] items-center w-full flex">
-          <MobileBottomTabs
-            activeTab={activeTab}
-            setActiveTab={handleActiveTabChange}
-            bottomTabs={bottomTabs}
-          />
+        <MobileBottomTabs
+          activeTab={bottom_tab}
+          setActiveTab={handleActiveTabChange}
+          bottomTabs={bottomTabs}
+        />
       </Box>
     </Box>
   );

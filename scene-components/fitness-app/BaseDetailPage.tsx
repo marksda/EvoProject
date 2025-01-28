@@ -10,37 +10,36 @@ import PengaturanContentBase from "./akun-content/PengaturanContentBase";
 import LoginContentBase from "./login-content/LoginContentBase";
 
 type Props = StaticScreenProps<{
-    id: string;
+  id: string;
 }>;
 
 const BaseDetailPage= ({ route }: Props) => {
     const { id } = route.params;
 
-
     return (
-        <Box className="flex-1 md:h-[calc(100vh-144px)] md:pr-16 md:pl-8 overflow-auto">
-            {(id == "Pemesanan Kelas") && (
-                <PemesananKelasContentBase />
-            )}
-            {(id == "Pemesanan Personal Trainer") && (
-                <PemesananPersonalTrainerContentBase />
-            )}
-            {(id == "Riwayat") && (
-                <RiwayatContentBase />
-            )}
-            {(id == "Tagihan") && (
-                <TagihanContentBase />
-            )}
-            {(id == "Bonus") && (
-                <BonusContentBase />
-            )}
-            {(id == "Pengaturan" || id == "Buat Akun") && (
-                <PengaturanContentBase />
-            )}
-            {(id == "Login") && (
-              <LoginContentBase />
-            )}
-        </Box>
+      <Box className="flex-1 md:h-[calc(100vh-144px)] md:pr-16 md:pl-8 overflow-auto">
+        {(id == "Pemesanan Kelas") && (
+          <PemesananKelasContentBase />
+        )}
+        {(id == "Pemesanan Personal Trainer") && (
+          <PemesananPersonalTrainerContentBase />
+        )}
+        {(id == "Riwayat") && (
+          <RiwayatContentBase />
+        )}
+        {(id == "Tagihan") && (
+          <TagihanContentBase />
+        )}
+        {(id == "Bonus") && (
+          <BonusContentBase />
+        )}
+        {(id == "Pengaturan" || id == "Buat Akun") && (
+          <PengaturanContentBase />
+        )}
+        {(id == "Login") && (
+          <LoginContentBase />
+        )}
+      </Box>
     );
 }
 
