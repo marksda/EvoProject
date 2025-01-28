@@ -37,8 +37,6 @@ const BasePage = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = React.useState("Beranda");
 
-  console.log(token);
-
   const handleActiveTabChange = useCallback(
     (id: string) => {
       if(id == "Akun") {
@@ -46,7 +44,6 @@ const BasePage = () => {
           setActiveTab(id);
         } 
         else {
-          //redirect to navigation
           // @ts-ignore: Unreachable code error
           navigation.navigate("submain", {id: "Login"});
         }
@@ -55,7 +52,7 @@ const BasePage = () => {
         setActiveTab(id);
       }
     },
-    []
+    [token]
   );
 
   return (

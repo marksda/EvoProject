@@ -47,10 +47,7 @@ const LoginForm = () => {
   );
 
   const onSubmit: SubmitHandler<Credential> = async (data) => {
-    console.log(data);
-
     await login(data).unwrap().then((payload) => {
-      console.log(payload);
       dispatch(setToken({
         token: payload.token,
         refresh_token: payload.refresh_token
