@@ -37,7 +37,7 @@ const BasePage = () => {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = React.useState("Beranda");
 
-  // console.log(token);
+  console.log(token);
 
   const handleActiveTabChange = useCallback(
     (id: string) => {

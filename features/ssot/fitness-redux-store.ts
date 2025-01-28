@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import reduxStorageMMKV from "./storageMMKV";
-import tokenReducer from "@/services/fitness-redux-token-slice.service";
-import PrinterScannerReducer from "@/services/redux-printer-slice.service";
+import tokenReducer from "@/services/token-slice";
+import PrinterScannerReducer from "@/services/printer-slice";
 import { persistReducer, persistStore } from "redux-persist";
 import { fitnessApi } from "@/services/fitness-api-rtkquery-service";
 

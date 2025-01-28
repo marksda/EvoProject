@@ -1,5 +1,5 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
+import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
 import { HStack } from "@/components/ui/hstack";
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Image } from "@/components/ui/image";
@@ -8,7 +8,9 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Credential, CredentialSchema } from "@/features/schema-resolver/Credential";
+import { useAppDispatch } from "@/features/ssot/hook";
 import { useLoginMutation } from "@/services/fitness-api-rtkquery-service";
+import { setToken } from "@/services/token-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
@@ -17,6 +19,7 @@ import { ScrollView } from "react-native";
 
 const LoginForm = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const {control, handleSubmit} = useForm<Credential>({
     defaultValues: {},
     resolver: zodResolver(CredentialSchema),
@@ -46,7 +49,10 @@ const LoginForm = () => {
 
     await login(data).unwrap().then((payload) => {
       console.log(payload);
-      // dispatch(setToken(payload));
+      dispatch(setToken({
+        token: payload.token,
+        refresh_token: payload.refresh_token
+      }));
     }).catch((error) => {
       console.log(error);
       // setDisableForm(false);

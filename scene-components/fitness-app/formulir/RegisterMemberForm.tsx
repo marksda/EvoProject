@@ -22,7 +22,7 @@ import { Club } from "@/features/schema-resolver/Club";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { useAppDispatch } from "@/features/ssot/hook";
-import { setToken } from "@/services/fitness-redux-token-slice.service";
+import { setToken } from "@/services/token-slice";
 import { ScrollView } from "react-native";
 
 const RegisterMemberForm = () => {

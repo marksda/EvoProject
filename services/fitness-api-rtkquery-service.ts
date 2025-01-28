@@ -1,7 +1,7 @@
 import { RootState } from "@/features/ssot/fitness-redux-store";
 import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
-import { resetToken, setToken } from "./fitness-redux-token-slice.service";
+import { resetToken, setToken } from "./token-slice";
 import { IItem } from "@/features/entities/fitness/item";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { Agama } from "@/features/schema-resolver/Agama";
@@ -150,7 +150,7 @@ export const fitnessApi = createApi({
       }),
       login: builder.mutation<LoginResponse, Credential>({
         query: (body) => ({
-          url: '/register/login?XDEBUG_SESSION_START=PHPSTORM',
+          url: '/login?XDEBUG_SESSION_START=PHPSTORM',
           method: 'POST',
           body,
         }),
