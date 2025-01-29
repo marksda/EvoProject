@@ -161,13 +161,12 @@ export const fitnessApi = createApi({
           method: 'POST',
         }),
       }),
-      registerMember: builder.mutation<Token, RegistrasiMember>({
+      registerMember: builder.mutation<LoginResponse, RegistrasiMember>({
         query: (body) => ({
             url: '/register/member?XDEBUG_SESSION_START=PHPSTORM',
             method: 'POST',
             body,
-        }),
-        invalidatesTags: (result) => result ? ['Member']:['Kosong']
+        })
       }),
       saveItem: builder.mutation<IItem, Partial<IItem>>({
           query: (body) => ({

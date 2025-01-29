@@ -41,7 +41,7 @@ const AkunContentMain = () => {
       case "Tugas Harian":
         setShowAlertDialog(true);
         break;    
-      case "Logout dan Keluar":        
+      case "Logout dan Keluar Aplikasi":        
         setShowExitAlertDialog(true);        
         break;               
       default:
@@ -169,7 +169,7 @@ const AkunContentMain = () => {
               setActionPress={handleAcordionBoxPress}
             />
             <AccordionBox 
-              title="Logout dan Keluar" 
+              title="Logout dan Keluar Aplikasi" 
               variant="Merah"
               setActionPress={handleAcordionBoxPress}
             />

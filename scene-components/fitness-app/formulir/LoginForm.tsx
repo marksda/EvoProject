@@ -48,13 +48,13 @@ const LoginForm = () => {
   );
 
   const onSubmit: SubmitHandler<Credential> = async (data) => {
-    await login(data).unwrap().then((payload) => {
+    await login(data).unwrap().then((payload) => {    
+      dispatch(setBottomTab("Akun"));  
+      dispatch(setProfile(_.cloneDeep(payload.profile)));
       dispatch(setToken({
         token: payload.token,
         refresh_token: payload.refresh_token
       }));
-      dispatch(setProfile(_.cloneDeep(payload.profile)));
-      dispatch(setBottomTab("Akun"));
       navigation.goBack();
     }).catch((error) => {
       console.log(error);

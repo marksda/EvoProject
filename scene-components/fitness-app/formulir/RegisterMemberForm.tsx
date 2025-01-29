@@ -24,10 +24,13 @@ import { Pressable } from "@/components/ui/pressable";
 import { useAppDispatch } from "@/features/ssot/hook";
 import { setToken } from "@/services/token-slice";
 import { ScrollView } from "react-native";
+import { setProfile } from "@/services/profile-slice";
+import { setBottomTab } from "@/services/bottom-tab-slice";
+import { useNavigation } from "@react-navigation/native";
 
 const RegisterMemberForm = () => {
   const dispatch = useAppDispatch();
-
+  const navigation = useNavigation();
   const [tanggalLahir, setTanggalLahir] = useState<Date|null>(null);
   const [showActionSheetTanggalLahir, setShowActionSheetTanggalLahir] = useState(false);
   const [selectedKeyProvinsi, setSelectedKeyProvinsi] = useState<string|null>(null); 
@@ -280,8 +283,14 @@ const RegisterMemberForm = () => {
 
     await registerMember(data).unwrap().then((payload) => {
       // setDisableForm(false);
-      console.log(payload);
-      dispatch(setToken(payload));
+      dispatch(setBottomTab("Akun"));
+      dispatch(setProfile(_.cloneDeep(payload.profile)));
+      dispatch(setToken({
+        token: payload.token,
+        refresh_token: payload.refresh_token
+      }));      
+      // @ts-ignore: Unreachable code error
+      navigation.popToTop();
     }).catch((error) => {
       // setDisableForm(false);
     }); 
