@@ -1,9 +1,9 @@
 import { Box } from "@/components/ui/box";
 import React from "react";
 import { StaticScreenProps } from "@react-navigation/native";
-import UbahProfileContentBase from "./akun-content/UbahProfileContentBase";
 import RegisterMemberContentBase from "./register-content/RegisterMemberContentBase";
 import LupaPasswordContentBase from "./login-content/LupaPasswordContentBase";
+import ProfileContentBase from "./profile-content/ProfileContentBase";
 
 type Props = StaticScreenProps<{
   id: string;
@@ -20,8 +20,8 @@ const BaseFormulirPage= ({ route }: Props) => {
       {(id == "Lupa Password") && (
         <LupaPasswordContentBase />
       )}
-      {(id == "Ubah Profile") && (
-        <UbahProfileContentBase />
+      {(id == "Profile") && (
+        <ProfileContentBase />
       )}
     </Box>
   );

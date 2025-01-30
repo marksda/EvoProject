@@ -2,7 +2,7 @@ import { VStack } from "@/components/ui/vstack";
 import React from "react";
 import { ScrollView } from "react-native";
 
-const UbahProfileContentMain = () => {
+const ProfileContentMain = () => {
   return (
     <>
       <ScrollView
@@ -19,4 +19,4 @@ const UbahProfileContentMain = () => {
   );
 }
 
-export default UbahProfileContentMain;
+export default ProfileContentMain;

@@ -8,8 +8,6 @@ import RegisterMemberForm from "../formulir/RegisterMemberForm";
 
 const PengaturanContentMain = () => {
 
-  const token = useAppSelector(state => state.persisted.token); 
-
   const navigation = useNavigation();
 
   const handleAcordionBoxPress = (id: string) => {
@@ -19,7 +17,8 @@ const PengaturanContentMain = () => {
         break;               
       default:
         // @ts-ignore: Unreachable code error
-        navigation.navigate("formulir", { id });
+        navigation.navigate("formulir", {id: "Profile"});
+        // navigation.navigate("formulir", { id });
         break;
     }
   };
@@ -27,8 +26,7 @@ const PengaturanContentMain = () => {
   return (
     <ScrollView
       className="p-2"
-    >
-    {token ? (<RegisterMemberForm />) : (
+    >    
       <VStack space="md">
         <AccordionBox 
           title="Ubah Profile" 
@@ -51,7 +49,6 @@ const PengaturanContentMain = () => {
           setActionPress={handleAcordionBoxPress}
         />
       </VStack>
-    )}
     </ScrollView>
   );
 }
