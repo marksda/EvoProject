@@ -10,7 +10,7 @@ const LupaPasswordContentHeader = () => {
   const navigation = useNavigation();
 
   return (         
-      <HStack className="items-center gap-4 h-[42px] bg-biru px-4">
+      <HStack className="items-center gap-4 h-12 bg-biru px-4">
         <Pressable
             onPress={() => {
                 navigation.goBack();

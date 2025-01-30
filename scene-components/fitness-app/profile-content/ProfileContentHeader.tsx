@@ -9,19 +9,17 @@ import React from "react";
 const ProfileContentHeader = () => {
   const navigation = useNavigation();
 
-  return (
-    <Box className="h-[32px] bg-biru px-4">            
-      <HStack className="items-center gap-2">
-        <Pressable
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Icon as={CloseIcon} size="md" className="color-white"/>
-        </Pressable>
-        <Heading size="md" className="text-white">Profile</Heading>
-      </HStack>         
-    </Box>
+  return (      
+    <HStack className="items-center gap-4 h-12 bg-biru px-4">
+      <Pressable
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Icon as={CloseIcon} size="md" className="color-white"/>
+      </Pressable>
+      <Heading size="md" className="text-white">Profile</Heading>
+    </HStack>
   );
 }
 

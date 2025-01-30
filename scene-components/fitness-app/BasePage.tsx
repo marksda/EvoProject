@@ -63,7 +63,7 @@ const BasePage = () => {
         <BerandaPage  isActive={bottom_tab === "Beranda"} activeTab={bottom_tab} />
         <AkunPage isActive={bottom_tab === "Akun"} />
       </Box>
-      <Box className="h-[52px] items-center w-full flex">
+      <Box className="h-24 items-center w-full flex">
         <MobileBottomTabs
           activeTab={bottom_tab}
           setActiveTab={handleActiveTabChange}
