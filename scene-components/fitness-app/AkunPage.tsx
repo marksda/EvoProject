@@ -5,15 +5,12 @@ import AkunContentBase from "./akun-content/AkunContentBase";
 
 const AkunPage = ({ activeTab, setActiveTab, isActive }: any) => {
   return isActive == true ? (
-    <>
-      <ScrollView className="bg-transparent md:hidden">
-          <Box
-            className={`${activeTab !== "Akun" ? "flex" : "hidden"} md:hidden`}
-          >
-            <AkunContentBase setActiveTab={setActiveTab} activeTab={activeTab} />
-          </Box>
-      </ScrollView>
-    </>
+    <ScrollView 
+      showsVerticalScrollIndicator={false}
+      className="bg-transparent"
+    >
+      <AkunContentBase setActiveTab={setActiveTab} activeTab={activeTab} />
+    </ScrollView>
   ):null;
 }
 

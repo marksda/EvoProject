@@ -58,19 +58,19 @@ const BasePage = () => {
   );
 
   return (
-    <Box className="flex-1">
-      <Box className="flex-1">
+    <>
+      <Box className="flex-1 pb-1">
         <BerandaPage  isActive={bottom_tab === "Beranda"} activeTab={bottom_tab} />
         <AkunPage isActive={bottom_tab === "Akun"} />
       </Box>
-      <Box className="h-24 items-center w-full flex">
+      <Box className="h-16">
         <MobileBottomTabs
           activeTab={bottom_tab}
           setActiveTab={handleActiveTabChange}
           bottomTabs={bottomTabs}
         />
       </Box>
-    </Box>
+    </>
   );
 }
 
