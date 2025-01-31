@@ -12,6 +12,7 @@ import AkunPage from "./AkunPage";
 import { useAppDispatch, useAppSelector } from "@/features/ssot/hook";
 import { useNavigation } from "@react-navigation/native";
 import { setBottomTab } from "@/services/bottom-tab-slice";
+import KelasPage from "./KelasPage";
 
 
 const bottomTabs = [
@@ -61,6 +62,7 @@ const BasePage = () => {
     <>
       <Box className="flex-1 pb-1">
         <BerandaPage  isActive={bottom_tab === "Beranda"} activeTab={bottom_tab} />
+        <KelasPage isActive={bottom_tab === "Kelas"} />
         <AkunPage isActive={bottom_tab === "Akun"} />
       </Box>
       <Box className="h-16">

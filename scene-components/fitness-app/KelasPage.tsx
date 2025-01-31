@@ -1,16 +1,16 @@
 import React from "react";
 import { ScrollView } from "react-native";
-import AkunContentBase from "./akun-content/AkunContentBase";
+import KelasContentBase from "./kelas-content/KelasContentBase";
 
-const AkunPage = ({ activeTab, setActiveTab, isActive }: any) => {
+const KelasPage = ({ isActive }: any) => {
   return isActive == true ? (
     <ScrollView 
       showsVerticalScrollIndicator={false}
       className="bg-transparent"
     >
-      <AkunContentBase setActiveTab={setActiveTab} activeTab={activeTab} />
+      <KelasContentBase />
     </ScrollView>
   ):null;
 }
 
-export default AkunPage;
+export default KelasPage;
