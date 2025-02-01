@@ -15,6 +15,7 @@ import { RegistrasiMember } from "@/features/schema-resolver/Member";
 import { Credential } from "@/features/schema-resolver/Credential";
 import { Token } from "@/features/entities/fitness/token";
 import { LoginResponse } from "@/features/entities/login-response";
+import { Kelas } from "@/features/schema-resolver/Kelas";
 
 const urlApi: string = 'http://192.168.1.12/api';
 
@@ -117,24 +118,24 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 export const fitnessApi = createApi({
   reducerPath: 'aerithApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Agama', 'Club', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Member', 'Propinsi', 'Kosong'],
+  tagTypes: ['Agama', 'Club', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Kelas', 'Member', 'Propinsi', 'Kosong'],
   endpoints: builder => {
     return {
-      getDaftarClub: builder.query<Club[], IQueryParamFilters>({
-        query: (queryParams) => `/clubs?filters=${JSON.stringify(queryParams)}`,
-        providesTags: ['Club']
-      }),
       getDaftarAgama: builder.query<Agama[], IQueryParamFilters>({
         query: (queryParams) => `/agamas?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Agama']
       }),
+      getDaftarClub: builder.query<Club[], IQueryParamFilters>({
+        query: (queryParams) => `/clubs?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Club']
+      }),
+      getDaftarDesa: builder.query<Desa[], IQueryParamFilters>({
+        query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Desa']
+      }),
       getDaftarGender: builder.query<Gender[], IQueryParamFilters>({
         query: (queryParams) => `/genders?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Gender']
-      }),
-      getDaftarPropinsi: builder.query<Provinsi[], IQueryParamFilters>({
-        query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
-        providesTags: ['Propinsi']
       }),
       getDaftarKabupaten: builder.query<Kabupaten[], IQueryParamFilters>({
         query: (queryParams) => `/kabupatens?filters=${JSON.stringify(queryParams)}`,
@@ -144,9 +145,13 @@ export const fitnessApi = createApi({
         query: (queryParams) => `/kecamatans?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Kecamatan']
       }),
-      getDaftarDesa: builder.query<Desa[], IQueryParamFilters>({
-        query: (queryParams) => `/desas?filters=${JSON.stringify(queryParams)}`,
-        providesTags: ['Desa']
+      getDaftarKelas: builder.query<Kelas[], IQueryParamFilters>({
+        query: (queryParams) => `/kelas?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Kelas']
+      }),
+      getDaftarPropinsi: builder.query<Provinsi[], IQueryParamFilters>({
+        query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['Propinsi']
       }),
       login: builder.mutation<LoginResponse, Credential>({
         query: (body) => ({
@@ -206,13 +211,14 @@ export const fitnessApi = createApi({
 });
 
 export const {
-  useGetDaftarClubQuery,
   useGetDaftarAgamaQuery,
+  useGetDaftarClubQuery,
+  useGetDaftarDesaQuery,
   useGetDaftarGenderQuery,
-  useGetDaftarPropinsiQuery,
   useGetDaftarKabupatenQuery,
   useGetDaftarKecamatanQuery,
-  useGetDaftarDesaQuery,
+  useGetDaftarKelasQuery,
+  useGetDaftarPropinsiQuery,
   useRegisterMemberMutation,
   useLoginMutation, useLogoutMutation,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation

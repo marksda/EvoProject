@@ -2,6 +2,7 @@ import { useAppSelector } from "@/features/ssot/hook";
 import LoginForm from "../formulir/LoginForm";
 import React from "react";
 import KelasContentHeader from "./KelasContentHeader";
+import KelasContentMain from "./KelasContentMain";
 
 const KelasContentBase = () => {
   const token = useAppSelector(state => state.persisted.token);
@@ -11,7 +12,7 @@ const KelasContentBase = () => {
   : (
       <>
         <KelasContentHeader />
-        {/* <KelasContentMain /> */}
+        <KelasContentMain />
       </>
   );
 }
