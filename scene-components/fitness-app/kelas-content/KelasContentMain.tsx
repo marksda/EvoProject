@@ -1,4 +1,5 @@
 import { Box } from "@/components/ui/box";
+import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
@@ -53,26 +54,30 @@ const KelasContentMain = () => {
 
   return (
     <ScrollView>
-      <VStack>
+      <Box className="flex-row flex-wrap p-2">
         {
           kelas?.map((itemKelas) => (
-            <Box key={itemKelas.id} className="p-2">
+            <Box
+              key={itemKelas.id}
+              className="h-48 mb-2 ood:ml-1 odd:w-1/2 odd: pr-1 even:pl-1"
+            >
               <ImageBackground
                 // @ts-ignore
                 source={imagesList[itemKelas.nama]}
-                className="w-1/2 h-48 flex-1"
+                className="h-48"
+                imageStyle={{ borderRadius: 8}}
               >
                 <LinearGradient 
                   colors={['#00000000', '#080e5a']} 
-                  style={{height : '100%', width : '100%'}}
+                  style={{height : '100%', width : '100%', borderRadius: 8, padding: 4}}
                 >
                   <Text className="text-white">{itemKelas.nama}</Text>
                 </LinearGradient>
-              </ImageBackground>
+              </ImageBackground>              
             </Box>
           ))
         }
-      </VStack>
+      </Box>
     </ScrollView>
   );
 };

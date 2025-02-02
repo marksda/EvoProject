@@ -60,7 +60,7 @@ const BasePage = () => {
 
   return (
     <>
-      <Box className="flex-1 pb-1">
+      <Box className="w-full flex-1 pb-1">
         <BerandaPage  isActive={bottom_tab === "Beranda"} activeTab={bottom_tab} />
         <KelasPage isActive={bottom_tab === "Kelas"} />
         <AkunPage isActive={bottom_tab === "Akun"} />

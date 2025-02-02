@@ -6,7 +6,7 @@ const KelasPage = ({ isActive }: any) => {
   return isActive == true ? (
     <ScrollView 
       showsVerticalScrollIndicator={false}
-      className="bg-transparent"
+      className="bg-transparent w-full"
     >
       <KelasContentBase />
     </ScrollView>
