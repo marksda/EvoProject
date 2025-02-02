@@ -54,7 +54,7 @@ const KelasContentMain = () => {
 
   return (
     <ScrollView>
-      <Box className="flex-row flex-wrap p-2">
+      <Box className="flex-row flex-wrap py-2 px-1">
         {
           kelas?.map((itemKelas) => (
             <Box
@@ -69,9 +69,9 @@ const KelasContentMain = () => {
               >
                 <LinearGradient 
                   colors={['#00000000', '#080e5a']} 
-                  style={{height : '100%', width : '100%', borderRadius: 8, padding: 4}}
+                  style={{height : '100%', width : '100%', borderRadius: 8}}
                 >
-                  <Text className="text-white">{itemKelas.nama}</Text>
+                  <Text className="rounded-t-lg py-1 px-2 text-white bg-biru/45 font-extrabold size-fit">{itemKelas.nama}</Text>
                 </LinearGradient>
               </ImageBackground>              
             </Box>
