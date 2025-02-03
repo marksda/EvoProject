@@ -1,7 +1,9 @@
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Image } from "@/components/ui/image";
+import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { useGetDaftarKelasQuery } from "@/services/fitness-api-rtkquery-service";
 import React, { useState } from "react";
@@ -98,6 +100,16 @@ const KelasContentMain = () => {
                     >
                       KELAS {itemKelas.kelas_kategori.nama}
                     </Text>
+                  </HStack>
+                  <HStack className="justify-between mt-16 mx-4">
+                    <Pressable 
+                      className="w-[80px] p-1 border border-black rounded-full bg-white/30"
+                    >
+                      <Text className="text-white text-center">Daftar</Text>  
+                    </Pressable>  
+                    <Pressable className="w-[80px] p-1 border border-black rounded-full bg-white/30">
+                      <Text className="text-white text-center">Detail</Text>  
+                    </Pressable>  
                   </HStack>                  
                 </LinearGradient>
               </ImageBackground>              
