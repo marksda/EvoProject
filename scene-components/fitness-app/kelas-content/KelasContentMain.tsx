@@ -1,7 +1,7 @@
 import { Box } from "@/components/ui/box";
+import { HStack } from "@/components/ui/hstack";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
 import { useGetDaftarKelasQuery } from "@/services/fitness-api-rtkquery-service";
 import React, { useState } from "react";
@@ -10,6 +10,12 @@ import { ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 
+const iconList = {
+  ["DANCE"]: require('../../../assets/icons/DANCE.webp'),
+  ["CARDIO"]: require('../../../assets/icons/CARDIO.webp'),
+  ["STRENGTH"]: require('../../../assets/icons/STRENGTH.webp'),
+  ["MIND & BODY"]: require('../../../assets/icons/MIND_BODY.webp'),
+}
 const imagesList = {
   ["BELLY DANCE"]: require('../../../assets/bg-card/BELLY_DANCE.jpg'),
   ["BODYCOMBAT"]: require('../../../assets/bg-card/BODYCOMBAT.jpg'),
@@ -34,15 +40,17 @@ const imagesList = {
   ["ZUMBA"]: require('../../../assets/bg-card/ZUMBA.jpg'),
 }
 
+const colorTextList = {
+  ["DANCE"]: "text-green-400",
+  ["CARDIO"]: "text-yellow-400",
+  ["STRENGTH"]: "text-red-600",
+  ["MIND & BODY"]: "text-cyan-500",
+}
+
 const KelasContentMain = () => {
   const [queryKelasParams] = useState<IQueryParamFilters>({
     is_paging: false, 
-    fields_sorter: [
-      {
-        field_name: 'nama',
-        value: 'asc'
-      },
-    ],
+    fields_sorter: [],
   });
   
   const { data: kelas } = useGetDaftarKelasQuery(queryKelasParams);
@@ -71,7 +79,26 @@ const KelasContentMain = () => {
                   colors={['#00000000', '#080e5a']} 
                   style={{height : '100%', width : '100%', borderRadius: 8}}
                 >
-                  <Text className="rounded-t-lg py-1 px-2 text-white bg-biru/45 font-extrabold size-fit">{itemKelas.nama}</Text>
+                  <Text 
+                    className="rounded-t-lg py-1 px-2 text-white bg-biru/45 font-extrabold"
+                  >
+                    {itemKelas.nama}
+                  </Text>
+                  <HStack className="mt-4 flex-row-reverse pr-2">
+                    <Image 
+                      // @ts-ignore
+                      source={iconList[itemKelas.kelas_kategori.nama]} 
+                      className="h-8 w-8"
+                      alt="icon"
+                    />
+                    <Text
+                      size="sm" 
+                      // @ts-ignore
+                      className={`mr-1 py-1 px-3 rounded-full bg-black/60 ${colorTextList[itemKelas.kelas_kategori.nama]}`}
+                    >
+                      KELAS {itemKelas.kelas_kategori.nama}
+                    </Text>
+                  </HStack>                  
                 </LinearGradient>
               </ImageBackground>              
             </Box>
