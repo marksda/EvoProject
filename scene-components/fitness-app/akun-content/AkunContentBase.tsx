@@ -1,4 +1,3 @@
-import { Box } from "@/components/ui/box"
 import AkunContentHeader from "./AkunContentHeader";
 import AkunContentMain from "./AkunContentMain";
 import { useAppSelector } from "@/features/ssot/hook";

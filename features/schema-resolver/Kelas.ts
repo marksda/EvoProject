@@ -10,4 +10,4 @@ export const KelasSchema = z.object({
   level: LevelSchema.pick({id: true, nama: true}),
 });
 
-export type Kelas = z.infer<typeof KelasSchema>;
+export type Kelas = Partial<z.infer<typeof KelasSchema>>;

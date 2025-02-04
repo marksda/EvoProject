@@ -3,13 +3,16 @@ import { HStack } from "@/components/ui/hstack";
 import { Image } from "@/components/ui/image";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarKelasQuery } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarKelasQuery } from "@/services/fitness-app/fitness-api-rtkquery-service";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ImageBackground } from "react-native";
 import { ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
+import _ from "lodash";
+import { useAppDispatch } from "@/features/ssot/hook";
+import { setKelas } from "@/services/fitness-app/kelas-slice";
 
 
 const iconList = {
@@ -17,7 +20,8 @@ const iconList = {
   ["CARDIO"]: require('../../../assets/icons/CARDIO.webp'),
   ["STRENGTH"]: require('../../../assets/icons/STRENGTH.webp'),
   ["MIND & BODY"]: require('../../../assets/icons/MIND_BODY.webp'),
-}
+};
+
 const imagesList = {
   ["BELLY DANCE"]: require('../../../assets/bg-card/BELLY_DANCE.jpg'),
   ["BODYCOMBAT"]: require('../../../assets/bg-card/BODYCOMBAT.jpg'),
@@ -40,7 +44,7 @@ const imagesList = {
   ["THAI BOXING"]: require('../../../assets/bg-card/THAI_BOXING.jpg'),
   ["VINYASA YOGA"]: require('../../../assets/bg-card/VINYASA_YOGA.jpg'),
   ["ZUMBA"]: require('../../../assets/bg-card/ZUMBA.jpg'),
-}
+};
 
 const colorTextList = {
   ["DANCE"]: "text-green-400",
@@ -50,6 +54,8 @@ const colorTextList = {
 }
 
 const KelasContentMain = () => {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation();
   const [queryKelasParams] = useState<IQueryParamFilters>({
     is_paging: false, 
     fields_sorter: [],
@@ -57,10 +63,19 @@ const KelasContentMain = () => {
   
   const { data: kelas } = useGetDaftarKelasQuery(queryKelasParams);
 
-  // const getPath = (nama: string):ImageSourcePropType|undefined   => {
-  //   let pathImage = getImagepath(nama);
-  //   return require(pathImage);
-  // }
+  const handleDaftarKelas = (idKelas: string) => {    
+    let hasil = _.find(kelas, (item) => item.id == idKelas);
+    dispatch(setKelas(hasil!));
+    // @ts-ignore: Unreachable code error
+    navigation.navigate("submain", {id: "Pendaftaran Kelas"});          
+  };
+
+  const handleDetailKelas = (idKelas: string) => {    
+    let hasil = _.find(kelas, (item) => item.id == idKelas);
+    dispatch(setKelas(hasil!));
+    // @ts-ignore: Unreachable code error
+    navigation.navigate("submain", {id: "Detail Kelas"});          
+  };
 
   return (
     <ScrollView>
@@ -98,16 +113,20 @@ const KelasContentMain = () => {
                       // @ts-ignore
                       className={`mr-1 py-1 px-3 rounded-full bg-black/60 ${colorTextList[itemKelas.kelas_kategori.nama]}`}
                     >
-                      KELAS {itemKelas.kelas_kategori.nama}
+                      KELAS {itemKelas.kelas_kategori?.nama}
                     </Text>
                   </HStack>
                   <HStack className="justify-between mt-16 mx-4">
                     <Pressable 
-                      className="w-[80px] p-1 border border-black rounded-full bg-white/30"
+                      onPress={(e) => {handleDaftarKelas(itemKelas.id!);}}
+                      className="w-[80px] p-1 rounded-full bg-white/30"
                     >
                       <Text className="text-white text-center">Daftar</Text>  
                     </Pressable>  
-                    <Pressable className="w-[80px] p-1 border border-black rounded-full bg-white/30">
+                    <Pressable 
+                      onPress={(e) => {handleDetailKelas(itemKelas.id!);}}
+                      className="w-[80px] p-1 rounded-full bg-white/30"
+                    >
                       <Text className="text-white text-center">Detail</Text>  
                     </Pressable>  
                   </HStack>                  

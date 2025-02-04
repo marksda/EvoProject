@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useCallback, useState } from "react";
 import dayjs from 'dayjs';
 import { IQueryParamFilters } from "@/features/entities/query-param-filters";
-import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery, useRegisterMemberMutation } from "@/services/fitness-api-rtkquery-service";
+import { useGetDaftarAgamaQuery, useGetDaftarClubQuery, useGetDaftarDesaQuery, useGetDaftarGenderQuery, useGetDaftarKabupatenQuery, useGetDaftarKecamatanQuery, useGetDaftarPropinsiQuery, useRegisterMemberMutation } from "@/services/fitness-app/fitness-api-rtkquery-service";
 import _ from "lodash";
 import { HStack } from "@/components/ui/hstack";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -22,10 +22,10 @@ import { Club } from "@/features/schema-resolver/Club";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { useAppDispatch } from "@/features/ssot/hook";
-import { setToken } from "@/services/token-slice";
+import { setToken } from "@/services/fitness-app/token-slice";
 import { ScrollView } from "react-native";
-import { setProfile } from "@/services/profile-slice";
-import { setBottomTab } from "@/services/bottom-tab-slice";
+import { setProfile } from "@/services/fitness-app/profile-slice";
+import { setBottomTab } from "@/services/fitness-app/bottom-tab-slice";
 import { useNavigation } from "@react-navigation/native";
 
 const RegisterMemberForm = () => {

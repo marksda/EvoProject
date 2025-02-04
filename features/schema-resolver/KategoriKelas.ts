@@ -5,4 +5,4 @@ export const KategoriKelasSchema = z.object({
   nama: z.string({ required_error: "harus diisi", invalid_type_error: "harus abjad" })
 });
 
-export type Kelas = z.infer<typeof KategoriKelasSchema>;
+export type KategoriKelas = z.infer<typeof KategoriKelasSchema>;

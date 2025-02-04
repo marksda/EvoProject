@@ -11,16 +11,13 @@ import MobileSidebarActionsheet from "../MobileSidebarActionsheet";
 import PersonalTraining from "./component/PersonalTraining";
 import { useNavigation } from "@react-navigation/native";
 import { BackHandler } from "react-native";
-import { AlertDialog, AlertDialogBackdrop, AlertDialogBody, AlertDialogContent } from "@/components/ui/alert-dialog";
-import { Icon } from "@/components/ui/icon";
-import { TriangleAlertIcon } from "lucide-react-native";
 import { useAppDispatch } from "@/features/ssot/hook";
-import { resetProfile } from "@/services/profile-slice";
-import { resetToken } from "@/services/token-slice";
-import { setBottomTab } from "@/services/bottom-tab-slice";
+import { resetProfile } from "@/services/fitness-app/profile-slice";
+import { resetToken } from "@/services/fitness-app/token-slice";
+import { setBottomTab } from "@/services/fitness-app/bottom-tab-slice";
 import ExitAlertDialog from "../ExitAlertDialog";
 import NotAvailableAlertDialog from "../NotAvailableAlertDialog";
-import { useLogoutMutation } from "@/services/fitness-api-rtkquery-service";
+import { useLogoutMutation } from "@/services/fitness-app/fitness-api-rtkquery-service";
 
 const exitApp = () => {
   BackHandler.exitApp();

@@ -11,7 +11,7 @@ import BerandaPage from "./BerandaPage";
 import AkunPage from "./AkunPage";
 import { useAppDispatch, useAppSelector } from "@/features/ssot/hook";
 import { useNavigation } from "@react-navigation/native";
-import { setBottomTab } from "@/services/bottom-tab-slice";
+import { setBottomTab } from "@/services/fitness-app/bottom-tab-slice";
 import KelasPage from "./KelasPage";
 
 

@@ -9,16 +9,16 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Credential, CredentialSchema } from "@/features/schema-resolver/Credential";
 import { useAppDispatch } from "@/features/ssot/hook";
-import { useLoginMutation } from "@/services/fitness-api-rtkquery-service";
-import { setProfile } from "@/services/profile-slice";
-import { setToken } from "@/services/token-slice";
+import { useLoginMutation } from "@/services/fitness-app/fitness-api-rtkquery-service";
+import { setProfile } from "@/services/fitness-app/profile-slice";
+import { setToken } from "@/services/fitness-app/token-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import { Controller, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
 import _ from 'lodash';
-import { setBottomTab } from "@/services/bottom-tab-slice";
+import { setBottomTab } from "@/services/fitness-app/bottom-tab-slice";
 
 const LoginForm = () => {
   const navigation = useNavigation();
