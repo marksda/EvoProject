@@ -1,23 +1,23 @@
 import React from "react";
-import PendaftaranKelasContentHeader from "./PendaftaranKelasContentHeader";
-import PendaftaranKelasContentMain from "./PendaftaranKelasContentMain";
 import { Box } from "@/components/ui/box";
 import { ScrollView } from "react-native";
+import DetailKelasContentHeader from "./DetailKelasContentHeader";
+import DetailKelasContentMain from "./DetailKelasContentMain";
 
-const PendaftaranKelasContentBase = () => {
+const DetailKelasContentBase = () => {
   return (
       <>
         <Box className="h-40">
-          <PendaftaranKelasContentHeader />
+          <DetailKelasContentHeader />
         </Box>
         <ScrollView
           showsVerticalScrollIndicator={false}
           className="bg-transparent w-full"
         >
-          <PendaftaranKelasContentMain />
+          <DetailKelasContentMain />
         </ScrollView>        
       </>
   )
 }
 
-export default PendaftaranKelasContentBase;
+export default DetailKelasContentBase;

@@ -14,6 +14,7 @@ export const kelasSlice = createSlice({
       state.kelas_kategori = _.cloneDeep(action.payload.kelas_kategori);
       state.level = _.cloneDeep(action.payload.level);
       state.durasi = action.payload.durasi;
+      state.deskripsi = action.payload.deskripsi;
     },
     resetKelas: (state, action: PayloadAction<null>) => {
       return {};

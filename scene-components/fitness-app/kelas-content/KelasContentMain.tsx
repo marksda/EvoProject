@@ -58,7 +58,16 @@ const KelasContentMain = () => {
   const navigation = useNavigation();
   const [queryKelasParams] = useState<IQueryParamFilters>({
     is_paging: false, 
-    fields_sorter: [],
+    fields_sorter: [
+      {
+        field_name: "kelas_kategori_id",
+        value: "asc"
+      },
+      {
+        field_name: "nama",
+        value: "asc"
+      }
+    ],
   });
   
   const { data: kelas } = useGetDaftarKelasQuery(queryKelasParams);

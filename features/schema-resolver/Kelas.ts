@@ -8,6 +8,7 @@ export const KelasSchema = z.object({
   kelas_kategori: KategoriKelasSchema.pick({id: true, nama: true}),
   durasi: z.string({ required_error: "harus diisi", invalid_type_error: " harus abjad" }),
   level: LevelSchema.pick({id: true, nama: true}),
+  deskripsi: z.string({ required_error: "harus diisi", invalid_type_error: " harus abjad" }),
 });
 
 export type Kelas = Partial<z.infer<typeof KelasSchema>>;
