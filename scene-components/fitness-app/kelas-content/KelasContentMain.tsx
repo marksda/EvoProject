@@ -15,14 +15,14 @@ import { useAppDispatch } from "@/features/ssot/hook";
 import { setKelas } from "@/services/fitness-app/kelas-slice";
 
 
-const iconList = {
+export const iconList = {
   ["DANCE"]: require('../../../assets/icons/DANCE.webp'),
   ["CARDIO"]: require('../../../assets/icons/CARDIO.webp'),
   ["STRENGTH"]: require('../../../assets/icons/STRENGTH.webp'),
   ["MIND & BODY"]: require('../../../assets/icons/MIND_BODY.webp'),
 };
 
-const imagesList = {
+export const imagesList = {
   ["BELLY DANCE"]: require('../../../assets/bg-card/BELLY_DANCE.jpg'),
   ["BODYCOMBAT"]: require('../../../assets/bg-card/BODYCOMBAT.jpg'),
   ["BOOTCAMP"]: require('../../../assets/bg-card/BOOTCAMP.jpg'),

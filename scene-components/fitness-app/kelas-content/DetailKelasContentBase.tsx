@@ -7,7 +7,7 @@ import DetailKelasContentMain from "./DetailKelasContentMain";
 const DetailKelasContentBase = () => {
   return (
       <>
-        <Box className="h-40">
+        <Box className="h-72">
           <DetailKelasContentHeader />
         </Box>
         <ScrollView

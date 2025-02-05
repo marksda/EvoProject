@@ -1,31 +1,37 @@
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
+import { useAppSelector } from "@/features/ssot/hook";
 import React from "react";
 import { ImageBackground } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import { imagesList } from "./KelasContentMain";
+import { Icon } from "@/components/ui/icon";
+import { CircleArrowLeftIcon } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Pressable } from "@/components/ui/pressable";
 
 const DetailKelasContentHeader = () => {
+  const navigation = useNavigation();
+  const kelas = useAppSelector(state => state.persisted.kelas);
 
   return (
     <ImageBackground
-      source={require('../../../assets/class_banner2.jpg')}
-      className="h-40 flex-1"
+    // @ts-ignore
+      source={imagesList[kelas.nama]}
+      className="flex-1"
+      resizeMode="stretch"
     >
-      <LinearGradient 
-        colors={['#00000000', '#080e5a']} 
-        style={{height : '100%', width : '100%'}}
+      <Pressable 
+        onPress={
+          () => {
+            navigation.goBack(); 
+          }
+        }
       >
-        <VStack className="pl-8 pt-10">
-          <Heading size="2xl" className="text-white font-extrabold">Detail Kelas</Heading>
-          <Text
-            size="xl" 
-            className="color-white font-bold"
-          >
-            Capai target anda dengan fasilitas kelas kita
-          </Text>
-        </VStack>
-      </LinearGradient>
+        <Icon 
+          as={CircleArrowLeftIcon} 
+          // @ts-ignore
+          size="102"   
+          className="ml-4 mt-4 color-white"
+        />
+      </Pressable>
     </ImageBackground>
   );
 }
