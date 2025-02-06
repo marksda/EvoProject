@@ -17,7 +17,7 @@ import { Token } from "@/features/entities/fitness/token";
 import { LoginResponse } from "@/features/entities/login-response";
 import { Kelas } from "@/features/schema-resolver/Kelas";
 
-const urlApi: string = 'http://192.168.1.12/api';
+const urlApi: string = 'http://192.168.1.9/api';
 
 export class TokenAPI {
   static getToken = async (credential: Credential) => {

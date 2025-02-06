@@ -7,7 +7,7 @@ import { ScrollView } from "react-native";
 const PendaftaranKelasContentBase = () => {
   return (
       <>
-        <Box className="h-40">
+        <Box className="h-12">
           <PendaftaranKelasContentHeader />
         </Box>
         <ScrollView
