@@ -6,7 +6,7 @@ const BerandaPage = ({ isActive }: any) => {
   return isActive == true ? (
     <ScrollView 
       showsVerticalScrollIndicator={false}
-      className="bg-transparent w-full"
+      className="bg-slate-300 w-full"
     >
       <BerandaContentBase />
     </ScrollView>

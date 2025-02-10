@@ -8,9 +8,9 @@ import { Bell } from "lucide-react-native";
 const NotifikasiIcon = () => {
   return (
     <Pressable>
-      <VStack>
-        <Box className="bg-slate-200 p-2 rounded-lg">
-          <Icon as={Bell} size="xl"/>
+      <VStack className="mt-4">
+        <Box className="bg-slate-200/50 p-2 rounded-lg">
+          <Icon as={Bell} size="md"/>
         </Box>        
         <Badge
           className="z-10 self-end h-[14px] w-[14] bg-red-600 rounded-full -mt-2 -mr-2"

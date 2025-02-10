@@ -86,7 +86,7 @@ const KelasContentMain = () => {
   };
 
   return (
-    <Box className="flex-row flex-wrap py-2 px-1">
+    <Box className="flex-row flex-wrap py-2 px-1 bg-slate-300">
       {
         kelas?.map((itemKelas) => (
           <Box

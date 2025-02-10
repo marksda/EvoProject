@@ -1,10 +1,23 @@
 import { Box } from "@/components/ui/box";
+import { HStack } from "@/components/ui/hstack";
+import { Image } from "@/components/ui/image";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
 
 const BerandaContentMain = () => {
   return (
-    <Box className="flex-row flex-wrap py-2 px-1">
-
-    </Box>
+    <>
+      <Box className="px-6 py-4">
+        <VStack className="gap-1">
+          <HStack className="bg-slate-200 border border-orange-500 rounded-md min-h-14 p-4">
+            <Image 
+            
+            />
+            <Text>Klaim</Text>
+          </HStack>
+        </VStack>
+      </Box>
+    </>
   )
 }
 
