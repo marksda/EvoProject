@@ -1,24 +1,16 @@
-import { Box } from "@/components/ui/box";
 import React from "react";
 import { ScrollView } from "react-native";
-// import Header from "./Header";
-import BerandaContent from "./beranda-content/BerandaContent";
+import BerandaContentBase from "./beranda-content/BerandaContentBase";
 
-const BerandaPage = ({ activeTab, setActiveTab, isActive }: any) => {
-    return isActive == true ? (
-        <>
-            {/* <Box className={`w-full ${activeTab != "Profile" ? "flex" : "hidden"}`}>
-                <Header />
-            </Box> */}
-            <ScrollView className="h-[1px] md:hidden">
-                <Box
-                    className={`${activeTab !== "Akun" ? "flex" : "hidden"} md:hidden`}
-                >
-                    <BerandaContent setActiveTab={setActiveTab} activeTab={activeTab} />
-                </Box>
-            </ScrollView>
-        </>
-    ): null;
+const BerandaPage = ({ isActive }: any) => {
+  return isActive == true ? (
+    <ScrollView 
+      showsVerticalScrollIndicator={false}
+      className="bg-transparent w-full"
+    >
+      <BerandaContentBase />
+    </ScrollView>
+  ):null;
 }
 
 export default BerandaPage;

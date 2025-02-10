@@ -8,7 +8,6 @@ import { useGetDaftarKelasQuery } from "@/services/fitness-app/fitness-api-rtkqu
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { ImageBackground } from "react-native";
-import { ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import _ from "lodash";
 import { useAppDispatch } from "@/features/ssot/hook";
@@ -87,65 +86,63 @@ const KelasContentMain = () => {
   };
 
   return (
-    <ScrollView>
-      <Box className="flex-row flex-wrap py-2 px-1">
-        {
-          kelas?.map((itemKelas) => (
-            <Box
-              key={itemKelas.id}
-              className="h-48 mb-2 ood:ml-1 odd:w-1/2 odd: pr-1 even:pl-1"
+    <Box className="flex-row flex-wrap py-2 px-1">
+      {
+        kelas?.map((itemKelas) => (
+          <Box
+            key={itemKelas.id}
+            className="h-48 mb-2 ood:ml-1 odd:w-1/2 odd: pr-1 even:pl-1"
+          >
+            <ImageBackground
+              // @ts-ignore
+              source={imagesList[itemKelas.nama]}
+              className="h-48"
+              imageStyle={{ borderRadius: 8}}
             >
-              <ImageBackground
-                // @ts-ignore
-                source={imagesList[itemKelas.nama]}
-                className="h-48"
-                imageStyle={{ borderRadius: 8}}
+              <LinearGradient 
+                colors={['#00000000', '#080e5a']} 
+                style={{height : '100%', width : '100%', borderRadius: 8}}
               >
-                <LinearGradient 
-                  colors={['#00000000', '#080e5a']} 
-                  style={{height : '100%', width : '100%', borderRadius: 8}}
+                <Text 
+                  className="rounded-t-lg py-1 px-2 text-white bg-biru/45 font-extrabold"
                 >
-                  <Text 
-                    className="rounded-t-lg py-1 px-2 text-white bg-biru/45 font-extrabold"
+                  {itemKelas.nama}
+                </Text>
+                <HStack className="mt-4 flex-row-reverse pr-2">
+                  <Image 
+                    // @ts-ignore
+                    source={iconList[itemKelas.kelas_kategori.nama]} 
+                    className="h-8 w-8"
+                    alt="icon"
+                  />
+                  <Text
+                    size="sm" 
+                    // @ts-ignore
+                    className={`mr-1 py-1 px-3 rounded-full bg-black/60 ${colorTextList[itemKelas.kelas_kategori.nama]}`}
                   >
-                    {itemKelas.nama}
+                    KELAS {itemKelas.kelas_kategori?.nama}
                   </Text>
-                  <HStack className="mt-4 flex-row-reverse pr-2">
-                    <Image 
-                      // @ts-ignore
-                      source={iconList[itemKelas.kelas_kategori.nama]} 
-                      className="h-8 w-8"
-                      alt="icon"
-                    />
-                    <Text
-                      size="sm" 
-                      // @ts-ignore
-                      className={`mr-1 py-1 px-3 rounded-full bg-black/60 ${colorTextList[itemKelas.kelas_kategori.nama]}`}
-                    >
-                      KELAS {itemKelas.kelas_kategori?.nama}
-                    </Text>
-                  </HStack>
-                  <HStack className="justify-between mt-16 mx-4">
-                    <Pressable 
-                      onPress={(e) => {handleDaftarKelas(itemKelas.id!);}}
-                      className="w-[80px] p-1 rounded-full bg-white/30"
-                    >
-                      <Text className="text-white text-center">Daftar</Text>  
-                    </Pressable>  
-                    <Pressable 
-                      onPress={(e) => {handleDetailKelas(itemKelas.id!);}}
-                      className="w-[80px] p-1 rounded-full bg-white/30"
-                    >
-                      <Text className="text-white text-center">Detail</Text>  
-                    </Pressable>  
-                  </HStack>                  
-                </LinearGradient>
-              </ImageBackground>              
-            </Box>
-          ))
-        }
-      </Box>
-    </ScrollView>
+                </HStack>
+                <HStack className="justify-between mt-16 mx-4">
+                  <Pressable 
+                    onPress={(e) => {handleDaftarKelas(itemKelas.id!);}}
+                    className="w-[80px] p-1 rounded-full bg-white/30"
+                  >
+                    <Text className="text-white text-center">Daftar</Text>  
+                  </Pressable>  
+                  <Pressable 
+                    onPress={(e) => {handleDetailKelas(itemKelas.id!);}}
+                    className="w-[80px] p-1 rounded-full bg-white/30"
+                  >
+                    <Text className="text-white text-center">Detail</Text>  
+                  </Pressable>  
+                </HStack>                  
+              </LinearGradient>
+            </ImageBackground>              
+          </Box>
+        ))
+      }
+    </Box>
   );
 };
 

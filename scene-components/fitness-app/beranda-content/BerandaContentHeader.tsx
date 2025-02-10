@@ -1,23 +1,19 @@
-import { Box } from "@/components/ui/box";
-import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { ImageBackground } from "react-native";
+import NotifikasiIcon from "../NotifikasiIcon";
 
-const BerandaContentHeader = ({ setActiveTab, activeTab }: any) => {
-
-    return (
-        <Box>
-            <ImageBackground
-                source={{ uri: "https://legacy.reactjs.org/logo-og.png" }}
-                className="h-28 flex-1"
-            >
-                <HStack className="w-full items-center justify-between">
-                    <Heading size="md" className="text-white">Halaman beranda</Heading>
-                </HStack>
-            </ImageBackground>
-            <Box className=" h-12 m-1 rounded-md shadow-sm border-l-[4px] border-l-biru"></Box>
-        </Box>
-    );
+const BerandaContentHeader = () => {
+  return (
+    <ImageBackground
+      source={require('../../../assets/beranda_banner2.jpg')}
+      imageStyle={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}
+      className="h-48 flex-1"
+    >
+      <HStack className="my-2 mx-4 justify-end">
+        <NotifikasiIcon />
+      </HStack>      
+    </ImageBackground>
+  );
 }
 
 export default BerandaContentHeader;
