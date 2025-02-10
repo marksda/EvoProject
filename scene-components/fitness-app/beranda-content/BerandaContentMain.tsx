@@ -11,7 +11,9 @@ const BerandaContentMain = () => {
         <VStack className="gap-1">
           <HStack className="bg-slate-200 border border-orange-500 rounded-md min-h-14 p-4">
             <Image 
-            
+              source={require('../../../assets/thumnail/give_box.png')}
+              alt="image"
+              className="self-center"
             />
             <Text>Klaim</Text>
           </HStack>
