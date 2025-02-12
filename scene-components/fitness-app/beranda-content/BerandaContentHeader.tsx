@@ -11,7 +11,6 @@ import { ChevronDown } from "lucide-react-native";
 
 const BerandaContentHeader = ({ setActionsheetVisible }: any) => {
   const handleOpenActionSheet = () => {
-    console.log('open');
     setActionsheetVisible(true);
   };
 
