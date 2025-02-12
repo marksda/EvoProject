@@ -40,10 +40,10 @@ const BerandaContentMain = () => {
             </Pressable>
           </HStack>           
           <Box>
-              <ScrollView>
-                
-              </ScrollView>
-            </Box>     
+            <ScrollView>
+              
+            </ScrollView>
+          </Box>     
         </VStack>
       </Box>
     </>

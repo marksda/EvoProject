@@ -6,13 +6,14 @@ import {
     User 
 } from "lucide-react-native";
 import MobileBottomTabs from "./MobileBottomTabs";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import BerandaPage from "./BerandaPage";
 import AkunPage from "./AkunPage";
 import { useAppDispatch, useAppSelector } from "@/features/ssot/hook";
 import { useNavigation } from "@react-navigation/native";
 import { setBottomTab } from "@/services/fitness-app/bottom-tab-slice";
 import KelasPage from "./KelasPage";
+import Geolocation from "@react-native-community/geolocation";
 
 
 const bottomTabs = [
@@ -39,6 +40,26 @@ const BasePage = () => {
   const token = useAppSelector(state => state.persisted.token);
   const bottom_tab = useAppSelector(state => state.persisted.bottom_tab);
   const navigation = useNavigation();
+
+  const [skipPermissionGeolocationRequests, setSkipPermissionGeolocationRequests] = useState(false);
+  // IOS only
+  const [authorizationGeolocationLevel, setAuthorizationGeolocationLevel] = useState<'whenInUse' | 'always' | 'auto'>('auto');
+  // Android only
+  const [geolocationProvider, setgeolocationProvider] = useState<'playServices' | 'android' | 'auto'>('auto');
+  // IOS only
+  const [enableBackgroundGeolocationUpdates, setEnableBackgroundGeolocationUpdates] = useState(false);
+
+  useEffect(
+    () => {
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: skipPermissionGeolocationRequests,
+        authorizationLevel: authorizationGeolocationLevel,
+        enableBackgroundLocationUpdates: enableBackgroundGeolocationUpdates,
+        locationProvider: geolocationProvider,
+      });
+    },
+    [skipPermissionGeolocationRequests, authorizationGeolocationLevel, geolocationProvider, enableBackgroundGeolocationUpdates]
+  );
 
   const handleActiveTabChange = useCallback(
     (id: string) => {
