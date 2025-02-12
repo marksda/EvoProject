@@ -10,9 +10,9 @@ import { ScrollView } from "react-native";
 const BerandaContentMain = () => {
   return (
     <>
-      <Box className="px-6 py-4">
+      <Box className="px-6 pt-14 pb-4">
         <VStack className="gap-4">
-          <HStack className="justify-between p-2 bg-slate-200 border border-orange-500 rounded-md ">
+          <HStack className="justify-between p-2 bg-slate-100 border border-orange-500 rounded-md ">
             <HStack className="items-center min-h-14 gap-2">
               <Image 
                 source={require('../../../assets/thumnail/give_box.png')}
