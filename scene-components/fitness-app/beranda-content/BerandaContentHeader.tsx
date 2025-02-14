@@ -8,9 +8,11 @@ import { Text } from "@/components/ui/text";
 import { Image } from "@/components/ui/image";
 import { Icon } from "@/components/ui/icon";
 import { ChevronDown } from "lucide-react-native";
+import Geolocation from "@react-native-community/geolocation";
 
 const BerandaContentHeader = ({ setActionsheetVisible }: any) => {
   const handleOpenActionSheet = () => {
+    Geolocation.requestAuthorization();
     setActionsheetVisible(true);
   };
 

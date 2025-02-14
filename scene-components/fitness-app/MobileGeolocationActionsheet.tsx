@@ -64,7 +64,7 @@ const MobileGeolocationActionsheet = ({ actionsheetVisible, setActionsheetVisibl
 const styles = StyleSheet.create({
   dropdown: {
     height: 40,
-    minWidth: 150, 
+    minWidth: 250, 
     borderColor: 'gray',
     borderWidth: 0.5,
     borderRadius: 8,
