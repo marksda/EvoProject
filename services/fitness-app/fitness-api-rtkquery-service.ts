@@ -118,7 +118,7 @@ export const baseQueryWithReauth: BaseQueryFn<string|FetchArgs, unknown, FetchBa
 export const fitnessApi = createApi({
   reducerPath: 'aerithApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Agama', 'Club', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Kelas', 'Member', 'Propinsi', 'Kosong'],
+  tagTypes: ['Agama', 'Club', 'ClubKabupaten', 'Desa', 'Gender', 'Item', 'Kabupaten', 'Kecamatan', 'Kelas', 'Member', 'Propinsi', 'Kosong'],
   endpoints: builder => {
     return {
       getDaftarAgama: builder.query<Agama[], IQueryParamFilters>({
@@ -152,6 +152,10 @@ export const fitnessApi = createApi({
       getDaftarPropinsi: builder.query<Provinsi[], IQueryParamFilters>({
         query: (queryParams) => `/propinsis?filters=${JSON.stringify(queryParams)}`,
         providesTags: ['Propinsi']
+      }),
+      getDaftarClubKabupaten: builder.query<Kabupaten[], IQueryParamFilters>({
+        query: (queryParams) => `/hook/club_kabupaten?filters=${JSON.stringify(queryParams)}`,
+        providesTags: ['ClubKabupaten']
       }),
       login: builder.mutation<LoginResponse, Credential>({
         query: (body) => ({
@@ -219,6 +223,7 @@ export const {
   useGetDaftarKecamatanQuery,
   useGetDaftarKelasQuery,
   useGetDaftarPropinsiQuery,
+  useGetDaftarClubKabupatenQuery,
   useRegisterMemberMutation,
   useLoginMutation, useLogoutMutation,
   useSaveItemMutation, useGetDaftarItemQuery, useUpdateItemMutation, useDeleteItemMutation

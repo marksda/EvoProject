@@ -1,24 +1,45 @@
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper } from "@/components/ui/actionsheet";
 import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { IQueryParamFilters } from "@/features/entities/query-param-filters";
+import { useGetDaftarClubKabupatenQuery, useGetDaftarClubQuery } from "@/services/fitness-app/fitness-api-rtkquery-service";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-const dataKabupaten = [
-  { label: 'Item 1', value: '1' },
-  { label: 'Item 2', value: '2' },
-  { label: 'Item 3', value: '3' },
-  { label: 'Item 4', value: '4' },
-  { label: 'Item 5', value: '5' },
-  { label: 'Item 6', value: '6' },
-  { label: 'Item 7', value: '7' },
-  { label: 'Item 8', value: '8' },
-];
 
 const MobileGeolocationActionsheet = ({ actionsheetVisible, setActionsheetVisible }: any) => {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string|null>(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [queryKabupatenParams, setQueryKabupatenParams] = useState<IQueryParamFilters>({
+    is_paging: false,  
+    paging: {
+      pageNumber: 1,
+      pageSize: 25
+    },
+    fields_filter: [],
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+  const [queryClubParams] = useState<IQueryParamFilters>({
+    is_paging: false, 
+    fields_filter: [],
+    fields_sorter: [
+      {
+        field_name: 'nama',
+        value: 'asc'
+      },
+    ],
+  });
+
+
+  const { data: kabupatens } = useGetDaftarClubKabupatenQuery(queryKabupatenParams);
+  const { data: clubs } = useGetDaftarClubQuery(queryClubParams, {skip: value == null ? true:false});
 
   const handleClose = () => {
     setActionsheetVisible(false);
@@ -43,18 +64,25 @@ const MobileGeolocationActionsheet = ({ actionsheetVisible, setActionsheetVisibl
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               value={value}
-              data={dataKabupaten}
+              data={kabupatens ? kabupatens:[]}
               search
               maxHeight={300}
-              labelField="label"
-              valueField="value" 
+              labelField="nama"
+              valueField="id" 
               onChange={item => {
-                setValue(item.value);
+                setValue(item.id);
               }}   
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}           
             />
           </HStack>
+          {
+            clubs ? 
+              clubs.map((club) => (
+                <Text key={club.id}>{club.nama}</Text>
+              ))
+              : null
+          }
         </VStack>
       </ActionsheetContent>
     </Actionsheet>
